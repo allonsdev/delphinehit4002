@@ -1,0 +1,38 @@
+{% if error %}
+  <p>{{ error }}</p>
+{% else %}
+<h2>{{ animal.tag_number }} - {{ animal.breed }} ({{ animal.sex }})</h2>
+<p>Color: {{ animal.color }} | Purpose: {{ animal.purpose }} | Status: {{ animal.status }}</p>
+<p>Farm: {{ animal.farm.name }} | Paddock: {{ animal.current_paddock.name }}</p>
+<p>Weight: {{ animal.current_weight_kg }} kg | Height: {{ animal.height_cm }} cm | Body Length: {{ animal.body_length_cm }} cm</p>
+
+<h3>Reproductive Status</h3>
+{% if reproductive_status %}
+    <p>Status: {{ reproductive_status.reproductive_status }}</p>
+    <p>Last Heat: {{ reproductive_status.last_heat_date }}</p>
+    <p>Parity: {{ reproductive_status.parity_number }}</p>
+{% else %}
+    <p>No reproductive info</p>
+{% endif %}
+
+<h3>Last Lactation</h3>
+{% if last_lactation %}
+    <p>Start: {{ last_lactation.start_date }} | End: {{ last_lactation.end_date }}</p>
+    <p>Total Milk Yield: {{ last_lactation.total_milk_yield_liters }} L</p>
+{% endif %}
+
+<h3>Last Breeding Event</h3>
+{% if last_breeding %}
+    <p>Date: {{ last_breeding.breeding_date }} | Method: {{ last_breeding.method }} | Confirmed Pregnant: {{ last_breeding.confirmed_pregnant }}</p>
+{% endif %}
+
+<h3>Last Treatment</h3>
+{% if last_treatment %}
+    <p>Diagnosis: {{ last_treatment.diagnosis }} | Medication: {{ last_treatment.medication }} | Date: {{ last_treatment.treatment_date }}</p>
+{% endif %}
+
+<h3>Last Vaccination</h3>
+{% if last_vaccination %}
+    <p>Vaccine: {{ last_vaccination.vaccine_name }} | Date: {{ last_vaccination.date_administered }} | Administered By: {{ last_vaccination.administered_by }}</p>
+{% endif %}
+{% endif %}
