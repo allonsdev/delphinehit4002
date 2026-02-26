@@ -1,43 +1,28 @@
 "use strict";
 
 var _excluded = ["endValue"];
-
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-
-function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
-
-function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
-
-function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
-
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
+function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+function _objectWithoutProperties(e, t) { if (null == e) return {}; var o, r, i = _objectWithoutPropertiesLoose(e, t); if (Object.getOwnPropertySymbols) { var s = Object.getOwnPropertySymbols(e); for (r = 0; r < s.length; r++) o = s[r], t.includes(o) || {}.propertyIsEnumerable.call(e, o) && (i[o] = e[o]); } return i; }
+function _objectWithoutPropertiesLoose(r, e) { if (null == r) return {}; var t = {}; for (var n in r) if ({}.hasOwnProperty.call(r, n)) { if (e.includes(n)) continue; t[n] = r[n]; } return t; }
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 /* -------------------------------------------------------------------------- */
-
 /*                                    Utils                                   */
-
 /* -------------------------------------------------------------------------- */
 var docReady = function docReady(fn) {
   // see if DOM is already available
@@ -47,22 +32,21 @@ var docReady = function docReady(fn) {
     setTimeout(fn, 1);
   }
 };
-
 var resize = function resize(fn) {
   return window.addEventListener('resize', fn);
 };
-
 var isIterableArray = function isIterableArray(array) {
   return Array.isArray(array) && !!array.length;
 };
-
 var camelize = function camelize(str) {
-  var text = str.replace(/[-_\s.]+(.)?/g, function (_, c) {
-    return c ? c.toUpperCase() : '';
+  var text = str.replace(/[-_\s.]+(.)?/g, function (match, capture) {
+    if (capture) {
+      return capture.toUpperCase();
+    }
+    return '';
   });
   return "".concat(text.substr(0, 1).toLowerCase()).concat(text.substr(1));
 };
-
 var getData = function getData(el, data) {
   try {
     return JSON.parse(el.dataset[camelize(data)]);
@@ -70,33 +54,31 @@ var getData = function getData(el, data) {
     return el.dataset[camelize(data)];
   }
 };
-/* ----------------------------- Colors function ---------------------------- */
 
+/* ----------------------------- Colors function ---------------------------- */
 
 var hexToRgb = function hexToRgb(hexValue) {
   var hex;
-  hexValue.indexOf('#') === 0 ? hex = hexValue.substring(1) : hex = hexValue; // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
-
+  hexValue.indexOf('#') === 0 ? hex = hexValue.substring(1) : hex = hexValue;
+  // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
   var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
   var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex.replace(shorthandRegex, function (m, r, g, b) {
     return r + r + g + g + b + b;
   }));
   return result ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)] : null;
 };
-
 var rgbaColor = function rgbaColor() {
   var color = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '#fff';
   var alpha = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0.5;
   return "rgba(".concat(hexToRgb(color), ", ").concat(alpha, ")");
 };
-/* --------------------------------- Colors --------------------------------- */
 
+/* --------------------------------- Colors --------------------------------- */
 
 var getColor = function getColor(name) {
   var dom = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : document.documentElement;
   return getComputedStyle(dom).getPropertyValue("--falcon-".concat(name)).trim();
 };
-
 var getColors = function getColors(dom) {
   return {
     primary: getColor('primary', dom),
@@ -106,10 +88,12 @@ var getColors = function getColors(dom) {
     warning: getColor('warning', dom),
     danger: getColor('danger', dom),
     light: getColor('light', dom),
-    dark: getColor('dark', dom)
+    dark: getColor('dark', dom),
+    white: getColor('white', dom),
+    black: getColor('black', dom),
+    emphasis: getColor('emphasis-color', dom)
   };
 };
-
 var getSubtleColors = function getSubtleColors(dom) {
   return {
     primary: getColor('primary-bg-subtle', dom),
@@ -122,10 +106,8 @@ var getSubtleColors = function getSubtleColors(dom) {
     dark: getColor('dark-bg-subtle', dom)
   };
 };
-
 var getGrays = function getGrays(dom) {
   return {
-    white: getColor('gray-white', dom),
     100: getColor('gray-100', dom),
     200: getColor('gray-200', dom),
     300: getColor('gray-300', dom),
@@ -136,24 +118,19 @@ var getGrays = function getGrays(dom) {
     800: getColor('gray-800', dom),
     900: getColor('gray-900', dom),
     1000: getColor('gray-1000', dom),
-    1100: getColor('gray-1100', dom),
-    black: getColor('gray-black', dom)
+    1100: getColor('gray-1100', dom)
   };
 };
-
 var hasClass = function hasClass(el, className) {
   !el && false;
   return el.classList.value.includes(className);
 };
-
 var addClass = function addClass(el, className) {
   el.classList.add(className);
 };
-
 var removeClass = function removeClass(el, className) {
   el.classList.remove(className);
 };
-
 var getOffset = function getOffset(el) {
   var rect = el.getBoundingClientRect();
   var scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
@@ -163,7 +140,6 @@ var getOffset = function getOffset(el) {
     left: rect.left + scrollLeft
   };
 };
-
 function isScrolledIntoView(el) {
   var rect = el.getBoundingClientRect();
   var windowHeight = window.innerHeight || document.documentElement.clientHeight;
@@ -172,7 +148,6 @@ function isScrolledIntoView(el) {
   var horInView = rect.left <= windowWidth && rect.left + rect.width >= 0;
   return vertInView && horInView;
 }
-
 var breakpoints = {
   xs: 0,
   sm: 576,
@@ -181,33 +156,33 @@ var breakpoints = {
   xl: 1200,
   xxl: 1540
 };
-
 var getBreakpoint = function getBreakpoint(el) {
   var classes = el && el.classList.value;
   var breakpoint;
-
   if (classes) {
     breakpoint = breakpoints[classes.split(' ').filter(function (cls) {
       return cls.includes('navbar-expand-');
     }).pop().split('-').pop()];
   }
-
   return breakpoint;
 };
+var getSystemTheme = function getSystemTheme() {
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+};
+var isDark = function isDark() {
+  return localStorage.getItem('theme') === 'auto' ? getSystemTheme() : localStorage.getItem('theme');
+};
 /* --------------------------------- Cookie --------------------------------- */
-
 
 var setCookie = function setCookie(name, value, expire) {
   var expires = new Date();
   expires.setTime(expires.getTime() + expire);
   document.cookie = "".concat(name, "=").concat(value, ";expires=").concat(expires.toUTCString());
 };
-
 var getCookie = function getCookie(name) {
   var keyValue = document.cookie.match("(^|;) ?".concat(name, "=([^;]*)(;|$)"));
   return keyValue ? keyValue[2] : keyValue;
 };
-
 var settings = {
   tinymce: {
     theme: 'oxide'
@@ -216,36 +191,34 @@ var settings = {
     borderColor: 'rgba(255, 255, 255, 0.8)'
   }
 };
+
 /* -------------------------- Chart Initialization -------------------------- */
 
 var newChart = function newChart(chart, config) {
   var ctx = chart.getContext('2d');
   return new window.Chart(ctx, config);
 };
-/* ---------------------------------- Store --------------------------------- */
 
+/* ---------------------------------- Store --------------------------------- */
 
 var getItemFromStore = function getItemFromStore(key, defaultValue) {
   var store = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : localStorage;
-
   try {
     return JSON.parse(store.getItem(key)) || defaultValue;
   } catch (_unused) {
     return store.getItem(key) || defaultValue;
   }
 };
-
 var setItemToStore = function setItemToStore(key, payload) {
   var store = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : localStorage;
   return store.setItem(key, payload);
 };
-
 var getStoreSpace = function getStoreSpace() {
   var store = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : localStorage;
   return parseFloat((escape(encodeURIComponent(JSON.stringify(store))).length / (1024 * 1024)).toFixed(2));
 };
-/* get Dates between */
 
+/* get Dates between */
 
 var getDates = function getDates(startDate, endDate) {
   var interval = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1000 * 60 * 60 * 24;
@@ -257,39 +230,31 @@ var getDates = function getDates(startDate, endDate) {
     return new Date(startDate.valueOf() + interval * i);
   });
 };
-
 var getPastDates = function getPastDates(duration) {
   var days;
-
   switch (duration) {
     case 'week':
       days = 7;
       break;
-
     case 'month':
       days = 30;
       break;
-
     case 'year':
       days = 365;
       break;
-
     default:
       days = duration;
   }
-
   var date = new Date();
   var endDate = date;
   var startDate = new Date(new Date().setDate(date.getDate() - (days - 1)));
   return getDates(startDate, endDate);
 };
+
 /* Get Random Number */
-
-
 var getRandomNumber = function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 };
-
 var utils = {
   docReady: docReady,
   breakpoints: breakpoints,
@@ -318,17 +283,18 @@ var utils = {
   getDates: getDates,
   getPastDates: getPastDates,
   getRandomNumber: getRandomNumber,
-  removeClass: removeClass
+  removeClass: removeClass,
+  getSystemTheme: getSystemTheme,
+  isDark: isDark
 };
+
 /* -------------------------------------------------------------------------- */
-
 /*                                  Detector                                  */
-
 /* -------------------------------------------------------------------------- */
 
 var detectorInit = function detectorInit() {
   var _window = window,
-      is = _window.is;
+    is = _window.is;
   var html = document.querySelector('html');
   is.opera() && addClass(html, 'opera');
   is.mobile() && addClass(html, 'mobile');
@@ -344,19 +310,16 @@ var detectorInit = function detectorInit() {
   is.windows() && addClass(html, 'windows');
   navigator.userAgent.match('CriOS') && addClass(html, 'chrome');
 };
+
 /*-----------------------------------------------
 |   DomNode
 -----------------------------------------------*/
-
-
 var DomNode = /*#__PURE__*/function () {
   function DomNode(node) {
     _classCallCheck(this, DomNode);
-
     this.node = node;
   }
-
-  _createClass(DomNode, [{
+  return _createClass(DomNode, [{
     key: "addClass",
     value: function addClass(className) {
       this.isValidNode() && this.node.classList.add(className);
@@ -386,7 +349,6 @@ var DomNode = /*#__PURE__*/function () {
           return this.node.dataset[this.camelize(key)];
         }
       }
-
       return null;
     }
   }, {
@@ -418,8 +380,9 @@ var DomNode = /*#__PURE__*/function () {
     key: "isValidNode",
     value: function isValidNode() {
       return !!this.node;
-    } // eslint-disable-next-line class-methods-use-this
+    }
 
+    // eslint-disable-next-line class-methods-use-this
   }, {
     key: "camelize",
     value: function camelize(str) {
@@ -429,21 +392,632 @@ var DomNode = /*#__PURE__*/function () {
       return "".concat(text.substr(0, 1).toLowerCase()).concat(text.substr(1));
     }
   }]);
-
-  return DomNode;
 }();
-/* -------------------------------------------------------------------------- */
+var orders = [{
+  id: 1,
+  dropdownId: 'order-dropdown-1',
+  orderId: '#181',
+  mailLink: 'mailto:ricky@example.com',
+  name: 'Ricky Antony',
+  email: 'ricky@example.com',
+  date: '20/04/2019',
+  address: 'Ricky Antony, 2392 Main Avenue, Penasauka, New Jersey 02149',
+  shippingType: 'Via Flat Rate',
+  status: 'Completed',
+  badge: {
+    type: 'success',
+    icon: 'fas fa-check'
+  },
+  amount: '$99'
+}, {
+  id: 2,
+  dropdownId: 'order-dropdown-2',
+  orderId: '#182',
+  mailLink: 'mailto:kin@example.com',
+  name: 'Kin Rossow',
+  email: 'kin@example.com',
+  date: '20/04/2019',
+  address: 'Kin Rossow, 1 Hollywood Blvd,Beverly Hills, California 90210',
+  shippingType: 'Via Free Shipping',
+  status: 'Processing',
+  badge: {
+    type: 'primary',
+    icon: 'fas fa-redo'
+  },
+  amount: '$120'
+}, {
+  id: 3,
+  dropdownId: 'order-dropdown-3',
+  orderId: '#183',
+  mailLink: 'mailto:merry@example.com',
+  name: 'Merry Diana',
+  email: 'merry@example.com',
+  date: '30/04/2019',
+  address: 'Merry Diana, 1 Infinite Loop, Cupertino, California 90210',
+  shippingType: 'Via Link Road',
+  status: 'On Hold',
+  badge: {
+    type: 'secondary',
+    icon: 'fas fa-ban'
+  },
+  amount: '$70'
+}, {
+  id: 4,
+  dropdownId: 'order-dropdown-4',
+  orderId: '#184',
+  mailLink: 'mailto:bucky@example.com',
+  name: 'Bucky Robert',
+  email: 'bucky@example.com',
+  date: '30/04/2019',
+  address: 'Bucky Robert, 1 Infinite Loop, Cupertino, California 90210',
+  shippingType: 'Via Free Shipping',
+  status: 'Pending',
+  badge: {
+    type: 'warning',
+    icon: 'fas fa-stream'
+  },
+  amount: '$92'
+}, {
+  id: 5,
+  dropdownId: 'order-dropdown-5',
+  orderId: '#185',
+  mailLink: 'mailto:rocky@example.com',
+  name: 'Rocky Zampa',
+  email: 'rocky@example.com',
+  date: '30/04/2019',
+  address: 'Rocky Zampa, 1 Infinite Loop, Cupertino, California 90210',
+  shippingType: 'Via Free Road',
+  status: 'On Hold',
+  badge: {
+    type: 'secondary',
+    icon: 'fas fa-ban'
+  },
+  amount: '$120'
+}, {
+  id: 6,
+  dropdownId: 'order-dropdown-6',
+  orderId: '#186',
+  mailLink: 'mailto:ricky@example.com',
+  name: 'Ricky John',
+  email: 'ricky@example.com',
+  date: '30/04/2019',
+  address: 'Ricky John, 1 Infinite Loop, Cupertino, California 90210',
+  shippingType: 'Via Free Shipping',
+  status: 'Processing',
+  badge: {
+    type: 'primary',
+    icon: 'fas fa-redo'
+  },
+  amount: '$145'
+}, {
+  id: 7,
+  dropdownId: 'order-dropdown-7',
+  orderId: '#187',
+  mailLink: 'mailto:cristofer@example.com',
+  name: 'Cristofer Henric',
+  email: 'cristofer@example.com',
+  date: '30/04/2019',
+  address: 'Cristofer Henric, 1 Infinite Loop, Cupertino, California 90210',
+  shippingType: 'Via Flat Rate',
+  status: 'Completed',
+  badge: {
+    type: 'success',
+    icon: 'fas fa-check'
+  },
+  amount: '$55'
+}, {
+  id: 8,
+  dropdownId: 'order-dropdown-8',
+  orderId: '#188',
+  mailLink: 'mailto:lee@example.com',
+  name: 'Brate Lee',
+  email: 'lee@example.com',
+  date: '29/04/2019',
+  address: 'Brate Lee, 1 Infinite Loop, Cupertino, California 90210',
+  shippingType: 'Via Link Road',
+  status: 'On Hold',
+  badge: {
+    type: 'secondary',
+    icon: 'fas fa-ban'
+  },
+  amount: '$90'
+}, {
+  id: 9,
+  dropdownId: 'order-dropdown-9',
+  orderId: '#189',
+  mailLink: 'mailto:Stephenson@example.com',
+  name: 'Thomas Stephenson',
+  email: 'Stephenson@example.com',
+  date: '29/04/2019',
+  address: 'Thomas Stephenson, 116 Ballifeary Road, Bamff',
+  shippingType: 'Via Flat Rate',
+  status: 'Processing',
+  badge: {
+    type: 'primary',
+    icon: 'fas fa-redo'
+  },
+  amount: '$52'
+}, {
+  id: 10,
+  dropdownId: 'order-dropdown-10',
+  orderId: '#190',
+  mailLink: 'mailto:eviewsing@example.com',
+  name: 'Evie Singh',
+  email: 'eviewsing@example.com',
+  date: '29/04/2019',
+  address: 'Evie Singh, 54 Castledore Road, Tunstead',
+  shippingType: 'Via Flat Rate',
+  status: 'Completed',
+  badge: {
+    type: 'success',
+    icon: 'fas fa-check'
+  },
+  amount: '$90'
+}, {
+  id: 11,
+  dropdownId: 'order-dropdown-11',
+  orderId: '#191',
+  mailLink: 'mailto:peter@example.com',
+  name: 'David Peters',
+  email: 'peter@example.com',
+  date: '29/04/2019',
+  address: 'David Peters, Rhyd Y Groes, Rhosgoch, LL66 0AT',
+  shippingType: 'Via Link Road',
+  status: 'Completed',
+  badge: {
+    type: 'success',
+    icon: 'fas fa-check'
+  },
+  amount: '$69'
+}, {
+  id: 12,
+  dropdownId: 'order-dropdown-12',
+  orderId: '#192',
+  mailLink: 'mailto:jennifer@example.com',
+  name: 'Jennifer Johnson',
+  email: 'jennifer@example.com',
+  date: '28/04/2019',
+  address: 'Jennifer Johnson, Rhyd Y Groes, Rhosgoch, LL66 0AT',
+  shippingType: 'Via Flat Rate',
+  status: 'Processing',
+  badge: {
+    type: 'primary',
+    icon: 'fas fa-redo'
+  },
+  amount: '$112'
+}, {
+  id: 13,
+  dropdownId: 'order-dropdown-13',
+  orderId: '#193',
+  mailLink: 'mailto:okuneva@example.com',
+  name: ' Demarcus Okuneva',
+  email: 'okuneva@example.com',
+  date: '28/04/2019',
+  address: ' Demarcus Okuneva, 90555 Upton Drive Jeffreyview, UT 08771',
+  shippingType: 'Via Flat Rate',
+  status: 'Completed',
+  badge: {
+    type: 'success',
+    icon: 'fas fa-check'
+  },
+  amount: '$99'
+}, {
+  id: 14,
+  dropdownId: 'order-dropdown-14',
+  orderId: '#194',
+  mailLink: 'mailto:simeon@example.com',
+  name: 'Simeon Harber',
+  email: 'simeon@example.com',
+  date: '27/04/2019',
+  address: 'Simeon Harber, 702 Kunde Plain Apt. 634 East Bridgetview, HI 13134-1862',
+  shippingType: 'Via Free Shipping',
+  status: 'On Hold',
+  badge: {
+    type: 'secondary',
+    icon: 'fas fa-ban'
+  },
+  amount: '$129'
+}, {
+  id: 15,
+  dropdownId: 'order-dropdown-15',
+  orderId: '#195',
+  mailLink: 'mailto:lavon@example.com',
+  name: 'Lavon Haley',
+  email: 'lavon@example.com',
+  date: '27/04/2019',
+  address: 'Lavon Haley, 30998 Adonis Locks McGlynnside, ID 27241',
+  shippingType: 'Via Free Shipping',
+  status: 'Pending',
+  badge: {
+    type: 'warning',
+    icon: 'fas fa-stream'
+  },
+  amount: '$70'
+}, {
+  id: 16,
+  dropdownId: 'order-dropdown-16',
+  orderId: '#196',
+  mailLink: 'mailto:ashley@example.com',
+  name: 'Ashley Kirlin',
+  email: 'ashley@example.com',
+  date: '26/04/2019',
+  address: 'Ashley Kirlin, 43304 Prosacco Shore South Dejuanfurt, MO 18623-0505',
+  shippingType: 'Via Link Road',
+  status: 'Processing',
+  badge: {
+    type: 'primary',
+    icon: 'fas fa-redo'
+  },
+  amount: '$39'
+}, {
+  id: 17,
+  dropdownId: 'order-dropdown-17',
+  orderId: '#197',
+  mailLink: 'mailto:johnnie@example.com',
+  name: 'Johnnie Considine',
+  email: 'johnnie@example.com',
+  date: '26/04/2019',
+  address: 'Johnnie Considine, 6008 Hermann Points Suite 294 Hansenville, TN 14210',
+  shippingType: 'Via Flat Rate',
+  status: 'Pending',
+  badge: {
+    type: 'warning',
+    icon: 'fas fa-stream'
+  },
+  amount: '$70'
+}, {
+  id: 18,
+  dropdownId: 'order-dropdown-18',
+  orderId: '#198',
+  mailLink: 'mailto:trace@example.com',
+  name: 'Trace Farrell',
+  email: 'trace@example.com',
+  date: '26/04/2019',
+  address: 'Trace Farrell, 431 Steuber Mews Apt. 252 Germanland, AK 25882',
+  shippingType: 'Via Free Shipping',
+  status: 'Completed',
+  badge: {
+    type: 'success',
+    icon: 'fas fa-check'
+  },
+  amount: '$70'
+}, {
+  id: 19,
+  dropdownId: 'order-dropdown-19',
+  orderId: '#199',
+  mailLink: 'mailto:nienow@example.com',
+  name: 'Estell Nienow',
+  email: 'nienow@example.com',
+  date: '26/04/2019',
+  address: 'Estell Nienow, 4167 Laverna Manor Marysemouth, NV 74590',
+  shippingType: 'Via Free Shipping',
+  status: 'Completed',
+  badge: {
+    type: 'success',
+    icon: 'fas fa-check'
+  },
+  amount: '$59'
+}, {
+  id: 20,
+  dropdownId: 'order-dropdown-20',
+  orderId: '#200',
+  mailLink: 'mailto:howe@example.com',
+  name: 'Daisha Howe',
+  email: 'howe@example.com',
+  date: '25/04/2019',
+  address: 'Daisha Howe, 829 Lavonne Valley Apt. 074 Stehrfort, RI 77914-0379',
+  shippingType: 'Via Free Shipping',
+  status: 'Completed',
+  badge: {
+    type: 'success',
+    icon: 'fas fa-check'
+  },
+  amount: '$39'
+}, {
+  id: 21,
+  dropdownId: 'order-dropdown-21',
+  orderId: '#201',
+  mailLink: 'mailto:haley@example.com',
+  name: 'Miles Haley',
+  email: 'haley@example.com',
+  date: '24/04/2019',
+  address: 'Miles Haley, 53150 Thad Squares Apt. 263 Archibaldfort, MO 00837',
+  shippingType: 'Via Flat Rate',
+  status: 'Completed',
+  badge: {
+    type: 'success',
+    icon: 'fas fa-check'
+  },
+  amount: '$55'
+}, {
+  id: 22,
+  dropdownId: 'order-dropdown-22',
+  orderId: '#202',
+  mailLink: 'mailto:watsica@example.com',
+  name: 'Brenda Watsica',
+  email: 'watsica@example.com',
+  date: '24/04/2019',
+  address: "Brenda Watsica, 9198 O'Kon Harbors Morarborough, IA 75409-7383",
+  shippingType: 'Via Free Shipping',
+  status: 'Completed',
+  badge: {
+    type: 'success',
+    icon: 'fas fa-check'
+  },
+  amount: '$89'
+}, {
+  id: 23,
+  dropdownId: 'order-dropdown-23',
+  orderId: '#203',
+  mailLink: 'mailto:ellie@example.com',
+  name: "Ellie O'Reilly",
+  email: 'ellie@example.com',
+  date: '24/04/2019',
+  address: "Ellie O'Reilly, 1478 Kaitlin Haven Apt. 061 Lake Muhammadmouth, SC 35848",
+  shippingType: 'Via Free Shipping',
+  status: 'Completed',
+  badge: {
+    type: 'success',
+    icon: 'fas fa-check'
+  },
+  amount: '$47'
+}, {
+  id: 24,
+  dropdownId: 'order-dropdown-24',
+  orderId: '#204',
+  mailLink: 'mailto:garry@example.com',
+  name: 'Garry Brainstrow',
+  email: 'garry@example.com',
+  date: '23/04/2019',
+  address: 'Garry Brainstrow, 13572 Kurt Mews South Merritt, IA 52491',
+  shippingType: 'Via Free Shipping',
+  status: 'Completed',
+  badge: {
+    type: 'success',
+    icon: 'fas fa-check'
+  },
+  amount: '$139'
+}, {
+  id: 25,
+  dropdownId: 'order-dropdown-25',
+  orderId: '#205',
+  mailLink: 'mailto:estell@example.com',
+  name: 'Estell Pollich',
+  email: 'estell@example.com',
+  date: '23/04/2019',
+  address: 'Estell Pollich, 13572 Kurt Mews South Merritt, IA 52491',
+  shippingType: 'Via Free Shipping',
+  status: 'On Hold',
+  badge: {
+    type: 'secondary',
+    icon: 'fas fa-ban'
+  },
+  amount: '$49'
+}, {
+  id: 26,
+  dropdownId: 'order-dropdown-26',
+  orderId: '#206',
+  mailLink: 'mailto:ara@example.com',
+  name: 'Ara Mueller',
+  email: 'ara@example.com',
+  date: '23/04/2019',
+  address: 'Ara Mueller, 91979 Kohler Place Waelchiborough, CT 41291',
+  shippingType: 'Via Flat Rate',
+  status: 'On Hold',
+  badge: {
+    type: 'secondary',
+    icon: 'fas fa-ban'
+  },
+  amount: '$19'
+}, {
+  id: 27,
+  dropdownId: 'order-dropdown-27',
+  orderId: '#207',
+  mailLink: 'mailto:blick@example.com',
+  name: 'Lucienne Blick',
+  email: 'blick@example.com',
+  date: '23/04/2019',
+  address: 'Lucienne Blick, 6757 Giuseppe Meadows Geraldinemouth, MO 48819-4970',
+  shippingType: 'Via Flat Rate',
+  status: 'On Hold',
+  badge: {
+    type: 'secondary',
+    icon: 'fas fa-ban'
+  },
+  amount: '$59'
+}, {
+  id: 28,
+  dropdownId: 'order-dropdown-28',
+  orderId: '#208',
+  mailLink: 'mailto:haag@example.com',
+  name: 'Laverne Haag',
+  email: 'haag@example.com',
+  date: '22/04/2019',
+  address: 'Laverne Haag, 2327 Kaylee Mill East Citlalli, AZ 89582-3143',
+  shippingType: 'Via Flat Rate',
+  status: 'On Hold',
+  badge: {
+    type: 'secondary',
+    icon: 'fas fa-ban'
+  },
+  amount: '$49'
+}, {
+  id: 29,
+  dropdownId: 'order-dropdown-29',
+  orderId: '#209',
+  mailLink: 'mailto:bednar@example.com',
+  name: 'Brandon Bednar',
+  email: 'bednar@example.com',
+  date: '22/04/2019',
+  address: 'Brandon Bednar, 25156 Isaac Crossing Apt. 810 Lonborough, CO 83774-5999',
+  shippingType: 'Via Flat Rate',
+  status: 'On Hold',
+  badge: {
+    type: 'secondary',
+    icon: 'fas fa-ban'
+  },
+  amount: '$39'
+}, {
+  id: 30,
+  dropdownId: 'order-dropdown-30',
+  orderId: '#210',
+  mailLink: 'mailto:dimitri@example.com',
+  name: 'Dimitri Boehm',
+  email: 'dimitri@example.com',
+  date: '23/04/2019',
+  address: 'Dimitri Boehm, 71603 Wolff Plains Apt. 885 Johnstonton, MI 01581',
+  shippingType: 'Via Flat Rate',
+  status: 'On Hold',
+  badge: {
+    type: 'secondary',
+    icon: 'fas fa-ban'
+  },
+  amount: '$111'
+}];
+var advanceAjaxTableInit = function advanceAjaxTableInit() {
+  var togglePaginationButtonDisable = function togglePaginationButtonDisable(button, disabled) {
+    var updatedButton = button;
+    updatedButton.disabled = disabled;
+    updatedButton.classList[disabled ? 'add' : 'remove']('disabled');
+  };
+  // Selectors
+  var table = document.getElementById('advanceAjaxTable');
+  if (table) {
+    var options = {
+      page: 10,
+      pagination: {
+        item: "<li><button class='page' type='button'></button></li>"
+      },
+      item: function item(values) {
+        var orderId = values.orderId,
+          id = values.id,
+          name = values.name,
+          email = values.email,
+          date = values.date,
+          address = values.address,
+          shippingType = values.shippingType,
+          status = values.status,
+          badge = values.badge,
+          amount = values.amount;
+        return "\n          <tr class=\"btn-reveal-trigger\">\n            <td class=\"order py-2 align-middle white-space-nowrap\">\n              <a href=\"https://prium.github.io/falcon/v3.16.0/app/e-commerce/orders/order-details.html\">\n                <strong>".concat(orderId, "</strong>\n              </a>\n              by\n              <strong>").concat(name, "</strong>\n              <br />\n              <a href=\"mailto:").concat(email, "\">").concat(email, "</a>\n            </td>\n            <td class=\"py-2 align-middle\">\n              ").concat(date, "\n            </td>\n            <td class=\"py-2 align-middle white-space-nowrap\">\n              ").concat(address, "\n              <p class=\"mb-0 text-500\">").concat(shippingType, "</p>\n            </td>\n            <td class=\"py-2 align-middle text-center fs-9 white-space-nowrap\">\n              <span class=\"badge rounded-pill d-block badge-subtle-").concat(badge.type, "\">\n                ").concat(status, "\n                <span class=\"ms-1 ").concat(badge.icon, "\" data-fa-transform=\"shrink-2\"></span>\n              </span>\n            </td>\n            <td class=\"py-2 align-middle text-end fs-9 fw-medium\">\n              ").concat(amount, "\n            </td>\n            <td class=\"py-2 align-middle white-space-nowrap text-end\">\n              <div class=\"dropstart font-sans-serif position-static d-inline-block\">\n                <button class=\"btn btn-link text-600 btn-sm dropdown-toggle btn-reveal\" type='button' id=\"order-dropdown-").concat(id, "\" data-bs-toggle=\"dropdown\" data-boundary=\"window\" aria-haspopup=\"true\" aria-expanded=\"false\" data-bs-reference=\"parent\">\n                  <span class=\"fas fa-ellipsis-h fs-10\"></span>\n                </button>\n                <div class=\"dropdown-menu dropdown-menu-end border py-2\" aria-labelledby=\"order-dropdown-").concat(id, "\">\n                  <a href=\"#!\" class=\"dropdown-item\">View</a>\n                  <a href=\"#!\" class=\"dropdown-item\">Edit</a>\n                  <a href=\"#!\" class=\"dropdown-item\">Refund</a>\n                  <div class\"dropdown-divider\"></div>\n                  <a href=\"#!\" class=\"dropdown-item text-warning\">Archive</a>\n                  <a href=\"#!\" class=\"dropdown-item text-warning\">Archive</a>\n                </div>\n              </div>\n            </td>\n          </tr>\n        ");
+      }
+    };
+    var paginationButtonNext = table.querySelector('[data-list-pagination="next"]');
+    var paginationButtonPrev = table.querySelector('[data-list-pagination="prev"]');
+    var viewAll = table.querySelector('[data-list-view="*"]');
+    var viewLess = table.querySelector('[data-list-view="less"]');
+    var listInfo = table.querySelector('[data-list-info]');
+    var listFilter = document.querySelector('[data-list-filter]');
+    var orderList = new window.List(table, options, orders);
 
+    // Fallback
+    orderList.on('updated', function (item) {
+      var fallback = table.querySelector('.fallback') || document.getElementById(options.fallback);
+      if (fallback) {
+        if (item.matchingItems.length === 0) {
+          fallback.classList.remove('d-none');
+        } else {
+          fallback.classList.add('d-none');
+        }
+      }
+    });
+    var totalItem = orderList.items.length;
+    var itemsPerPage = orderList.page;
+    var btnDropdownClose = orderList.listContainer.querySelector('.btn-close');
+    var pageQuantity = Math.ceil(totalItem / itemsPerPage);
+    var numberOfcurrentItems = orderList.visibleItems.length;
+    var pageCount = 1;
+    btnDropdownClose && btnDropdownClose.addEventListener('search.close', function () {
+      return orderList.fuzzySearch('');
+    });
+    var updateListControls = function updateListControls() {
+      listInfo && (listInfo.innerHTML = "".concat(orderList.i, " to ").concat(numberOfcurrentItems, " of ").concat(totalItem));
+      paginationButtonPrev && togglePaginationButtonDisable(paginationButtonPrev, pageCount === 1);
+      if (paginationButtonNext) {
+        togglePaginationButtonDisable(paginationButtonNext, pageCount === pageQuantity);
+      }
+      if (pageCount > 1 && pageCount < pageQuantity) {
+        togglePaginationButtonDisable(paginationButtonNext, false);
+        togglePaginationButtonDisable(paginationButtonPrev, false);
+      }
+    };
+    updateListControls();
+    if (paginationButtonNext) {
+      paginationButtonNext.addEventListener('click', function (e) {
+        e.preventDefault();
+        pageCount += 1;
+        var nextInitialIndex = orderList.i + itemsPerPage;
+        nextInitialIndex <= orderList.size() && orderList.show(nextInitialIndex, itemsPerPage);
+        numberOfcurrentItems += orderList.visibleItems.length;
+        updateListControls();
+      });
+    }
+    if (paginationButtonPrev) {
+      paginationButtonPrev.addEventListener('click', function (e) {
+        e.preventDefault();
+        pageCount -= 1;
+        numberOfcurrentItems -= orderList.visibleItems.length;
+        var prevItem = orderList.i - itemsPerPage;
+        prevItem > 0 && orderList.show(prevItem, itemsPerPage);
+        updateListControls();
+      });
+    }
+    var toggleViewBtn = function toggleViewBtn() {
+      viewLess.classList.toggle('d-none');
+      viewAll.classList.toggle('d-none');
+    };
+    if (viewAll) {
+      viewAll.addEventListener('click', function () {
+        orderList.show(1, totalItem);
+        pageQuantity = 1;
+        pageCount = 1;
+        numberOfcurrentItems = totalItem;
+        updateListControls();
+        toggleViewBtn();
+      });
+    }
+    if (viewLess) {
+      viewLess.addEventListener('click', function () {
+        orderList.show(1, itemsPerPage);
+        pageQuantity = Math.ceil(totalItem / itemsPerPage);
+        pageCount = 1;
+        numberOfcurrentItems = orderList.visibleItems.length;
+        updateListControls();
+        toggleViewBtn();
+      });
+    }
+    if (options.pagination) {
+      table.querySelector('.pagination').addEventListener('click', function (e) {
+        if (e.target.classList[0] === 'page') {
+          pageCount = Number(e.target.innerText);
+          updateListControls();
+        }
+      });
+    }
+    if (options.filter) {
+      var key = options.filter.key;
+      listFilter.addEventListener('change', function (e) {
+        orderList.filter(function (item) {
+          if (e.target.value === '') {
+            return true;
+          }
+          return item.values()[key].toLowerCase().includes(e.target.value.toLowerCase());
+        });
+      });
+    }
+  }
+};
+
+/* -------------------------------------------------------------------------- */
 /*                                  Anchor JS                                 */
-
 /* -------------------------------------------------------------------------- */
-
 
 var anchors = new window.AnchorJS();
 anchors.options = {
   icon: '#'
 };
 anchors.add('[data-anchor]');
+
 /*-----------------------------------------------
 |   Bottom Bar Control
 -----------------------------------------------*/
@@ -451,13 +1025,11 @@ anchors.add('[data-anchor]');
 var bottomBarInit = function bottomBarInit() {
   var bottomBars = document.querySelectorAll('[data-bottom-bar]');
   var navbarButtons = [document.querySelector('[data-bs-target="#navbarVerticalCollapse"]'), document.querySelector('[data-bs-target="#navbarStandard"]')];
-
   var isElementInViewport = function isElementInViewport(el) {
     var offsetTop = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
     var rect = el.getBoundingClientRect();
     return rect.bottom > 0 && rect.top > offsetTop && rect.right > 0 && rect.left < (window.innerWidth || document.documentElement.clientWidth) && rect.top < (window.innerHeight || document.documentElement.clientHeight);
   };
-
   if (bottomBars.length) {
     bottomBars.forEach(function (bar) {
       // get options
@@ -467,15 +1039,15 @@ var bottomBarInit = function bottomBarInit() {
         offsetTop: 0,
         breakPoint: 'lg'
       };
-
       var _window$_$merge = window._.merge(defaultOptions, barOptions),
-          target = _window$_$merge.target,
-          offsetTop = _window$_$merge.offsetTop,
-          breakPoint = _window$_$merge.breakPoint; // select target
+        target = _window$_$merge.target,
+        offsetTop = _window$_$merge.offsetTop,
+        breakPoint = _window$_$merge.breakPoint;
 
+      // select target
+      var targetEl = document.getElementById(target);
 
-      var targetEl = document.getElementById(target); // handle Bottombar
-
+      // handle Bottombar
       var toggleBottomBar = function toggleBottomBar() {
         if (window.matchMedia("(max-width: ".concat(utils.breakpoints[breakPoint], "px)")).matches) {
           if (!isElementInViewport(targetEl, offsetTop)) {
@@ -485,9 +1057,7 @@ var bottomBarInit = function bottomBarInit() {
           }
         }
       };
-
       window.addEventListener('scroll', toggleBottomBar);
-
       var toggleBottomBarOnNavbarCollapse = function toggleBottomBarOnNavbarCollapse(el) {
         if (!utils.hasClass(el, 'collapsed')) {
           utils.addClass(bar, 'hide');
@@ -495,7 +1065,6 @@ var bottomBarInit = function bottomBarInit() {
           utils.removeClass(bar, 'hide');
         }
       };
-
       navbarButtons.forEach(function (btn) {
         return btn && btn.addEventListener('click', function () {
           return toggleBottomBarOnNavbarCollapse(btn);
@@ -504,22 +1073,24 @@ var bottomBarInit = function bottomBarInit() {
     });
   }
 };
+
 /*-----------------------------------------------
 |   Bulk Select
 -----------------------------------------------*/
 
-
+var elementMap = new Map();
 var BulkSelect = /*#__PURE__*/function () {
   function BulkSelect(element, option) {
     _classCallCheck(this, BulkSelect);
-
-    this.element = new DomNode(element);
+    this.element = element;
     this.option = _objectSpread({
       displayNoneClassName: 'd-none'
     }, option);
+    elementMap.set(this.element, this);
   }
 
-  _createClass(BulkSelect, [{
+  // Static
+  return _createClass(BulkSelect, [{
     key: "init",
     value: function init() {
       this.attachNodes();
@@ -527,85 +1098,86 @@ var BulkSelect = /*#__PURE__*/function () {
       this.clickRowCheckbox();
     }
   }, {
+    key: "getSelectedRows",
+    value: function getSelectedRows() {
+      return Array.from(this.bulkSelectRows).filter(function (row) {
+        return row.checked;
+      }).map(function (row) {
+        return utils.getData(row, 'bulk-select-row');
+      });
+    }
+  }, {
     key: "attachNodes",
     value: function attachNodes() {
-      var _this$element$data = this.element.data('bulk-select'),
-          body = _this$element$data.body,
-          actions = _this$element$data.actions,
-          replacedElement = _this$element$data.replacedElement;
-
+      var _utils$getData = utils.getData(this.element, 'bulk-select'),
+        body = _utils$getData.body,
+        actions = _utils$getData.actions,
+        replacedElement = _utils$getData.replacedElement;
       this.actions = new DomNode(document.getElementById(actions));
       this.replacedElement = new DomNode(document.getElementById(replacedElement));
       this.bulkSelectRows = document.getElementById(body).querySelectorAll('[data-bulk-select-row]');
     }
   }, {
+    key: "attachRowNodes",
+    value: function attachRowNodes(elms) {
+      this.bulkSelectRows = elms;
+    }
+  }, {
     key: "clickBulkCheckbox",
     value: function clickBulkCheckbox() {
       var _this = this;
-
       // Handle click event in bulk checkbox
-      this.element.on('click', function () {
-        if (_this.element.attr('indeterminate') === 'indeterminate') {
+      this.element.addEventListener('click', function () {
+        if (_this.element.indeterminate === 'indeterminate') {
           _this.actions.addClass(_this.option.displayNoneClassName);
-
           _this.replacedElement.removeClass(_this.option.displayNoneClassName);
-
           _this.removeBulkCheck();
-
           _this.bulkSelectRows.forEach(function (el) {
             var rowCheck = new DomNode(el);
             rowCheck.setProp('checked', false);
             rowCheck.setAttribute('checked', false);
           });
-
           return;
         }
-
         _this.toggleDisplay();
-
         _this.bulkSelectRows.forEach(function (el) {
-          var rowCheck = new DomNode(el);
-          rowCheck.setProp('checked', _this.element.attr('checked'));
-          rowCheck.setAttribute('checked', _this.element.attr('checked'));
+          el.checked = _this.element.checked;
         });
+        if (_this.element.checked) {
+          _this.actions.removeClass(_this.option.displayNoneClassName);
+          _this.replacedElement.addClass(_this.option.displayNoneClassName);
+        } else {
+          _this.actions.addClass(_this.option.displayNoneClassName);
+          _this.replacedElement.removeClass(_this.option.displayNoneClassName);
+        }
       });
     }
   }, {
     key: "clickRowCheckbox",
     value: function clickRowCheckbox() {
       var _this2 = this;
-
       // Handle click event in checkbox of each row
       this.bulkSelectRows.forEach(function (el) {
         var rowCheck = new DomNode(el);
         rowCheck.on('click', function () {
-          if (_this2.element.attr('indeterminate') !== 'indeterminate') {
-            _this2.element.setProp('indeterminate', true);
-
+          if (_this2.element.indeterminate !== 'indeterminate') {
+            _this2.element.indeterminate = true;
             _this2.element.setAttribute('indeterminate', 'indeterminate');
-
-            _this2.element.setProp('checked', true);
-
+            _this2.element.checked = true;
             _this2.element.setAttribute('checked', true);
-
             _this2.actions.removeClass(_this2.option.displayNoneClassName);
-
             _this2.replacedElement.addClass(_this2.option.displayNoneClassName);
           }
-
           if (_toConsumableArray(_this2.bulkSelectRows).every(function (element) {
             return element.checked;
           })) {
-            _this2.element.setProp('indeterminate', false);
-
+            _this2.element.indeterminate = false;
             _this2.element.setAttribute('indeterminate', false);
           }
-
           if (_toConsumableArray(_this2.bulkSelectRows).every(function (element) {
             return !element.checked;
           })) {
             _this2.removeBulkCheck();
-
             _this2.toggleDisplay();
           }
         });
@@ -614,9 +1186,9 @@ var BulkSelect = /*#__PURE__*/function () {
   }, {
     key: "removeBulkCheck",
     value: function removeBulkCheck() {
-      this.element.setProp('indeterminate', false);
+      this.element.indeterminate = false;
       this.element.removeAttribute('indeterminate');
-      this.element.setProp('checked', false);
+      this.element.checked = false;
       this.element.setAttribute('checked', false);
     }
   }, {
@@ -625,26 +1197,40 @@ var BulkSelect = /*#__PURE__*/function () {
       this.actions.toggleClass(this.option.displayNoneClassName);
       this.replacedElement.toggleClass(this.option.displayNoneClassName);
     }
+  }], [{
+    key: "getInstance",
+    value: function getInstance(element) {
+      if (elementMap.has(element)) {
+        return elementMap.get(element);
+      }
+      return null;
+    }
   }]);
-
-  return BulkSelect;
 }();
-
 function bulkSelectInit() {
   var bulkSelects = document.querySelectorAll('[data-bulk-select');
-
   if (bulkSelects.length) {
     bulkSelects.forEach(function (el) {
       var bulkSelect = new BulkSelect(el);
       bulkSelect.init();
     });
   }
+  var selectedRowsBtn = document.querySelector('[data-selected-rows]');
+  var selectedRows = document.getElementById('selectedRows');
+  if (selectedRowsBtn) {
+    var bulkSelectEl = document.getElementById('bulk-select-example');
+    var bulkSelectInstance = window.BulkSelect.getInstance(bulkSelectEl);
+    selectedRowsBtn.addEventListener('click', function () {
+      console.log(bulkSelectInstance);
+      selectedRows.innerHTML = JSON.stringify(bulkSelectInstance.getSelectedRows(), undefined, 2);
+    });
+  }
 }
+window.BulkSelect = BulkSelect;
+
 /*-----------------------------------------------
 |   Chat
 -----------------------------------------------*/
-
-
 var chatInit = function chatInit() {
   var Events = {
     CLICK: 'click',
@@ -676,25 +1262,26 @@ var chatInit = function chatInit() {
   var $chatContact = document.querySelectorAll(Selector.CHAT_CONTACT);
   var $chatEmojiarea = document.querySelector(Selector.CHAT_EMOJIAREA);
   var $btnSend = document.querySelector(Selector.BTN_SEND);
-  var $currentChatArea = document.querySelector(Selector.CHAT_CONTENT_SCROLL_AREA); // Set scrollbar position
+  var $currentChatArea = document.querySelector(Selector.CHAT_CONTENT_SCROLL_AREA);
 
+  // Set scrollbar position
   var setScrollbarPosition = function setScrollbarPosition($chatArea) {
     if ($chatArea) {
       var scrollArea = $chatArea;
       scrollArea.scrollTop = $chatArea.scrollHeight;
     }
   };
-
   setTimeout(function () {
     setScrollbarPosition($currentChatArea);
   }, 700);
   document.querySelectorAll(Selector.CHAT_CONTACT).forEach(function (el) {
     el.addEventListener(Events.CLICK, function (e) {
       var $this = e.currentTarget;
-      $this.classList.add('active'); // Hide contact list sidebar on responsive
+      $this.classList.add('active');
+      // Hide contact list sidebar on responsive
+      window.innerWidth < 768 && !e.target.classList.contains('hover-actions') && ($chatSidebar.style.left = '-100%');
 
-      window.innerWidth < 768 && !e.target.classList.contains('hover-actions') && ($chatSidebar.style.left = '-100%'); // Remove unread-message class when read
-
+      // Remove unread-message class when read
       $this.classList.contains(ClassName.UNREAD_MESSAGE) && $this.classList.remove(ClassName.UNREAD_MESSAGE);
     });
   });
@@ -705,27 +1292,26 @@ var chatInit = function chatInit() {
       var TargetChatArea = document.querySelector(Selector.CHAT_CONTENT_SCROLL_AREA_ACTIVE);
       setScrollbarPosition(TargetChatArea);
     });
-  }); // change send button color on
+  });
+
+  // change send button color on
 
   if ($chatEmojiarea) {
     $chatEmojiarea.setAttribute('placeholder', 'Type your message');
     $chatEmojiarea.addEventListener(Events.KEYUP, function (e) {
       if (e.target.textContent.length <= 0) {
         $btnSend.classList.remove(ClassName.TEXT_PRIMARY);
-
         if (e.target.innerHTML === '<br>') {
           e.target.innerHTML = '';
         }
       } else {
         $btnSend.classList.add(ClassName.TEXT_PRIMARY);
       }
-
       var TargetChatArea = document.querySelector(Selector.CHAT_CONTENT_SCROLL_AREA_ACTIVE);
       setScrollbarPosition(TargetChatArea);
     });
-  } // Open conversation info sidebar
-
-
+  }
+  // Open conversation info sidebar
   $chatEmojiarea && document.querySelectorAll(Selector.BTN_INFO).forEach(function (el) {
     el.addEventListener(Events.CLICK, function (e) {
       var $this = e.currentTarget;
@@ -733,30 +1319,25 @@ var chatInit = function chatInit() {
       var $info = document.querySelector("".concat(Selector.CONVERSATION_INFO, "[data-").concat(DATA_KEY.INDEX, "='").concat(dataIndex, "']"));
       $info.classList.toggle(ClassName.SHOW);
     });
-  }); // Show contact list sidebar on responsive
+  });
 
+  // Show contact list sidebar on responsive
   document.querySelectorAll(Selector.CONTACTS_LIST_SHOW).forEach(function (el) {
     el.addEventListener(Events.CLICK, function () {
       $chatSidebar.style.left = 0;
     });
-  }); // Set scrollbar area height on resize
+  });
 
+  // Set scrollbar area height on resize
   utils.resize(function () {
     var TargetChatArea = document.querySelector(Selector.CHAT_CONTENT_SCROLL_AREA_ACTIVE);
     setScrollbarPosition(TargetChatArea);
-  }); // Emoji append in message text
-
-  $chatEmojiarea && window.picker.on(Events.EMOJI, function (selection) {
-    document.querySelector(Selector.EMOJIEAREA_EDITOR).innerHTML += selection.emoji;
   });
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                   choices                                   */
-
 /* -------------------------------------------------------------------------- */
-
-
 var choicesInit = function choicesInit() {
   if (window.Choices) {
     var elements = document.querySelectorAll('.js-choice');
@@ -771,11 +1352,9 @@ var choicesInit = function choicesInit() {
           validationItem.querySelectorAll('.choices').forEach(function (choicesItem) {
             var singleSelect = choicesItem.querySelector('.choices__list--single');
             var multipleSelect = choicesItem.querySelector('.choices__list--multiple');
-
             if (choicesItem.querySelector('[required]')) {
               if (singleSelect) {
                 var _singleSelect$querySe;
-
                 if (((_singleSelect$querySe = singleSelect.querySelector('.choices__item--selectable')) === null || _singleSelect$querySe === void 0 ? void 0 : _singleSelect$querySe.getAttribute('data-value')) !== '') {
                   choicesItem.classList.remove('invalid');
                   choicesItem.classList.add('valid');
@@ -783,23 +1362,25 @@ var choicesInit = function choicesInit() {
                   choicesItem.classList.remove('valid');
                   choicesItem.classList.add('invalid');
                 }
-              } //----- for multiple select only ----------
-
-
+              }
+              //----- for multiple select only ----------
               if (multipleSelect) {
-                if (choicesItem.getElementsByTagName('option').length) {
+                var selectedOptions = item.selectedOptions;
+                if (selectedOptions.length > 0 && _toConsumableArray(selectedOptions).some(function (opt) {
+                  return opt.value !== '';
+                })) {
                   choicesItem.classList.remove('invalid');
                   choicesItem.classList.add('valid');
                 } else {
                   choicesItem.classList.remove('valid');
                   choicesItem.classList.add('invalid');
                 }
-              } //------ select end ---------------
+              }
 
+              //------ select end ---------------
             }
           });
         };
-
         validationItem.addEventListener('submit', function () {
           selectFormValidation();
         });
@@ -811,11 +1392,10 @@ var choicesInit = function choicesInit() {
     });
   }
 };
+
 /*-----------------------------------------------
 |   Cookie notice
 -----------------------------------------------*/
-
-
 var cookieNoticeInit = function cookieNoticeInit() {
   var Selector = {
     NOTICE: '.notice',
@@ -835,57 +1415,50 @@ var cookieNoticeInit = function cookieNoticeInit() {
   var showNotice = true;
   notices.forEach(function (item) {
     var notice = new window.bootstrap.Toast(item);
-
     var options = _objectSpread({
       autoShow: false,
       autoShowDelay: 0,
       showOnce: false,
       cookieExpireTime: 3600000
     }, utils.getData(item, DataKeys.OPTIONS));
-
     var showOnce = options.showOnce,
-        autoShow = options.autoShow,
-        autoShowDelay = options.autoShowDelay;
-
+      autoShow = options.autoShow,
+      autoShowDelay = options.autoShowDelay;
     if (showOnce) {
       var hasNotice = utils.getCookie('notice');
       showNotice = hasNotice === null;
     }
-
     if (autoShow && showNotice) {
       setTimeout(function () {
         notice.show();
       }, autoShowDelay);
     }
-
     item.addEventListener(Events.HIDDEN_BS_TOAST, function (e) {
       var el = e.currentTarget;
-
       var toastOptions = _objectSpread({
         cookieExpireTime: 3600000,
         showOnce: false
       }, utils.getData(el, DataKeys.OPTIONS));
-
-      toastOptions.showOnce && utils.setCookie('notice', false, toastOptions.cookieExpireTime);
+      if (toastOptions.showOnce) {
+        utils.setCookie('notice', false, toastOptions.cookieExpireTime);
+      }
     });
   });
   var btnNoticeToggle = document.querySelector(Selector.DATA_TOGGLE_Notice);
-  btnNoticeToggle && btnNoticeToggle.addEventListener(Events.CLICK, function (_ref) {
-    var currentTarget = _ref.currentTarget;
-    var id = currentTarget.getAttribute('href');
-    var notice = new window.bootstrap.Toast(document.querySelector(id));
-    /*eslint-disable-next-line*/
-
-    var el = notice._element;
-    utils.hasClass(el, ClassNames.HIDE) ? notice.show() : notice.hide();
-  });
+  if (btnNoticeToggle) {
+    btnNoticeToggle.addEventListener(Events.CLICK, function (_ref) {
+      var currentTarget = _ref.currentTarget;
+      var id = currentTarget.getAttribute('href');
+      var notice = new window.bootstrap.Toast(document.querySelector(id));
+      var el = notice._element;
+      utils.hasClass(el, ClassNames.HIDE) ? notice.show() : notice.hide();
+    });
+  }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                  Copy LinK                                 */
-
 /* -------------------------------------------------------------------------- */
-
 
 var copyLink = function copyLink() {
   var copyLinkModal = document.getElementById('copyLinkModal');
@@ -916,25 +1489,21 @@ var copyLink = function copyLink() {
     });
   });
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                  Count Up                                  */
-
 /* -------------------------------------------------------------------------- */
-
 
 var countupInit = function countupInit() {
   if (window.countUp) {
     var countups = document.querySelectorAll('[data-countup]');
     countups.forEach(function (node) {
-      var _utils$getData = utils.getData(node, 'countup'),
-          endValue = _utils$getData.endValue,
-          options = _objectWithoutProperties(_utils$getData, _excluded);
-
+      var _utils$getData2 = utils.getData(node, 'countup'),
+        endValue = _utils$getData2.endValue,
+        options = _objectWithoutProperties(_utils$getData2, _excluded);
       var countUp = new window.countUp.CountUp(node, endValue, _objectSpread({
         duration: 5
       }, options));
-
       if (!countUp.error) {
         countUp.start();
       } else {
@@ -943,27 +1512,25 @@ var countupInit = function countupInit() {
     });
   }
 };
+
 /*-----------------------------------------------
 |   Data table
 -----------------------------------------------*/
-
-
 var dataTablesInit = function dataTablesInit() {
   if (window.jQuery) {
     var $ = window.jQuery;
-    var dataTables = $('.data-table');
-
+    var dataTables = $('[data-datatables]');
     var customDataTable = function customDataTable(elem) {
       elem.find('.pagination').addClass('pagination-sm');
     };
-
     dataTables.length && dataTables.each(function (index, value) {
       var $this = $(value);
       var options = $.extend({
         dom: "<'row mx-0'<'col-md-6'l><'col-md-6'f>>" + "<'table-responsive scrollbar'tr>" + "<'row g-0 align-items-center justify-content-center justify-content-sm-between'<'col-auto mb-2 mb-sm-0 px-3'i><'col-auto px-3'p>>"
-      }, $this.data('options'));
+      }, $this.data('datatables'));
       $this.DataTable(options);
-      var $wrpper = $this.closest('.dataTables_wrapper');
+      bulkSelectInit();
+      var $wrpper = $this.closest('.dt-container');
       customDataTable($wrpper);
       $this.on('draw.dt', function () {
         return customDataTable($wrpper);
@@ -971,71 +1538,14 @@ var dataTablesInit = function dataTablesInit() {
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
-/*                                  Draggable                                 */
-
-/* -------------------------------------------------------------------------- */
-
-
-var draggableInit = function draggableInit() {
-  var Selectors = {
-    BODY: 'body',
-    KANBAN_CONTAINER: '.kanban-container',
-    KABNBAN_COLUMN: '.kanban-column',
-    KANBAN_ITEMS_CONTAINER: '.kanban-items-container',
-    KANBAN_ITEM: '.kanban-item',
-    ADD_CARD_FORM: '.add-card-form'
-  };
-  var Events = {
-    DRAG_START: 'drag:start',
-    DRAG_STOP: 'drag:stop'
-  };
-  var ClassNames = {
-    FORM_ADDED: 'form-added'
-  };
-  var columns = document.querySelectorAll(Selectors.KABNBAN_COLUMN);
-  var columnContainers = document.querySelectorAll(Selectors.KANBAN_ITEMS_CONTAINER);
-  var container = document.querySelector(Selectors.KANBAN_CONTAINER);
-
-  if (columnContainers.length) {
-    // Initialize Sortable
-    var sortable = new window.Draggable.Sortable(columnContainers, {
-      draggable: Selectors.KANBAN_ITEM,
-      delay: 200,
-      mirror: {
-        appendTo: Selectors.BODY,
-        constrainDimensions: true
-      },
-      scrollable: {
-        draggable: Selectors.KANBAN_ITEM,
-        scrollableElements: [].concat(_toConsumableArray(columnContainers), [container])
-      }
-    }); // Hide form when drag start
-
-    sortable.on(Events.DRAG_START, function () {
-      columns.forEach(function (column) {
-        utils.hasClass(column, ClassNames.FORM_ADDED) && column.classList.remove(ClassNames.FORM_ADDED);
-      });
-    }); // Place forms and other contents bottom of the sortable container
-
-    sortable.on(Events.DRAG_STOP, function (_ref2) {
-      var el = _ref2.data.source;
-      var columnContainer = el.closest(Selectors.KANBAN_ITEMS_CONTAINER);
-      var form = columnContainer.querySelector(Selectors.ADD_CARD_FORM);
-      !el.nextElementSibling && columnContainer.appendChild(form);
-    });
-  }
-};
 /*-----------------------------------------------
 |   Dashboard Table dropdown
 -----------------------------------------------*/
-
-
 var dropdownMenuInit = function dropdownMenuInit() {
   // Only for ios
   if (window.is.ios()) {
-    var Event = {
+    var _Event = {
       SHOWN_BS_DROPDOWN: 'shown.bs.dropdown',
       HIDDEN_BS_DROPDOWN: 'hidden.bs.dropdown'
     };
@@ -1044,43 +1554,35 @@ var dropdownMenuInit = function dropdownMenuInit() {
       DROPDOWN_MENU: '.dropdown-menu'
     };
     document.querySelectorAll(Selector.TABLE_RESPONSIVE).forEach(function (table) {
-      table.addEventListener(Event.SHOWN_BS_DROPDOWN, function (e) {
+      table.addEventListener(_Event.SHOWN_BS_DROPDOWN, function (e) {
         var t = e.currentTarget;
-
         if (t.scrollWidth > t.clientWidth) {
           t.style.paddingBottom = "".concat(e.target.nextElementSibling.clientHeight, "px");
         }
       });
-      table.addEventListener(Event.HIDDEN_BS_DROPDOWN, function (e) {
+      table.addEventListener(_Event.HIDDEN_BS_DROPDOWN, function (e) {
         e.currentTarget.style.paddingBottom = '';
       });
     });
   }
-}; // Reference
+};
+
+// Reference
 // https://github.com/twbs/bootstrap/issues/11037#issuecomment-274870381
 
 /* -------------------------------------------------------------------------- */
-
 /*                           Open dropdown on hover                           */
-
 /* -------------------------------------------------------------------------- */
-
 
 var dropdownOnHover = function dropdownOnHover() {
   var navbarArea = document.querySelector('[data-top-nav-dropdowns]');
-
   if (navbarArea) {
     navbarArea.addEventListener('mouseover', function (e) {
       if (e.target.className.includes('dropdown-toggle') && window.innerWidth > 992) {
         var dropdownInstance = new window.bootstrap.Dropdown(e.target);
-        /* eslint-disable no-underscore-dangle */
-
         dropdownInstance._element.classList.add('show');
-
         dropdownInstance._menu.classList.add('show');
-
         dropdownInstance._menu.setAttribute('data-bs-popper', 'none');
-
         e.target.parentNode.addEventListener('mouseleave', function () {
           dropdownInstance.hide();
         });
@@ -1088,15 +1590,12 @@ var dropdownOnHover = function dropdownOnHover() {
     });
   }
 };
-/* eslint-disable */
 
 /*-----------------------------------------------
 |   Dropzone
 -----------------------------------------------*/
 
-
 window.Dropzone ? window.Dropzone.autoDiscover = false : '';
-
 var dropzoneInit = function dropzoneInit() {
   var merge = window._.merge;
   var Selector = {
@@ -1123,7 +1622,7 @@ var dropzoneInit = function dropzoneInit() {
   var dropzones = document.querySelectorAll(Selector.DROPZONE);
   !!dropzones.length && dropzones.forEach(function (item) {
     var userOptions = utils.getData(item, DATA_KEY.OPTIONS);
-    userOptions = userOptions ? userOptions : {};
+    userOptions = userOptions || {};
     var data = userOptions.data ? userOptions.data : {};
     var options = merge({
       url: '/assets/php/',
@@ -1137,7 +1636,6 @@ var dropzoneInit = function dropzoneInit() {
       filesizeBase: 1000,
       init: function init() {
         var thisDropzone = this;
-
         if (data.length) {
           data.forEach(function (v) {
             var mockFile = {
@@ -1148,13 +1646,11 @@ var dropzoneInit = function dropzoneInit() {
             thisDropzone.options.thumbnail.call(thisDropzone, mockFile, "".concat(v.url, "/").concat(v.name));
           });
         }
-
         thisDropzone.on(Events.ADDED_FILE, function addedfile() {
           if ('maxFiles' in userOptions) {
             if (userOptions.maxFiles === 1 && item.querySelectorAll(Selector.DZ_PREVIEW_COVER).length > 1) {
               item.querySelector(Selector.DZ_PREVIEW_COVER).remove();
             }
-
             if (userOptions.maxFiles === 1 && this.files.length > 1) {
               this.removeFile(this.files[0]);
             }
@@ -1164,88 +1660,203 @@ var dropzoneInit = function dropzoneInit() {
       error: function error(file, message) {
         if (file.previewElement) {
           file.previewElement.classList.add('dz-error');
-
           if (typeof message !== 'string' && message.error) {
             message = message.error;
           }
-
-          var _iterator = _createForOfIteratorHelper(file.previewElement.querySelectorAll('[data-dz-errormessage]')),
-              _step;
-
-          try {
-            for (_iterator.s(); !(_step = _iterator.n()).done;) {
-              var node = _step.value;
-              node.textContent = message;
-            }
-          } catch (err) {
-            _iterator.e(err);
-          } finally {
-            _iterator.f();
-          }
+          var errorNodes = Array.from(file.previewElement.querySelectorAll('[data-dz-errormessage]'));
+          errorNodes.forEach(function (node) {
+            node.textContent = message;
+          });
         }
       }
-    }, userOptions); // eslint-disable-next-line
-
+    }, userOptions);
     item.querySelector(Selector.DZ_PREVIEW).innerHTML = '';
     var dropzone = new window.Dropzone(item, options);
     dropzone.on(Events.ADDED_FILE, function () {
       if (item.querySelector(Selector.DZ_PREVIEW_COVER)) {
         item.querySelector(Selector.DZ_PREVIEW_COVER).classList.remove(ClassName.DZ_FILE_COMPLETE);
       }
-
       item.classList.add(ClassName.DZ_FILE_PROCESSING);
     });
     dropzone.on(Events.REMOVED_FILE, function () {
       if (item.querySelector(Selector.DZ_PREVIEW_COVER)) {
         item.querySelector(Selector.DZ_PREVIEW_COVER).classList.remove(ClassName.DZ_PROCESSING);
       }
-
       item.classList.add(ClassName.DZ_FILE_COMPLETE);
     });
     dropzone.on(Events.COMPLETE, function () {
       if (item.querySelector(Selector.DZ_PREVIEW_COVER)) {
         item.querySelector(Selector.DZ_PREVIEW_COVER).classList.remove(ClassName.DZ_PROCESSING);
       }
-
       item.classList.add(ClassName.DZ_FILE_COMPLETE);
     });
   });
 };
+
+/* -------------------------------------------------------------------------- */
+/*                                   Popover                                  */
 /* -------------------------------------------------------------------------- */
 
+var emojiMartInit = function emojiMartInit() {
+  var _ref2 = window.EmojiMart || {},
+    Picker = _ref2.Picker;
+  if (Picker) {
+    var emojiMartBtns = document.querySelectorAll('[data-emoji-mart]');
+    if (emojiMartBtns) {
+      Array.from(emojiMartBtns).forEach(function (btn) {
+        var inputTarget = utils.getData(btn, 'emoji-mart-input-target');
+        var input = document.querySelector(inputTarget);
+        var picker = new Picker(window._.merge(utils.getData(btn, 'emoji-mart'), {
+          previewPosition: 'none',
+          skinTonePosition: 'none',
+          onEmojiSelect: function onEmojiSelect(e) {
+            if (input) input.innerHTML += e["native"];
+          },
+          onClickOutside: function onClickOutside(e) {
+            if (!picker.contains(e.target) && !btn.contains(e.target)) {
+              picker.classList.add('d-none');
+            }
+          }
+        }));
+        picker.classList.add('d-none');
+        btn.parentElement.appendChild(picker);
+        btn.addEventListener('click', function () {
+          return picker.classList.toggle('d-none');
+        });
+      });
+    }
+  }
+};
+
+/* -------------------------------------------------------------------------- */
+/*                                  Flatpickr                                 */
+/* -------------------------------------------------------------------------- */
+
+var defaultPredefinedRanges = [{
+  id: 'today',
+  label: 'Today',
+  range: [new Date(new Date().setHours(0, 0, 0, 0)), new Date()]
+}, {
+  id: 'this_month',
+  label: 'This Month',
+  range: [new Date(new Date().getFullYear(), new Date().getMonth(), 1), new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)]
+}, {
+  id: 'last_month',
+  label: 'Last Month',
+  range: [new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1), new Date(new Date().getFullYear(), new Date().getMonth(), 0)]
+}, {
+  id: 'last_7_days',
+  label: 'Last 7 Days',
+  range: [new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000), new Date()]
+}, {
+  id: 'last_30_days',
+  label: 'Last 30 Days',
+  range: [new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000), new Date()]
+}];
+var flatpickrIntit = function flatpickrIntit() {
+  var dateTimePickers = document.querySelectorAll('.datetimepicker');
+  if (dateTimePickers.length && window.flatpickr) {
+    dateTimePickers.forEach(function (item) {
+      function applyUserRange(defaultRange, userRange) {
+        var matchingDefault = defaultRange.find(function (mathItem) {
+          return mathItem.id === Object.keys(userRange)[0];
+        });
+        return matchingDefault ? _objectSpread(_objectSpread({}, matchingDefault), {}, {
+          label: userRange[Object.keys(userRange)[0]]
+        }) : userRange;
+      }
+      function findDefaultRange(defaultRange, userRange) {
+        return defaultRange.find(function (rangeItem) {
+          return rangeItem.id === userRange;
+        }) || null;
+      }
+      function generateRangeButtons(predefinedDefaultRanges) {
+        var userDefinedRanges = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+        var normalizedUserRanges = Array.isArray(userDefinedRanges) ? userDefinedRanges : predefinedDefaultRanges;
+        var mergedRanges = normalizedUserRanges.map(function (userRange) {
+          if (_typeof(userRange) === 'object') {
+            return applyUserRange(predefinedDefaultRanges, userRange);
+          }
+          return findDefaultRange(predefinedDefaultRanges, userRange);
+        }).filter(Boolean);
+        return "\n        <ul class=\"flatpickr-predefined-ranges list-group list-group-flush\">\n          ".concat(mergedRanges.map(function (_ref3) {
+          var range = _ref3.range,
+            label = _ref3.label;
+          return "\n              <button type=\"button\" \n                data-range=\"".concat(range.map(function (date) {
+            return date instanceof Date ? date.toISOString() : date;
+          }).join(','), "\" \n                class=\"nav-link list-group-item list-group-item-action\">\n                ").concat(label, "\n              </button>\n            ");
+        }).join(''), "\n        </ul>\n      ");
+      }
+      function appendRangeButtonsIfNotExists(calendarContainer, rangeButtonsHtml) {
+        if (!calendarContainer.querySelector('.flatpickr-predefined-ranges')) {
+          calendarContainer.insertAdjacentHTML('afterbegin', rangeButtonsHtml);
+        }
+      }
+      function addRangeButtonClickListeners(instance, calendarContainer) {
+        _toConsumableArray(calendarContainer.querySelectorAll('[data-range]')).map(function (btn) {
+          return btn.addEventListener('click', function () {
+            var startDate = new Date(utils.getData(btn, 'range').split(',')[0]);
+            var endDate = new Date(utils.getData(btn, 'range').split(',')[1]);
+            instance.setDate([startDate, endDate], true);
+            instance.redraw();
+          });
+        });
+      }
+      function initializeFlatpickr(element, options) {
+        function showPredefinedRanges(selectedDates, dateStr, instance) {
+          var calendarContainer = instance.calendarContainer;
+          if (options.predefinedRanges) {
+            calendarContainer.classList.add('predefinedRange');
+            var rangeButtonsHtml = generateRangeButtons(defaultPredefinedRanges, options.predefinedRanges);
+            appendRangeButtonsIfNotExists(calendarContainer, rangeButtonsHtml);
+            addRangeButtonClickListeners(instance, calendarContainer);
+          }
+        }
+        function hidePredefinedRanges(selectedDates, dateStr, instance) {
+          if (options.predefinedRanges) {
+            var calendarContainer = instance.calendarContainer;
+            calendarContainer.classList.remove('predefinedRange');
+          }
+        }
+        var instance = window.flatpickr(element, _objectSpread(_objectSpread({}, options), {}, {
+          onOpen: showPredefinedRanges,
+          onClose: hidePredefinedRanges
+        }));
+        return instance;
+      }
+      var options = utils.getData(item, 'options');
+      initializeFlatpickr(item, options);
+    });
+  }
+};
+
+/* -------------------------------------------------------------------------- */
 /*                               from-validation                              */
-
 /* -------------------------------------------------------------------------- */
-
 
 var formValidationInit = function formValidationInit() {
-  // Example starter JavaScript for disabling form submissions if there are invalid fields
   // Fetch all the forms we want to apply custom Bootstrap validation styles to
-  var forms = document.querySelectorAll('.needs-validation'); // Loop over them and prevent submission
+  var forms = document.querySelectorAll('.needs-validation');
 
+  // Loop over them and prevent submission
   Array.prototype.slice.call(forms).forEach(function (form) {
     form.addEventListener('submit', function (event) {
       if (!form.checkValidity()) {
         event.preventDefault();
         event.stopPropagation();
       }
-
       form.classList.add('was-validated');
     }, false);
   });
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                FullCalendar                                */
-
 /* -------------------------------------------------------------------------- */
-
 
 var merge = window._.merge;
-
 var renderCalendar = function renderCalendar(el, option) {
   var _document$querySelect;
-
   var options = merge({
     initialView: 'dayGridMonth',
     editable: true,
@@ -1263,12 +1874,11 @@ var renderCalendar = function renderCalendar(el, option) {
   }, option);
   var calendar = new window.FullCalendar.Calendar(el, options);
   calendar.render();
-  (_document$querySelect = document.querySelector('.navbar-vertical-toggle')) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.addEventListener('navbar.vertical.toggle', function () {
+  (_document$querySelect = document.querySelector('.navbar-vertical-toggle')) === null || _document$querySelect === void 0 || _document$querySelect.addEventListener('navbar.vertical.toggle', function () {
     return calendar.updateSize();
   });
   return calendar;
 };
-
 var fullCalendarInit = function fullCalendarInit() {
   var calendars = document.querySelectorAll('[data-calendar]');
   calendars.forEach(function (item) {
@@ -1276,15 +1886,13 @@ var fullCalendarInit = function fullCalendarInit() {
     renderCalendar(item, options);
   });
 };
-
 var fullCalendar = {
   renderCalendar: renderCalendar,
   fullCalendarInit: fullCalendarInit
 };
+
 /* -------------------------------------------------------------------------- */
-
 /*                                 Glightbox                                */
-
 /* -------------------------------------------------------------------------- */
 
 var glightboxInit = function glightboxInit() {
@@ -1294,1006 +1902,139 @@ var glightboxInit = function glightboxInit() {
     });
   }
 };
+
 /*-----------------------------------------------
 |   Gooogle Map
 -----------------------------------------------*/
 
-
+function destroyMap(map) {
+  if (map) {
+    window.google.maps.event.clearInstanceListeners(map);
+    map = null;
+  }
+}
 function initMap() {
   var themeController = document.body;
   var $googlemaps = document.querySelectorAll('.googlemap');
-
   if ($googlemaps.length && window.google) {
-    // Visit https://snazzymaps.com/ for more themes
-    var mapStyles = {
-      Default: [{
-        featureType: 'water',
-        elementType: 'geometry',
-        stylers: [{
-          color: '#e9e9e9'
-        }, {
-          lightness: 17
-        }]
-      }, {
-        featureType: 'landscape',
-        elementType: 'geometry',
-        stylers: [{
-          color: '#f5f5f5'
-        }, {
-          lightness: 20
-        }]
-      }, {
-        featureType: 'road.highway',
-        elementType: 'geometry.fill',
-        stylers: [{
-          color: '#ffffff'
-        }, {
-          lightness: 17
-        }]
-      }, {
-        featureType: 'road.highway',
-        elementType: 'geometry.stroke',
-        stylers: [{
-          color: '#ffffff'
-        }, {
-          lightness: 29
-        }, {
-          weight: 0.2
-        }]
-      }, {
-        featureType: 'road.arterial',
-        elementType: 'geometry',
-        stylers: [{
-          color: '#ffffff'
-        }, {
-          lightness: 18
-        }]
-      }, {
-        featureType: 'road.local',
-        elementType: 'geometry',
-        stylers: [{
-          color: '#ffffff'
-        }, {
-          lightness: 16
-        }]
-      }, {
-        featureType: 'poi',
-        elementType: 'geometry',
-        stylers: [{
-          color: '#f5f5f5'
-        }, {
-          lightness: 21
-        }]
-      }, {
-        featureType: 'poi.park',
-        elementType: 'geometry',
-        stylers: [{
-          color: '#dedede'
-        }, {
-          lightness: 21
-        }]
-      }, {
-        elementType: 'labels.text.stroke',
-        stylers: [{
-          visibility: 'on'
-        }, {
-          color: '#ffffff'
-        }, {
-          lightness: 16
-        }]
-      }, {
-        elementType: 'labels.text.fill',
-        stylers: [{
-          saturation: 36
-        }, {
-          color: '#333333'
-        }, {
-          lightness: 40
-        }]
-      }, {
-        elementType: 'labels.icon',
-        stylers: [{
-          visibility: 'off'
-        }]
-      }, {
-        featureType: 'transit',
-        elementType: 'geometry',
-        stylers: [{
-          color: '#f2f2f2'
-        }, {
-          lightness: 19
-        }]
-      }, {
-        featureType: 'administrative',
-        elementType: 'geometry.fill',
-        stylers: [{
-          color: '#fefefe'
-        }, {
-          lightness: 20
-        }]
-      }, {
-        featureType: 'administrative',
-        elementType: 'geometry.stroke',
-        stylers: [{
-          color: '#fefefe'
-        }, {
-          lightness: 17
-        }, {
-          weight: 1.2
-        }]
-      }],
-      Gray: [{
-        featureType: 'all',
-        elementType: 'labels.text.fill',
-        stylers: [{
-          saturation: 36
-        }, {
-          color: '#000000'
-        }, {
-          lightness: 40
-        }]
-      }, {
-        featureType: 'all',
-        elementType: 'labels.text.stroke',
-        stylers: [{
-          visibility: 'on'
-        }, {
-          color: '#000000'
-        }, {
-          lightness: 16
-        }]
-      }, {
-        featureType: 'all',
-        elementType: 'labels.icon',
-        stylers: [{
-          visibility: 'off'
-        }]
-      }, {
-        featureType: 'administrative',
-        elementType: 'geometry.fill',
-        stylers: [{
-          color: '#000000'
-        }, {
-          lightness: 20
-        }]
-      }, {
-        featureType: 'administrative',
-        elementType: 'geometry.stroke',
-        stylers: [{
-          color: '#000000'
-        }, {
-          lightness: 17
-        }, {
-          weight: 1.2
-        }]
-      }, {
-        featureType: 'landscape',
-        elementType: 'geometry',
-        stylers: [{
-          color: '#000000'
-        }, {
-          lightness: 20
-        }]
-      }, {
-        featureType: 'poi',
-        elementType: 'geometry',
-        stylers: [{
-          color: '#000000'
-        }, {
-          lightness: 21
-        }]
-      }, {
-        featureType: 'road.highway',
-        elementType: 'geometry.fill',
-        stylers: [{
-          color: '#000000'
-        }, {
-          lightness: 17
-        }]
-      }, {
-        featureType: 'road.highway',
-        elementType: 'geometry.stroke',
-        stylers: [{
-          color: '#000000'
-        }, {
-          lightness: 29
-        }, {
-          weight: 0.2
-        }]
-      }, {
-        featureType: 'road.arterial',
-        elementType: 'geometry',
-        stylers: [{
-          color: '#000000'
-        }, {
-          lightness: 18
-        }]
-      }, {
-        featureType: 'road.local',
-        elementType: 'geometry',
-        stylers: [{
-          color: '#000000'
-        }, {
-          lightness: 16
-        }]
-      }, {
-        featureType: 'transit',
-        elementType: 'geometry',
-        stylers: [{
-          color: '#000000'
-        }, {
-          lightness: 19
-        }]
-      }, {
-        featureType: 'water',
-        elementType: 'geometry',
-        stylers: [{
-          color: '#000000'
-        }, {
-          lightness: 17
-        }]
-      }],
-      Midnight: [{
-        featureType: 'all',
-        elementType: 'labels.text.fill',
-        stylers: [{
-          color: '#ffffff'
-        }]
-      }, {
-        featureType: 'all',
-        elementType: 'labels.text.stroke',
-        stylers: [{
-          color: '#000000'
-        }, {
-          lightness: 13
-        }]
-      }, {
-        featureType: 'administrative',
-        elementType: 'geometry.fill',
-        stylers: [{
-          color: '#000000'
-        }]
-      }, {
-        featureType: 'administrative',
-        elementType: 'geometry.stroke',
-        stylers: [{
-          color: '#144b53'
-        }, {
-          lightness: 14
-        }, {
-          weight: 1.4
-        }]
-      }, {
-        featureType: 'landscape',
-        elementType: 'all',
-        stylers: [{
-          color: '#08304b'
-        }]
-      }, {
-        featureType: 'poi',
-        elementType: 'geometry',
-        stylers: [{
-          color: '#0c4152'
-        }, {
-          lightness: 5
-        }]
-      }, {
-        featureType: 'road.highway',
-        elementType: 'geometry.fill',
-        stylers: [{
-          color: '#000000'
-        }]
-      }, {
-        featureType: 'road.highway',
-        elementType: 'geometry.stroke',
-        stylers: [{
-          color: '#0b434f'
-        }, {
-          lightness: 25
-        }]
-      }, {
-        featureType: 'road.arterial',
-        elementType: 'geometry.fill',
-        stylers: [{
-          color: '#000000'
-        }]
-      }, {
-        featureType: 'road.arterial',
-        elementType: 'geometry.stroke',
-        stylers: [{
-          color: '#0b3d51'
-        }, {
-          lightness: 16
-        }]
-      }, {
-        featureType: 'road.local',
-        elementType: 'geometry',
-        stylers: [{
-          color: '#000000'
-        }]
-      }, {
-        featureType: 'transit',
-        elementType: 'all',
-        stylers: [{
-          color: '#146474'
-        }]
-      }, {
-        featureType: 'water',
-        elementType: 'all',
-        stylers: [{
-          color: '#021019'
-        }]
-      }],
-      Hopper: [{
-        featureType: 'water',
-        elementType: 'geometry',
-        stylers: [{
-          hue: '#165c64'
-        }, {
-          saturation: 34
-        }, {
-          lightness: -69
-        }, {
-          visibility: 'on'
-        }]
-      }, {
-        featureType: 'landscape',
-        elementType: 'geometry',
-        stylers: [{
-          hue: '#b7caaa'
-        }, {
-          saturation: -14
-        }, {
-          lightness: -18
-        }, {
-          visibility: 'on'
-        }]
-      }, {
-        featureType: 'landscape.man_made',
-        elementType: 'all',
-        stylers: [{
-          hue: '#cbdac1'
-        }, {
-          saturation: -6
-        }, {
-          lightness: -9
-        }, {
-          visibility: 'on'
-        }]
-      }, {
-        featureType: 'road',
-        elementType: 'geometry',
-        stylers: [{
-          hue: '#8d9b83'
-        }, {
-          saturation: -89
-        }, {
-          lightness: -12
-        }, {
-          visibility: 'on'
-        }]
-      }, {
-        featureType: 'road.highway',
-        elementType: 'geometry',
-        stylers: [{
-          hue: '#d4dad0'
-        }, {
-          saturation: -88
-        }, {
-          lightness: 54
-        }, {
-          visibility: 'simplified'
-        }]
-      }, {
-        featureType: 'road.arterial',
-        elementType: 'geometry',
-        stylers: [{
-          hue: '#bdc5b6'
-        }, {
-          saturation: -89
-        }, {
-          lightness: -3
-        }, {
-          visibility: 'simplified'
-        }]
-      }, {
-        featureType: 'road.local',
-        elementType: 'geometry',
-        stylers: [{
-          hue: '#bdc5b6'
-        }, {
-          saturation: -89
-        }, {
-          lightness: -26
-        }, {
-          visibility: 'on'
-        }]
-      }, {
-        featureType: 'poi',
-        elementType: 'geometry',
-        stylers: [{
-          hue: '#c17118'
-        }, {
-          saturation: 61
-        }, {
-          lightness: -45
-        }, {
-          visibility: 'on'
-        }]
-      }, {
-        featureType: 'poi.park',
-        elementType: 'all',
-        stylers: [{
-          hue: '#8ba975'
-        }, {
-          saturation: -46
-        }, {
-          lightness: -28
-        }, {
-          visibility: 'on'
-        }]
-      }, {
-        featureType: 'transit',
-        elementType: 'geometry',
-        stylers: [{
-          hue: '#a43218'
-        }, {
-          saturation: 74
-        }, {
-          lightness: -51
-        }, {
-          visibility: 'simplified'
-        }]
-      }, {
-        featureType: 'administrative.province',
-        elementType: 'all',
-        stylers: [{
-          hue: '#ffffff'
-        }, {
-          saturation: 0
-        }, {
-          lightness: 100
-        }, {
-          visibility: 'simplified'
-        }]
-      }, {
-        featureType: 'administrative.neighborhood',
-        elementType: 'all',
-        stylers: [{
-          hue: '#ffffff'
-        }, {
-          saturation: 0
-        }, {
-          lightness: 100
-        }, {
-          visibility: 'off'
-        }]
-      }, {
-        featureType: 'administrative.locality',
-        elementType: 'labels',
-        stylers: [{
-          hue: '#ffffff'
-        }, {
-          saturation: 0
-        }, {
-          lightness: 100
-        }, {
-          visibility: 'off'
-        }]
-      }, {
-        featureType: 'administrative.land_parcel',
-        elementType: 'all',
-        stylers: [{
-          hue: '#ffffff'
-        }, {
-          saturation: 0
-        }, {
-          lightness: 100
-        }, {
-          visibility: 'off'
-        }]
-      }, {
-        featureType: 'administrative',
-        elementType: 'all',
-        stylers: [{
-          hue: '#3a3935'
-        }, {
-          saturation: 5
-        }, {
-          lightness: -57
-        }, {
-          visibility: 'off'
-        }]
-      }, {
-        featureType: 'poi.medical',
-        elementType: 'geometry',
-        stylers: [{
-          hue: '#cba923'
-        }, {
-          saturation: 50
-        }, {
-          lightness: -46
-        }, {
-          visibility: 'on'
-        }]
-      }],
-      Beard: [{
-        featureType: 'poi.business',
-        elementType: 'labels.text',
-        stylers: [{
-          visibility: 'on'
-        }, {
-          color: '#333333'
-        }]
-      }],
-      AssassianCreed: [{
-        featureType: 'all',
-        elementType: 'all',
-        stylers: [{
-          visibility: 'on'
-        }]
-      }, {
-        featureType: 'all',
-        elementType: 'labels',
-        stylers: [{
-          visibility: 'off'
-        }, {
-          saturation: '-100'
-        }]
-      }, {
-        featureType: 'all',
-        elementType: 'labels.text.fill',
-        stylers: [{
-          saturation: 36
-        }, {
-          color: '#000000'
-        }, {
-          lightness: 40
-        }, {
-          visibility: 'off'
-        }]
-      }, {
-        featureType: 'all',
-        elementType: 'labels.text.stroke',
-        stylers: [{
-          visibility: 'off'
-        }, {
-          color: '#000000'
-        }, {
-          lightness: 16
-        }]
-      }, {
-        featureType: 'all',
-        elementType: 'labels.icon',
-        stylers: [{
-          visibility: 'off'
-        }]
-      }, {
-        featureType: 'administrative',
-        elementType: 'geometry.fill',
-        stylers: [{
-          color: '#000000'
-        }, {
-          lightness: 20
-        }]
-      }, {
-        featureType: 'administrative',
-        elementType: 'geometry.stroke',
-        stylers: [{
-          color: '#000000'
-        }, {
-          lightness: 17
-        }, {
-          weight: 1.2
-        }]
-      }, {
-        featureType: 'landscape',
-        elementType: 'geometry',
-        stylers: [{
-          color: '#000000'
-        }, {
-          lightness: 20
-        }]
-      }, {
-        featureType: 'landscape',
-        elementType: 'geometry.fill',
-        stylers: [{
-          color: '#4d6059'
-        }]
-      }, {
-        featureType: 'landscape',
-        elementType: 'geometry.stroke',
-        stylers: [{
-          color: '#4d6059'
-        }]
-      }, {
-        featureType: 'landscape.natural',
-        elementType: 'geometry.fill',
-        stylers: [{
-          color: '#4d6059'
-        }]
-      }, {
-        featureType: 'poi',
-        elementType: 'geometry',
-        stylers: [{
-          lightness: 21
-        }]
-      }, {
-        featureType: 'poi',
-        elementType: 'geometry.fill',
-        stylers: [{
-          color: '#4d6059'
-        }]
-      }, {
-        featureType: 'poi',
-        elementType: 'geometry.stroke',
-        stylers: [{
-          color: '#4d6059'
-        }]
-      }, {
-        featureType: 'road',
-        elementType: 'geometry',
-        stylers: [{
-          visibility: 'on'
-        }, {
-          color: '#7f8d89'
-        }]
-      }, {
-        featureType: 'road',
-        elementType: 'geometry.fill',
-        stylers: [{
-          color: '#7f8d89'
-        }]
-      }, {
-        featureType: 'road.highway',
-        elementType: 'geometry.fill',
-        stylers: [{
-          color: '#7f8d89'
-        }, {
-          lightness: 17
-        }]
-      }, {
-        featureType: 'road.highway',
-        elementType: 'geometry.stroke',
-        stylers: [{
-          color: '#7f8d89'
-        }, {
-          lightness: 29
-        }, {
-          weight: 0.2
-        }]
-      }, {
-        featureType: 'road.arterial',
-        elementType: 'geometry',
-        stylers: [{
-          color: '#000000'
-        }, {
-          lightness: 18
-        }]
-      }, {
-        featureType: 'road.arterial',
-        elementType: 'geometry.fill',
-        stylers: [{
-          color: '#7f8d89'
-        }]
-      }, {
-        featureType: 'road.arterial',
-        elementType: 'geometry.stroke',
-        stylers: [{
-          color: '#7f8d89'
-        }]
-      }, {
-        featureType: 'road.local',
-        elementType: 'geometry',
-        stylers: [{
-          color: '#000000'
-        }, {
-          lightness: 16
-        }]
-      }, {
-        featureType: 'road.local',
-        elementType: 'geometry.fill',
-        stylers: [{
-          color: '#7f8d89'
-        }]
-      }, {
-        featureType: 'road.local',
-        elementType: 'geometry.stroke',
-        stylers: [{
-          color: '#7f8d89'
-        }]
-      }, {
-        featureType: 'transit',
-        elementType: 'geometry',
-        stylers: [{
-          color: '#000000'
-        }, {
-          lightness: 19
-        }]
-      }, {
-        featureType: 'water',
-        elementType: 'all',
-        stylers: [{
-          color: '#2b3638'
-        }, {
-          visibility: 'on'
-        }]
-      }, {
-        featureType: 'water',
-        elementType: 'geometry',
-        stylers: [{
-          color: '#2b3638'
-        }, {
-          lightness: 17
-        }]
-      }, {
-        featureType: 'water',
-        elementType: 'geometry.fill',
-        stylers: [{
-          color: '#24282b'
-        }]
-      }, {
-        featureType: 'water',
-        elementType: 'geometry.stroke',
-        stylers: [{
-          color: '#24282b'
-        }]
-      }, {
-        featureType: 'water',
-        elementType: 'labels',
-        stylers: [{
-          visibility: 'off'
-        }]
-      }, {
-        featureType: 'water',
-        elementType: 'labels.text',
-        stylers: [{
-          visibility: 'off '
-        }]
-      }, {
-        featureType: 'water',
-        elementType: 'labels.text.fill',
-        stylers: [{
-          visibility: 'off'
-        }]
-      }, {
-        featureType: 'water',
-        elementType: 'labels.text.stroke',
-        stylers: [{
-          visibility: 'off'
-        }]
-      }, {
-        featureType: 'water',
-        elementType: 'labels.icon',
-        stylers: [{
-          visibility: 'off'
-        }]
-      }],
-      SubtleGray: [{
-        featureType: 'administrative',
-        elementType: 'all',
-        stylers: [{
-          saturation: '-100'
-        }]
-      }, {
-        featureType: 'administrative.province',
-        elementType: 'all',
-        stylers: [{
-          visibility: 'off'
-        }]
-      }, {
-        featureType: 'landscape',
-        elementType: 'all',
-        stylers: [{
-          saturation: -100
-        }, {
-          lightness: 65
-        }, {
-          visibility: 'on'
-        }]
-      }, {
-        featureType: 'poi',
-        elementType: 'all',
-        stylers: [{
-          saturation: -100
-        }, {
-          lightness: '50'
-        }, {
-          visibility: 'simplified'
-        }]
-      }, {
-        featureType: 'road',
-        elementType: 'all',
-        stylers: [{
-          saturation: -100
-        }]
-      }, {
-        featureType: 'road.highway',
-        elementType: 'all',
-        stylers: [{
-          visibility: 'simplified'
-        }]
-      }, {
-        featureType: 'road.arterial',
-        elementType: 'all',
-        stylers: [{
-          lightness: '30'
-        }]
-      }, {
-        featureType: 'road.local',
-        elementType: 'all',
-        stylers: [{
-          lightness: '40'
-        }]
-      }, {
-        featureType: 'transit',
-        elementType: 'all',
-        stylers: [{
-          saturation: -100
-        }, {
-          visibility: 'simplified'
-        }]
-      }, {
-        featureType: 'water',
-        elementType: 'geometry',
-        stylers: [{
-          hue: '#ffff00'
-        }, {
-          lightness: -25
-        }, {
-          saturation: -97
-        }]
-      }, {
-        featureType: 'water',
-        elementType: 'labels',
-        stylers: [{
-          lightness: -25
-        }, {
-          saturation: -100
-        }]
-      }],
-      Tripitty: [{
-        featureType: 'all',
-        elementType: 'labels',
-        stylers: [{
-          visibility: 'off'
-        }]
-      }, {
-        featureType: 'administrative',
-        elementType: 'all',
-        stylers: [{
-          visibility: 'off'
-        }]
-      }, {
-        featureType: 'landscape',
-        elementType: 'all',
-        stylers: [{
-          color: '#2c5ca5'
-        }]
-      }, {
-        featureType: 'poi',
-        elementType: 'all',
-        stylers: [{
-          color: '#2c5ca5'
-        }]
-      }, {
-        featureType: 'road',
-        elementType: 'all',
-        stylers: [{
-          visibility: 'off'
-        }]
-      }, {
-        featureType: 'transit',
-        elementType: 'all',
-        stylers: [{
-          visibility: 'off'
-        }]
-      }, {
-        featureType: 'water',
-        elementType: 'all',
-        stylers: [{
-          color: '#193a70'
-        }, {
-          visibility: 'on'
-        }]
-      }],
-      Cobalt: [{
-        featureType: 'all',
-        elementType: 'all',
-        stylers: [{
-          invert_lightness: true
-        }, {
-          saturation: 10
-        }, {
-          lightness: 30
-        }, {
-          gamma: 0.5
-        }, {
-          hue: '#435158'
-        }]
-      }]
-    };
-    $googlemaps.forEach(function (itm) {
-      var latLng = utils.getData(itm, 'latlng').split(',');
-      var markerPopup = itm.innerHTML;
-      var icon = utils.getData(itm, 'icon') ? utils.getData(itm, 'icon') : 'https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi.png';
-      var zoom = utils.getData(itm, 'zoom');
-      var mapElement = itm;
-      var mapStyle = utils.getData(itm, 'theme');
-
-      if (utils.getData(itm, 'theme') === 'streetview') {
-        var pov = utils.getData(itm, 'pov');
-        var _mapOptions = {
-          position: {
-            lat: Number(latLng[0]),
-            lng: Number(latLng[1])
-          },
-          pov: pov,
-          zoom: zoom,
-          gestureHandling: 'none',
-          scrollwheel: false
-        };
-        return new window.google.maps.StreetViewPanorama(mapElement, _mapOptions);
-      }
-
-      var mapOptions = {
-        zoom: zoom,
-        scrollwheel: utils.getData(itm, 'scrollwheel'),
-        center: new window.google.maps.LatLng(latLng[0], latLng[1]),
-        styles: localStorage.getItem('theme') === 'dark' ? mapStyles.Cobalt : mapStyles[mapStyle]
+    $googlemaps.forEach( /*#__PURE__*/function () {
+      var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(itm) {
+        var _yield$window$google$, Map, InfoWindow, _yield$window$google$2, AdvancedMarkerElement, _yield$window$google$3, ColorScheme, latLng, markerPopup, zoom, mapId, mapElement, lightIconUrl, darkIconUrl, pov, _mapOptions, mapOptions, map, infowindow, iconImage, marker;
+        return _regeneratorRuntime().wrap(function _callee$(_context) {
+          while (1) switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return window.google.maps.importLibrary('maps');
+            case 2:
+              _yield$window$google$ = _context.sent;
+              Map = _yield$window$google$.Map;
+              InfoWindow = _yield$window$google$.InfoWindow;
+              _context.next = 7;
+              return window.google.maps.importLibrary('marker');
+            case 7:
+              _yield$window$google$2 = _context.sent;
+              AdvancedMarkerElement = _yield$window$google$2.AdvancedMarkerElement;
+              _context.next = 11;
+              return window.google.maps.importLibrary('core');
+            case 11:
+              _yield$window$google$3 = _context.sent;
+              ColorScheme = _yield$window$google$3.ColorScheme;
+              latLng = utils.getData(itm, 'latlng').split(',');
+              markerPopup = itm.innerHTML;
+              zoom = utils.getData(itm, 'zoom');
+              mapId = utils.getData(itm, 'mapid');
+              mapElement = itm;
+              lightIconUrl = utils.getData(itm, 'icon') ? utils.getData(itm, 'icon') : 'https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi.png';
+              darkIconUrl = utils.getData(itm, 'dark-icon') ? utils.getData(itm, 'dark-icon') : lightIconUrl; // Fallback
+              if (!(utils.getData(itm, 'theme') === 'streetview')) {
+                _context.next = 24;
+                break;
+              }
+              pov = utils.getData(itm, 'pov');
+              _mapOptions = {
+                position: {
+                  lat: Number(latLng[0]),
+                  lng: Number(latLng[1])
+                },
+                pov: pov,
+                zoom: zoom,
+                gestureHandling: 'none',
+                scrollwheel: false,
+                linksControl: true,
+                panControl: true,
+                motionTracking: false,
+                visible: true
+              };
+              return _context.abrupt("return", new window.google.maps.StreetViewPanorama(mapElement, _mapOptions));
+            case 24:
+              mapOptions = {
+                mapId: mapId,
+                zoom: zoom,
+                scrollwheel: utils.getData(itm, 'scrollwheel'),
+                center: {
+                  lat: Number(latLng[0]),
+                  lng: Number(latLng[1])
+                },
+                colorScheme: utils.isDark() === 'dark' ? ColorScheme.DARK : ColorScheme.LIGHT
+              };
+              map = new Map(mapElement, mapOptions);
+              infowindow = new InfoWindow({
+                content: markerPopup
+              });
+              iconImage = document.createElement('img');
+              iconImage.src = utils.isDark() === 'dark' ? darkIconUrl : lightIconUrl;
+              marker = new AdvancedMarkerElement({
+                position: {
+                  lat: Number(latLng[0]),
+                  lng: Number(latLng[1])
+                },
+                content: iconImage,
+                map: map
+              });
+              marker.addListener('click', function () {
+                infowindow.open(map, marker);
+              });
+              themeController && themeController.addEventListener('clickControl', function (_ref5) {
+                var control = _ref5.detail.control;
+                if (control === 'theme') {
+                  destroyMap(map);
+                  initMap();
+                }
+              });
+              return _context.abrupt("return", null);
+            case 33:
+            case "end":
+              return _context.stop();
+          }
+        }, _callee);
+      }));
+      return function (_x) {
+        return _ref4.apply(this, arguments);
       };
-      var map = new window.google.maps.Map(mapElement, mapOptions);
-      var infowindow = new window.google.maps.InfoWindow({
-        content: markerPopup
-      });
-      var marker = new window.google.maps.Marker({
-        position: new window.google.maps.LatLng(latLng[0], latLng[1]),
-        icon: icon,
-        map: map
-      });
-      marker.addListener('click', function () {
-        infowindow.open(map, marker);
-      });
-      themeController && themeController.addEventListener('clickControl', function (_ref3) {
-        var _ref3$detail = _ref3.detail,
-            control = _ref3$detail.control,
-            value = _ref3$detail.value;
-
-        if (control === 'theme') {
-          map.set('styles', value === 'dark' ? mapStyles.Cobalt : mapStyles[mapStyle]);
-        }
-      });
-      return null;
-    });
+    }());
   }
 }
-
 var hideOnCollapseInit = function hideOnCollapseInit() {
   var previewMailForm = document.querySelector('#previewMailForm');
   var previewFooter = document.querySelector('#preview-footer');
-
   if (previewMailForm) {
     previewMailForm.addEventListener('show.bs.collapse', function () {
       previewFooter.classList.add('d-none');
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                           Icon copy to clipboard                           */
-
 /* -------------------------------------------------------------------------- */
-
 
 var iconCopiedInit = function iconCopiedInit() {
   var iconList = document.getElementById('icon-list');
   var iconCopiedToast = document.getElementById('icon-copied-toast');
   var iconCopiedToastInstance = new window.bootstrap.Toast(iconCopiedToast);
-
   if (iconList) {
     iconList.addEventListener('click', function (e) {
       var el = e.target;
-
       if (el.tagName === 'INPUT') {
         el.select();
         el.setSelectionRange(0, 99999);
@@ -2304,12 +2045,30 @@ var iconCopiedInit = function iconCopiedInit() {
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
+/*                                   Inputmask                                */
+/* -------------------------------------------------------------------------- */
+var inputmaskInit = function inputmaskInit() {
+  if (window.Inputmask) {
+    var elements = document.querySelectorAll('[data-input-mask]');
+    elements.forEach(function (item) {
+      var userOptions = utils.getData(item, 'input-mask');
+      var defaultOptions = {
+        showMaskOnFocus: false,
+        showMaskOnHover: false,
+        jitMasking: true
+      };
+      var maskOptions = window._.merge(defaultOptions, userOptions);
+      var inputmask = new window.Inputmask(_objectSpread({}, maskOptions)).mask(item);
+      return inputmask;
+    });
+  }
+};
+
+/* -------------------------------------------------------------------------- */
 /*                                   Kanbah                                   */
-
 /* -------------------------------------------------------------------------- */
-
 
 var kanbanInit = function kanbanInit() {
   var Selectors = {
@@ -2335,11 +2094,12 @@ var kanbanInit = function kanbanInit() {
   var addCardButtons = document.querySelectorAll(Selectors.BTN_ADD_CARD);
   var formHideButtons = document.querySelectorAll(Selectors.BTN_FORM_HIDE);
   var addListForm = document.querySelector(Selectors.ADD_LIST_FORM);
-  var collapseDismissButtons = document.querySelectorAll(Selectors.BTN_COLLAPSE_DISMISS); // Show add card form and place scrollbar bottom of the list
+  var collapseDismissButtons = document.querySelectorAll(Selectors.BTN_COLLAPSE_DISMISS);
 
+  // Show add card form and place scrollbar bottom of the list
   addCardButtons && addCardButtons.forEach(function (button) {
-    button.addEventListener(Events.CLICK, function (_ref4) {
-      var el = _ref4.currentTarget;
+    button.addEventListener(Events.CLICK, function (_ref6) {
+      var el = _ref6.currentTarget;
       var column = el.closest(Selectors.KANBAN_COLUMN);
       var container = column.querySelector(Selectors.KANBAN_ITEMS_CONTAINER);
       var scrollHeight = container.scrollHeight;
@@ -2349,33 +2109,34 @@ var kanbanInit = function kanbanInit() {
         top: scrollHeight
       });
     });
-  }); // Remove add card form
+  });
 
+  // Remove add card form
   formHideButtons.forEach(function (button) {
-    button.addEventListener(Events.CLICK, function (_ref5) {
-      var el = _ref5.currentTarget;
+    button.addEventListener(Events.CLICK, function (_ref7) {
+      var el = _ref7.currentTarget;
       el.closest(Selectors.KANBAN_COLUMN).classList.remove(ClassNames.FORM_ADDED);
     });
   });
-
   if (addListForm) {
     // Hide add list button when the form is going to show
-    addListForm.addEventListener(Events.SHOW_BS_COLLAPSE, function (_ref6) {
-      var el = _ref6.currentTarget;
+    addListForm.addEventListener(Events.SHOW_BS_COLLAPSE, function (_ref8) {
+      var el = _ref8.currentTarget;
       var nextElement = el.nextElementSibling;
       nextElement && nextElement.classList.add(ClassNames.D_NONE);
-    }); // Focus input field when the form is shown
+    });
 
-    addListForm.addEventListener(Events.SHOWN_BS_COLLAPSE, function (_ref7) {
-      var el = _ref7.currentTarget;
+    // Focus input field when the form is shown
+    addListForm.addEventListener(Events.SHOWN_BS_COLLAPSE, function (_ref9) {
+      var el = _ref9.currentTarget;
       el.querySelector(Selectors.INPUT_ADD_LIST).focus();
     });
-  } // Hide add list form when the dismiss button is clicked
+  }
 
-
+  // Hide add list form when the dismiss button is clicked
   collapseDismissButtons.forEach(function (button) {
-    button.addEventListener(Events.CLICK, function (_ref8) {
-      var el = _ref8.currentTarget;
+    button.addEventListener(Events.CLICK, function (_ref10) {
+      var el = _ref10.currentTarget;
       var collapseElement = el.closest(Selectors.COLLAPSE);
       var collapse = window.bootstrap.Collapse.getInstance(collapseElement);
       utils.hasClass(collapseElement.nextElementSibling, ClassNames.D_NONE) && collapseElement.nextElementSibling.classList.remove(ClassNames.D_NONE);
@@ -2383,12 +2144,10 @@ var kanbanInit = function kanbanInit() {
     });
   });
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                   leaflet                                  */
-
 /* -------------------------------------------------------------------------- */
-
 
 var leafletActiveUserInit = function leafletActiveUserInit() {
   var points = [{
@@ -3366,16 +3125,14 @@ var leafletActiveUserInit = function leafletActiveUserInit() {
     name: '299'
   }];
   var _window2 = window,
-      L = _window2.L;
+    L = _window2.L;
   var mapContainer = document.getElementById('map');
-
   if (L && mapContainer) {
     var getFilterColor = function getFilterColor() {
-      return localStorage.getItem('theme') === 'dark' ? ['invert:98%', 'grayscale:69%', 'bright:89%', 'contrast:111%', 'hue:205deg', 'saturate:1000%'] : ['bright:101%', 'contrast:101%', 'hue:23deg', 'saturate:225%'];
+      return utils.isDark() === 'dark' ? ['invert:98%', 'grayscale:69%', 'bright:89%', 'contrast:111%', 'hue:205deg', 'saturate:1000%'] : ['bright:101%', 'contrast:101%', 'hue:23deg', 'saturate:225%'];
     };
-
     var tileLayerTheme = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
-    var tiles = L.tileLayer.colorFilter(tileLayerTheme, {
+    var tiles = L.tileLayer(tileLayerTheme, {
       attribution: null,
       transparent: true,
       filter: getFilterColor()
@@ -3395,8 +3152,8 @@ var leafletActiveUserInit = function leafletActiveUserInit() {
     });
     points.map(function (point) {
       var name = point.name,
-          location = point.location,
-          street = point.street;
+        location = point.location,
+        street = point.street;
       var icon = L.icon({
         iconUrl: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAApCAYAAADAk4LOAAAACXBIWXMAAAFgAAABYAEg2RPaAAADpElEQVRYCZ1XS1LbQBBtybIdiMEJKSpUqihgEW/xDdARyAnirOIl3MBH8NK7mBvkBpFv4Gy9IRSpFIQiRPyNfqkeZkY9HwmFt7Lm06+7p/vN2MmyDIrQ6QebALAHAD4AbFuWfQeAAACGs5H/w5jlsJJw4wMA+GhMFuMA99jIDJJOP+ihZwDQFmNuowWO1wS3viDXpdEdZPEc0odruj0EgN5s5H8tJOEEX8R3rbkMtcU34NTqhe5nSQTJ7Tkk80s6/Gk28scGiULguFBffgdufdEwWoQ0uoXo8hdAlooVH0REjISfwZSlyHGh0V5n6aHAtKTxXI5g6nQnMH0P4bEgwtR18Yw8Pj8QZ4ARUAI0Hl+fQZZGisGEBVwHr7XKzox57DXZ/ij8Cdwe2u057z9/wygOxRl4S2vSUHx1oucaMQGAHTrgtdag9mK5aN+Wx/uAAQ9Zenp/SRce4TpaNbQK4+sTcGqeTB/aIXv3XN5oj2VKqii++U0JunpZ8urxee4hvjqVc2hHpBDXuKKT9XMgVYJ1/1fPGSeaikzgmWWkMIi9bVf8UhotXxzORn5gWFchI8QyttlzjS0qpsaIGY2MMsujV/AUSdcY0dDpB6/EiOPYzclR1CI5mOez3ekHvrFLxa7cR5pTscfrXjk0Vhm5V2PqLUWnH3R5GbPGpMVD7E1ckXesKBQ7AS/vmQ1c0+kHuxpBj98lTCm8pbc5QRJRdZ6qHb/wGryXq3Lxszv+5gySuwvxueXySwYvHEjuQ9ofTGKYlrmK1EsCHMd5SoD7mZ1HHFCBHLNbMEshvrugqWLn01hpVVJhFgVGkDvK7hR6n2B+d9C7xsqWsbkqHv4cCsWezEb+o2SR+SFweUBxfA5wH7kShjKt2vWL57Px3GhIFEezkb8pxvUWHYhotAfCk2AtkEcxoOttrxUWDR5svb1emSQKj0WXK1HYIgFREbiBqmoZcB2RkbE+byMZiosorVgAZF1ID7yQhEs38wa7nUqNDezdlavC2HbBGSQkGgZ8uJVBmzeiKCRRpEa9ilWghORVeGB7BxeSKF5xqbFBkxBrFKUk/JHA7ppENQaCnCjthK+3opCEYyANztXmZN858cDYWSUSHk3A311GAZDvo6deNKUk1EsqnJoQlkYBNlmxQZeaMgmxoUokICoHDce351RCCiuKoirJWEgNOYvQplM2VCLhUqF7jf94rW9kHVUjQeheV4riv0i4ZOzzz/2y/+0KAOAfr4EE4HpCFhwAAAAASUVORK5CYII=\n        "
       });
@@ -3416,58 +3173,51 @@ var leafletActiveUserInit = function leafletActiveUserInit() {
     });
     map.addLayer(mcg);
     var themeController = document.body;
-    themeController.addEventListener('clickControl', function (_ref9) {
-      var _ref9$detail = _ref9.detail,
-          control = _ref9$detail.control,
-          value = _ref9$detail.value;
-
+    themeController.addEventListener('clickControl', function (_ref11) {
+      var _ref11$detail = _ref11.detail,
+        control = _ref11$detail.control,
+        value = _ref11$detail.value;
       if (control === 'theme') {
         tiles.updateFilter(value === 'dark' ? ['invert:98%', 'grayscale:69%', 'bright:89%', 'contrast:111%', 'hue:205deg', 'saturate:1000%'] : ['bright:101%', 'contrast:101%', 'hue:23deg', 'saturate:225%']);
       }
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                 Data Table                                 */
-
 /* -------------------------------------------------------------------------- */
-
-/* eslint-disable no-param-reassign */
-
 
 var togglePaginationButtonDisable = function togglePaginationButtonDisable(button, disabled) {
   button.disabled = disabled;
   button.classList[disabled ? 'add' : 'remove']('disabled');
 };
-
 var listInit = function listInit() {
   if (window.List) {
     var lists = document.querySelectorAll('[data-list]');
-
     if (lists.length) {
       lists.forEach(function (el) {
+        var bulkSelect = el.querySelector('[data-bulk-select]');
         var options = utils.getData(el, 'list');
-
         if (options.pagination) {
           options = _objectSpread(_objectSpread({}, options), {}, {
             pagination: _objectSpread({
-              item: '<li><button class=\'page\' type=\'button\'></button></li>'
+              item: "<li><button class='page' type='button'></button></li>"
             }, options.pagination)
           });
         }
-
         var paginationButtonNext = el.querySelector('[data-list-pagination="next"]');
         var paginationButtonPrev = el.querySelector('[data-list-pagination="prev"]');
         var viewAll = el.querySelector('[data-list-view="*"]');
         var viewLess = el.querySelector('[data-list-view="less"]');
         var listInfo = el.querySelector('[data-list-info]');
-        var listFilter = document.querySelector('[data-list-filter]');
-        var list = new window.List(el, options); //-------fallback-----------
+        var listFilters = document.querySelectorAll('[data-list-filter]');
+        var list = new window.List(el, options);
+
+        //-------fallback-----------
 
         list.on('updated', function (item) {
           var fallback = el.querySelector('.fallback') || document.getElementById(options.fallback);
-
           if (fallback) {
             if (item.matchingItems.length === 0) {
               fallback.classList.remove('d-none');
@@ -3475,7 +3225,9 @@ var listInit = function listInit() {
               fallback.classList.add('d-none');
             }
           }
-        }); // ---------------------------------------
+        });
+
+        // ---------------------------------------
 
         var totalItem = list.items.length;
         var itemsPerPage = list.page;
@@ -3486,21 +3238,18 @@ var listInit = function listInit() {
         btnDropdownClose && btnDropdownClose.addEventListener('search.close', function () {
           list.fuzzySearch('');
         });
-
         var updateListControls = function updateListControls() {
           listInfo && (listInfo.innerHTML = "".concat(list.i, " to ").concat(numberOfcurrentItems, " of ").concat(totalItem));
           paginationButtonPrev && togglePaginationButtonDisable(paginationButtonPrev, pageCount === 1);
           paginationButtonNext && togglePaginationButtonDisable(paginationButtonNext, pageCount === pageQuantity);
-
           if (pageCount > 1 && pageCount < pageQuantity) {
             togglePaginationButtonDisable(paginationButtonNext, false);
             togglePaginationButtonDisable(paginationButtonPrev, false);
           }
-        }; // List info
+        };
 
-
+        // List info
         updateListControls();
-
         if (paginationButtonNext) {
           paginationButtonNext.addEventListener('click', function (e) {
             e.preventDefault();
@@ -3511,7 +3260,6 @@ var listInit = function listInit() {
             updateListControls();
           });
         }
-
         if (paginationButtonPrev) {
           paginationButtonPrev.addEventListener('click', function (e) {
             e.preventDefault();
@@ -3522,12 +3270,10 @@ var listInit = function listInit() {
             updateListControls();
           });
         }
-
         var toggleViewBtn = function toggleViewBtn() {
           viewLess.classList.toggle('d-none');
           viewAll.classList.toggle('d-none');
         };
-
         if (viewAll) {
           viewAll.addEventListener('click', function () {
             list.show(1, totalItem);
@@ -3538,7 +3284,6 @@ var listInit = function listInit() {
             toggleViewBtn();
           });
         }
-
         if (viewLess) {
           viewLess.addEventListener('click', function () {
             list.show(1, itemsPerPage);
@@ -3548,9 +3293,8 @@ var listInit = function listInit() {
             updateListControls();
             toggleViewBtn();
           });
-        } // numbering pagination
-
-
+        }
+        // numbering pagination
         if (options.pagination) {
           el.querySelector('.pagination').addEventListener('click', function (e) {
             if (e.target.classList[0] === 'page') {
@@ -3559,27 +3303,53 @@ var listInit = function listInit() {
             }
           });
         }
-
-        if (options.filter) {
-          var key = options.filter.key;
-          listFilter.addEventListener('change', function (e) {
-            list.filter(function (item) {
-              if (e.target.value === '') {
-                return true;
-              }
-
-              return item.values()[key].toLowerCase().includes(e.target.value.toLowerCase());
+        if (listFilters) {
+          listFilters.forEach(function (listFilter) {
+            listFilter.addEventListener('change', function () {
+              var activeFilters = {};
+              listFilters.forEach(function (filter) {
+                var key = filter.getAttribute('data-list-filter');
+                var value = filter.value.trim().toLowerCase();
+                if (value) {
+                  activeFilters[key] = value;
+                }
+              });
+              list.filter(function (item) {
+                return Object.keys(activeFilters).every(function (key) {
+                  var itemValue = item.values()[key].toLowerCase();
+                  return itemValue.includes(activeFilters[key]);
+                });
+              });
             });
+          });
+        }
+
+        //bulk-select
+        if (bulkSelect) {
+          var bulkSelectInstance = window.BulkSelect.getInstance(bulkSelect);
+          bulkSelectInstance.attachRowNodes(list.items.map(function (item) {
+            return item.elm.querySelector('[data-bulk-select-row]');
+          }));
+          bulkSelect.addEventListener('change', function () {
+            if (list) {
+              if (bulkSelect.checked) {
+                list.items.forEach(function (item) {
+                  item.elm.querySelector('[data-bulk-select-row]').checked = true;
+                });
+              } else {
+                list.items.forEach(function (item) {
+                  item.elm.querySelector('[data-bulk-select-row]').checked = false;
+                });
+              }
+            }
           });
         }
       });
     }
   }
 };
-
 var lottieInit = function lottieInit() {
   var lotties = document.querySelectorAll('.lottie');
-
   if (lotties.length) {
     lotties.forEach(function (item) {
       var options = utils.getData(item, 'options');
@@ -3594,12 +3364,10 @@ var lottieInit = function lottieInit() {
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                             Navbar Combo Layout                            */
-
 /* -------------------------------------------------------------------------- */
-
 
 var navbarComboInit = function navbarComboInit() {
   var Selector = {
@@ -3615,21 +3383,17 @@ var navbarComboInit = function navbarComboInit() {
   };
   var navbarVertical = document.querySelector(Selector.NAVBAR_VERTICAL);
   var navbarTopCombo = document.querySelector(Selector.NAVBAR_TOP_COMBO);
-
   var moveNavContent = function moveNavContent(windowWidth) {
     var navbarVerticalBreakpoint = utils.getBreakpoint(navbarVertical);
     var navbarTopBreakpoint = utils.getBreakpoint(navbarTopCombo);
-
     if (windowWidth < navbarTopBreakpoint) {
       var navbarCollapse = navbarTopCombo.querySelector(Selector.COLLAPSE);
       var navbarTopContent = navbarCollapse.innerHTML;
-
       if (navbarTopContent) {
         var targetID = utils.getData(navbarTopCombo, 'move-target');
         var targetElement = document.querySelector(targetID);
         navbarCollapse.innerHTML = '';
         targetElement.insertAdjacentHTML('afterend', "\n            <div data-move-container>\n              <div class='navbar-vertical-divider'>\n                <hr class='navbar-vertical-hr' />\n              </div>\n              ".concat(navbarTopContent, "\n            </div>\n          "));
-
         if (navbarVerticalBreakpoint < navbarTopBreakpoint) {
           var navbarNav = document.querySelector(Selector.DATA_MOVE_CONTAINER).querySelector(Selector.NAVBAR_NAV);
           utils.addClass(navbarNav, ClassName.FLEX_COLUMN);
@@ -3637,10 +3401,8 @@ var navbarComboInit = function navbarComboInit() {
       }
     } else {
       var moveableContainer = document.querySelector(Selector.DATA_MOVE_CONTAINER);
-
       if (moveableContainer) {
         var _navbarNav = moveableContainer.querySelector(Selector.NAVBAR_NAV);
-
         utils.hasClass(_navbarNav, ClassName.FLEX_COLUMN) && _navbarNav.classList.remove(ClassName.FLEX_COLUMN);
         moveableContainer.querySelector(Selector.NAVBAR_VERTICAL_DIVIDER).remove();
         navbarTopCombo.querySelector(Selector.COLLAPSE).innerHTML = moveableContainer.innerHTML;
@@ -3648,19 +3410,15 @@ var navbarComboInit = function navbarComboInit() {
       }
     }
   };
-
   moveNavContent(window.innerWidth);
   utils.resize(function () {
     return moveNavContent(window.innerWidth);
   });
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                         Navbar Darken on scroll                        */
-
 /* -------------------------------------------------------------------------- */
-
-
 var navbarDarkenOnScroll = function navbarDarkenOnScroll() {
   var Selector = {
     NAVBAR: '[data-navbar-darken-on-scroll]',
@@ -3680,12 +3438,10 @@ var navbarDarkenOnScroll = function navbarDarkenOnScroll() {
     NAVBAR_DARKEN_ON_SCROLL: 'navbar-darken-on-scroll'
   };
   var navbar = document.querySelector(Selector.NAVBAR);
-
   function removeNavbarBgClass() {
     navbar.classList.remove('bg-dark');
     navbar.classList.remove('bg-100');
   }
-
   var toggleThemeClass = function toggleThemeClass(theme) {
     if (theme === 'dark') {
       navbar.classList.remove('navbar-dark');
@@ -3695,12 +3451,9 @@ var navbarDarkenOnScroll = function navbarDarkenOnScroll() {
       navbar.classList.add('navbar-dark');
     }
   };
-
   function getBgClassName(name, defaultColorName) {
     var parent = document.documentElement;
-
     var allColors = _objectSpread(_objectSpread({}, utils.getColors(parent)), utils.getGrays(parent));
-
     var colorName = Object.keys(allColors).includes(name) ? name : defaultColorName;
     var color = allColors[colorName];
     var bgClassName = "bg-".concat(colorName);
@@ -3709,22 +3462,19 @@ var navbarDarkenOnScroll = function navbarDarkenOnScroll() {
       bgClassName: bgClassName
     };
   }
-
   if (navbar) {
-    var theme = localStorage.getItem('theme');
+    var theme = utils.isDark();
     var defaultColorName = theme === 'dark' ? '100' : 'dark';
     var name = utils.getData(navbar, DataKey.NAVBAR_DARKEN_ON_SCROLL);
     toggleThemeClass(theme);
     var themeController = document.body;
-    themeController.addEventListener('clickControl', function (_ref10) {
-      var _ref10$detail = _ref10.detail,
-          control = _ref10$detail.control,
-          value = _ref10$detail.value;
-
+    themeController.addEventListener('clickControl', function (_ref12) {
+      var _ref12$detail = _ref12.detail,
+        control = _ref12$detail.control,
+        value = _ref12$detail.value;
       if (control === 'theme') {
         toggleThemeClass(value);
         defaultColorName = value === 'dark' ? '100' : 'dark';
-
         if (navbar.classList.contains('bg-dark') || navbar.classList.contains('bg-100')) {
           removeNavbarBgClass();
           navbar.classList.add(getBgClassName(name, defaultColorName).bgClassName);
@@ -3735,24 +3485,27 @@ var navbarDarkenOnScroll = function navbarDarkenOnScroll() {
     var html = document.documentElement;
     var navbarCollapse = navbar.querySelector(Selector.NAVBAR_COLLAPSE);
     var colorRgb = utils.hexToRgb(getBgClassName(name, defaultColorName).color);
-
     var _window$getComputedSt = window.getComputedStyle(navbar),
-        backgroundImage = _window$getComputedSt.backgroundImage;
-
+      backgroundImage = _window$getComputedSt.backgroundImage;
     var transition = 'background-color 0.35s ease';
-    navbar.style.backgroundImage = 'none'; // Change navbar background color on scroll
-
+    navbar.style.backgroundImage = 'none';
+    // Change navbar background color on scroll
     window.addEventListener(Events.SCROLL, function () {
       var scrollTop = html.scrollTop;
       var alpha = scrollTop / windowHeight * 2;
       alpha >= 1 && (alpha = 1);
       navbar.style.backgroundColor = "rgba(".concat(colorRgb[0], ", ").concat(colorRgb[1], ", ").concat(colorRgb[2], ", ").concat(alpha, ")");
       navbar.style.backgroundImage = alpha > 0 || utils.hasClass(navbarCollapse, 'show') ? backgroundImage : 'none';
-    }); // Toggle bg class on window resize
+    });
+    window.addEventListener('resize', function () {
+      if (navbarCollapse.classList.contains('show')) {
+        navbar.classList.add(getBgClassName(name, defaultColorName).bgClassName);
+      }
+    });
 
+    // Toggle bg class on window resize
     utils.resize(function () {
       var breakPoint = utils.getBreakpoint(navbar);
-
       if (window.innerWidth > breakPoint) {
         removeNavbarBgClass();
         navbar.style.backgroundImage = html.scrollTop ? backgroundImage : 'none';
@@ -3761,7 +3514,6 @@ var navbarDarkenOnScroll = function navbarDarkenOnScroll() {
         removeNavbarBgClass();
         navbar.style.backgroundImage = backgroundImage;
       }
-
       if (window.innerWidth <= breakPoint) {
         navbar.style.transition = utils.hasClass(navbarCollapse, 'show') ? transition : 'none';
       }
@@ -3780,12 +3532,10 @@ var navbarDarkenOnScroll = function navbarDarkenOnScroll() {
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                 Navbar Top                                 */
-
 /* -------------------------------------------------------------------------- */
-
 
 var navbarTopDropShadow = function navbarTopDropShadow() {
   var Selector = {
@@ -3810,7 +3560,6 @@ var navbarTopDropShadow = function navbarTopDropShadow() {
   var $navbarVerticalCollapse = document.getElementById(Selector.NAVBAR_VERTICAL_COLLAPSE);
   var html = document.documentElement;
   var breakPoint = utils.getBreakpoint($navbarVertical);
-
   var setDropShadow = function setDropShadow($elem) {
     if ($elem.scrollTop > 0 && navDropShadowFlag) {
       $navbar && $navbar.classList.add(ClassNames.NAVBAR_GLASS_SHADOW);
@@ -3818,11 +3567,10 @@ var navbarTopDropShadow = function navbarTopDropShadow() {
       $navbar && $navbar.classList.remove(ClassNames.NAVBAR_GLASS_SHADOW);
     }
   };
-
+  setDropShadow(html);
   window.addEventListener(Events.SCROLL, function () {
     setDropShadow(html);
   });
-
   if ($navbarVerticalContent) {
     $navbarVerticalContent.addEventListener(Events.SCROLL, function () {
       if (window.outerWidth < breakPoint) {
@@ -3831,7 +3579,6 @@ var navbarTopDropShadow = function navbarTopDropShadow() {
       }
     });
   }
-
   if ($navbarVerticalCollapse) {
     $navbarVerticalCollapse.addEventListener(Events.SHOW_BS_COLLAPSE, function () {
       if (window.outerWidth < breakPoint) {
@@ -3840,7 +3587,6 @@ var navbarTopDropShadow = function navbarTopDropShadow() {
       }
     });
   }
-
   if ($navbarVerticalCollapse) {
     $navbarVerticalCollapse.addEventListener(Events.HIDDEN_BS_COLLAPSE, function () {
       if (utils.hasClass($navbarVerticalCollapse, ClassNames.SHOW) && window.outerWidth < breakPoint) {
@@ -3848,17 +3594,14 @@ var navbarTopDropShadow = function navbarTopDropShadow() {
       } else {
         navDropShadowFlag = true;
       }
-
       setDropShadow(html);
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                               Navbar Vertical                              */
-
 /* -------------------------------------------------------------------------- */
-
 
 var handleNavbarVerticalCollapsed = function handleNavbarVerticalCollapsed() {
   var Selector = {
@@ -3880,19 +3623,18 @@ var handleNavbarVerticalCollapsed = function handleNavbarVerticalCollapsed() {
   var navbarVerticalToggle = document.querySelector(Selector.NAVBAR_VERTICAL_TOGGLE);
   var html = document.querySelector(Selector.HTML);
   var navbarVerticalCollapse = document.querySelector(Selector.NAVBAR_VERTICAL_COLLAPSE);
-
   if (navbarVerticalToggle) {
     navbarVerticalToggle.addEventListener(Events.CLICK, function (e) {
       navbarVerticalToggle.blur();
-      html.classList.toggle(ClassNames.NAVBAR_VERTICAL_COLLAPSED); // Set collapse state on localStorage
+      html.classList.toggle(ClassNames.NAVBAR_VERTICAL_COLLAPSED);
 
+      // Set collapse state on localStorage
       var isNavbarVerticalCollapsed = utils.getItemFromStore('isNavbarVerticalCollapsed');
       utils.setItemToStore('isNavbarVerticalCollapsed', !isNavbarVerticalCollapsed);
       var event = new CustomEvent(Events.NAVBAR_VERTICAL_TOGGLE);
       e.currentTarget.dispatchEvent(event);
     });
   }
-
   if (navbarVerticalCollapse) {
     navbarVerticalCollapse.addEventListener(Events.MOUSE_OVER, function () {
       if (utils.hasClass(html, ClassNames.NAVBAR_VERTICAL_COLLAPSED)) {
@@ -3906,10 +3648,38 @@ var handleNavbarVerticalCollapsed = function handleNavbarVerticalCollapsed() {
     });
   }
 };
+
+/* -------------------------------------------------------------------------- */
+/*                               noUiSlider                                   */
+/* -------------------------------------------------------------------------- */
+var nouisliderInit = function nouisliderInit() {
+  if (window.noUiSlider) {
+    var elements = document.querySelectorAll('[data-nouislider]');
+    elements.forEach(function (item) {
+      var sliderValue = document.querySelector('[data-nouislider-value]');
+      var userOptions = utils.getData(item, 'nouislider');
+      var defaultOptions = {
+        start: [10],
+        connect: [true, false],
+        step: 1,
+        range: {
+          min: [0],
+          max: [100]
+        },
+        tooltips: true
+      };
+      var options = window._.merge(defaultOptions, userOptions);
+      window.noUiSlider.create(item, _objectSpread({}, options));
+      sliderValue && item.noUiSlider.on('update', function (values, handle) {
+        sliderValue.innerHTML = values[handle];
+      });
+    });
+  }
+};
+
 /*-----------------------------------------------
 |   Inline Player [plyr]
 -----------------------------------------------*/
-
 
 var plyrInit = function plyrInit() {
   if (window.Plyr) {
@@ -3921,19 +3691,15 @@ var plyrInit = function plyrInit() {
           active: true
         }
       };
-
       var options = window._.merge(defaultOptions, userOptions);
-
       return new window.Plyr(plyr, options);
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                   Popover                                  */
-
 /* -------------------------------------------------------------------------- */
-
 
 var popoverInit = function popoverInit() {
   var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
@@ -3941,12 +3707,10 @@ var popoverInit = function popoverInit() {
     return new window.bootstrap.Popover(popoverTriggerEl);
   });
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                         Bootstrap Animated Progress                        */
-
 /* -------------------------------------------------------------------------- */
-
 
 var progressAnimationToggle = function progressAnimationToggle() {
   var animatedProgress = document.querySelectorAll('[data-progress-animation]');
@@ -3958,11 +3722,10 @@ var progressAnimationToggle = function progressAnimationToggle() {
     });
   });
 };
+
 /*-----------------------------------------------
 |  Quantity
 -----------------------------------------------*/
-
-
 var quantityInit = function quantityInit() {
   var Selector = {
     DATA_QUANTITY_BTN: '[data-quantity] [data-type]',
@@ -3986,23 +3749,21 @@ var quantityInit = function quantityInit() {
       var numberInput = el.closest(Selector.DATA_QUANTITY).querySelector(Selector.DATA_QUANTITY_INPUT);
       var min = numberInput.getAttribute(Attributes.MIN);
       var value = parseInt(numberInput.value, 10);
-
       if (type === 'plus') {
         value += 1;
       } else {
         value = value > min ? value -= 1 : value;
       }
-
       numberInput.value = value;
     });
   });
 };
+
 /* -------------------------------------------------------------------------- */
 
 /*                               Ratings                               */
 
 /* -------------------------------------------------------------------------- */
-
 
 var ratingInit = function ratingInit() {
   var raters = document.querySelectorAll('[data-rater]');
@@ -4017,21 +3778,17 @@ var ratingInit = function ratingInit() {
         done();
       }
     }, utils.getData(rater, 'rater'));
-
     return window.raterJs(options);
   });
 };
+
 /* -------------------------------------------------------------------------- */
-
 /*                                 Scrollbars                                 */
-
 /* -------------------------------------------------------------------------- */
 // import utils from './utils';
 
-
 var scrollInit = function scrollInit() {
   var dropdownElements = Array.from(document.querySelectorAll('[data-hide-on-body-scroll]'));
-
   if (window.innerWidth < 1200) {
     window.addEventListener('scroll', function () {
       dropdownElements.forEach(function (dropdownElement) {
@@ -4041,12 +3798,10 @@ var scrollInit = function scrollInit() {
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                 Scrollbars                                 */
-
 /* -------------------------------------------------------------------------- */
-
 
 var scrollbarInit = function scrollbarInit() {
   Array.prototype.forEach.call(document.querySelectorAll('.scrollbar-overlay'), function (el) {
@@ -4055,7 +3810,6 @@ var scrollbarInit = function scrollbarInit() {
     });
   });
 };
-
 var searchInit = function searchInit() {
   var Selectors = {
     SEARCH_DISMISS: '[data-bs-dismiss="search"]',
@@ -4077,7 +3831,6 @@ var searchInit = function searchInit() {
     SHOW_BS_DROPDOWN: 'show.bs.dropdown',
     SEARCH_CLOSE: 'search.close'
   };
-
   var hideSearchSuggestion = function hideSearchSuggestion(searchArea) {
     var el = searchArea.querySelector(Selectors.SEARCH_TOGGLE);
     var dropdownMenu = searchArea.querySelector(Selectors.DROPDOWN_MENU);
@@ -4086,18 +3839,14 @@ var searchInit = function searchInit() {
     el.classList.remove(ClassName.SHOW);
     dropdownMenu.classList.remove(ClassName.SHOW);
   };
-
   var searchAreas = document.querySelectorAll(Selectors.SEARCH_BOX);
-
   var hideAllSearchAreas = function hideAllSearchAreas() {
     searchAreas.forEach(hideSearchSuggestion);
   };
-
   searchAreas.forEach(function (searchArea) {
     var input = searchArea.querySelector(Selectors.SEARCH_INPUT);
     var btnDropdownClose = searchArea.querySelector(Selectors.SEARCH_DISMISS);
     var dropdownMenu = searchArea.querySelector(Selectors.DROPDOWN_MENU);
-
     if (input) {
       input.addEventListener(Events.FOCUS, function () {
         hideAllSearchAreas();
@@ -4108,9 +3857,8 @@ var searchInit = function searchInit() {
         dropdownMenu.classList.add(ClassName.SHOW);
       });
     }
-
-    document.addEventListener(Events.CLICK, function (_ref11) {
-      var target = _ref11.target;
+    document.addEventListener(Events.CLICK, function (_ref13) {
+      var target = _ref13.target;
       !searchArea.contains(target) && hideSearchSuggestion(searchArea);
     });
     btnDropdownClose && btnDropdownClose.addEventListener(Events.CLICK, function (e) {
@@ -4126,10 +3874,10 @@ var searchInit = function searchInit() {
     });
   });
 };
+
 /*-----------------------------------------------
 |   Select2
 -----------------------------------------------*/
-
 
 var select2Init = function select2Init() {
   if (window.jQuery) {
@@ -4144,11 +3892,39 @@ var select2Init = function select2Init() {
     });
   }
 };
+
+/* -------------------------------------------------------------------------- */
+/*                                 SortableJS                                 */
+/* -------------------------------------------------------------------------- */
+
+var sortableInit = function sortableInit() {
+  var getData = utils.getData;
+  var sortableEl = document.querySelectorAll('[data-sortable]');
+  var defaultOptions = {
+    animation: 150,
+    group: {
+      name: 'shared'
+    },
+    delay: 100,
+    delayOnTouchOnly: true,
+    forceFallback: true,
+    onStart: function onStart() {
+      document.body.classList.add('sortable-dragging');
+    },
+    onEnd: function onEnd() {
+      document.body.classList.remove('sortable-dragging');
+    }
+  };
+  sortableEl.forEach(function (el) {
+    var userOptions = getData(el, 'sortable');
+    var options = window._.merge(defaultOptions, userOptions);
+    return window.Sortable.create(el, options);
+  });
+};
+
 /*-----------------------------------------------
 |  Swiper
 -----------------------------------------------*/
-
-
 var swiperInit = function swiperInit() {
   var swipers = document.querySelectorAll('[data-swiper]');
   var navbarVerticalToggle = document.querySelector('.navbar-vertical-toggle');
@@ -4156,7 +3932,6 @@ var swiperInit = function swiperInit() {
     var options = utils.getData(swiper, 'swiper');
     var thumbsOptions = options.thumb;
     var thumbsInit;
-
     if (thumbsOptions) {
       var thumbImages = swiper.querySelectorAll('img');
       var slides = '';
@@ -4164,19 +3939,16 @@ var swiperInit = function swiperInit() {
         slides += "\n          <div class='swiper-slide '>\n            <img class='img-fluid rounded mt-1' src=".concat(img.src, " alt=''/>\n          </div>\n        ");
       });
       var thumbs = document.createElement('div');
-      thumbs.setAttribute('class', 'swiper-container thumb');
+      thumbs.setAttribute('class', 'swiper thumb');
       thumbs.innerHTML = "<div class='swiper-wrapper'>".concat(slides, "</div>");
-
       if (thumbsOptions.parent) {
         var parent = document.querySelector(thumbsOptions.parent);
         parent.parentNode.appendChild(thumbs);
       } else {
         swiper.parentNode.appendChild(thumbs);
       }
-
       thumbsInit = new window.Swiper(thumbs, thumbsOptions);
     }
-
     var swiperNav = swiper.querySelector('.swiper-nav');
     var newSwiper = new window.Swiper(swiper, _objectSpread(_objectSpread({}, options), {}, {
       navigation: {
@@ -4187,91 +3959,89 @@ var swiperInit = function swiperInit() {
         swiper: thumbsInit
       }
     }));
-
     if (navbarVerticalToggle) {
       navbarVerticalToggle.addEventListener('navbar.vertical.toggle', function () {
         newSwiper.update();
       });
     }
   });
-}; // export default themeControl;
+};
 
 /* -------------------------------------------------------------------------- */
-
 /*                                Theme Control                               */
-
 /* -------------------------------------------------------------------------- */
-
-/* eslint-disable no-param-reassign */
-
-/* eslint-disable */
-
-
 var initialDomSetup = function initialDomSetup(element) {
   if (!element) return;
   var dataUrlDom = element.querySelector('[data-theme-control = "navbarPosition"]');
-  var hasDataUrl = dataUrlDom ? getData(dataUrlDom, "page-url") : null;
-  element.querySelectorAll("[data-theme-control]").forEach(function (el) {
-    var inputDataAttributeValue = getData(el, "theme-control");
+  var hasDataUrl = dataUrlDom ? getData(dataUrlDom, 'page-url') : null;
+  element.querySelectorAll('[data-theme-control]').forEach(function (el) {
+    var inputDataAttributeValue = getData(el, 'theme-control');
     var localStorageValue = getItemFromStore(inputDataAttributeValue);
-
-    if (inputDataAttributeValue === "navbarStyle" && !hasDataUrl && (getItemFromStore("navbarPosition") === "top" || getItemFromStore("navbarPosition") === "double-top")) {
-      el.setAttribute("disabled", true);
+    if (inputDataAttributeValue === 'navbarStyle' && !hasDataUrl && (getItemFromStore('navbarPosition') === 'top' || getItemFromStore('navbarPosition') === 'double-top')) {
+      el.setAttribute('disabled', true);
     }
-
-    if (el.type === "select-one" && inputDataAttributeValue === "navbarPosition") {
+    if (el.type === 'select-one' && inputDataAttributeValue === 'navbarPosition') {
       el.value = localStorageValue;
     }
-
-    if (el.type === "checkbox") {
-      if (inputDataAttributeValue === "theme") {
-        localStorageValue === "dark" && el.setAttribute("checked", true);
+    if (el.type === 'checkbox') {
+      if (inputDataAttributeValue === 'theme') {
+        if (localStorageValue === 'auto' ? getSystemTheme() === 'dark' : localStorageValue === 'dark') {
+          el.setAttribute('checked', true);
+        }
       } else {
-        localStorageValue && el.setAttribute("checked", true);
+        localStorageValue && el.setAttribute('checked', true);
       }
-    } else {
+    } else if (el.type === 'radio') {
       var isChecked = localStorageValue === el.value;
-      isChecked && el.setAttribute("checked", true);
+      isChecked && el.setAttribute('checked', true);
+    } else {
+      var isActive = localStorageValue === el.value;
+      isActive && el.classList.add('active');
     }
   });
 };
-
 var changeTheme = function changeTheme(element) {
   element.querySelectorAll('[data-theme-control = "theme"]').forEach(function (el) {
-    var inputDataAttributeValue = getData(el, "theme-control");
+    var inputDataAttributeValue = getData(el, 'theme-control');
     var localStorageValue = getItemFromStore(inputDataAttributeValue);
-
-    if (el.type === "checkbox") {
-      localStorageValue === "dark" ? el.checked = true : el.checked = false;
-    } else {
+    if (el.type === 'checkbox') {
+      if (localStorageValue === 'auto') {
+        getSystemTheme() === 'dark' ? el.checked = true : el.checked = false;
+      } else {
+        localStorageValue === 'dark' ? el.checked = true : el.checked = false;
+      }
+    } else if (el.type === 'radio') {
       localStorageValue === el.value ? el.checked = true : el.checked = false;
+    } else {
+      localStorageValue === el.value ? el.classList.add('active') : el.classList.remove('active');
     }
   });
 };
-
+var handleThemeDropdownIcon = function handleThemeDropdownIcon(value) {
+  document.querySelectorAll('[data-theme-dropdown-toggle-icon]').forEach(function (el) {
+    el.classList.toggle('d-none', value !== getData(el, 'theme-dropdown-toggle-icon'));
+  });
+};
+handleThemeDropdownIcon(getItemFromStore('theme'));
 var themeControl = function themeControl() {
   var themeController = new DomNode(document.body);
-  var navbarVertical = document.querySelector(".navbar-vertical");
+  var navbarVertical = document.querySelector('.navbar-vertical');
   initialDomSetup(themeController.node);
-  themeController.on("click", function (e) {
+  themeController.on('click', function (e) {
     var target = new DomNode(e.target);
-
-    if (target.data("theme-control")) {
-      var control = target.data("theme-control");
-      var value = e.target[e.target.type === "radio" ? "value" : "checked"];
-
-      if (control === "theme") {
-        typeof value === "boolean" && (value = value ? "dark" : "light");
+    if (target.data('theme-control')) {
+      var control = target.data('theme-control');
+      var value = e.target[e.target.type === 'checkbox' ? 'checked' : 'value'];
+      if (control === 'theme') {
+        typeof value === 'boolean' && (value = value ? 'dark' : 'light');
       }
-
-      if (control !== "navbarPosition") {
-        CONFIG.hasOwnProperty(control) && setItemToStore(control, value);
-
+      if (control !== 'navbarPosition') {
+        Object.prototype.hasOwnProperty.call(CONFIG, control) && setItemToStore(control, value);
         switch (control) {
-          case "theme":
+          case 'theme':
             {
-              document.documentElement.setAttribute("data-bs-theme", value);
-              var clickControl = new CustomEvent("clickControl", {
+              document.documentElement.setAttribute('data-bs-theme', value === 'auto' ? getSystemTheme() : value);
+              var clickControl = new CustomEvent('clickControl', {
                 detail: {
                   control: control,
                   value: value
@@ -4281,21 +4051,17 @@ var themeControl = function themeControl() {
               changeTheme(themeController.node);
               break;
             }
-
-          case "navbarStyle":
+          case 'navbarStyle':
             {
-              navbarVertical.classList.remove("navbar-card");
-              navbarVertical.classList.remove("navbar-inverted");
-              navbarVertical.classList.remove("navbar-vibrant");
-
-              if (value !== "transparent") {
+              navbarVertical.classList.remove('navbar-card');
+              navbarVertical.classList.remove('navbar-inverted');
+              navbarVertical.classList.remove('navbar-vibrant');
+              if (value !== 'transparent') {
                 navbarVertical.classList.add("navbar-".concat(value));
               }
-
               break;
             }
-
-          case "reset":
+          case 'reset':
             {
               Object.keys(CONFIG).forEach(function (key) {
                 localStorage.setItem(key, CONFIG[key]);
@@ -4303,50 +4069,55 @@ var themeControl = function themeControl() {
               window.location.reload();
               break;
             }
-
           default:
             window.location.reload();
         }
       }
     }
-  }); // control navbar position
+  });
 
-  themeController.on("change", function (e) {
+  // control navbar position
+  themeController.on('change', function (e) {
     var target = new DomNode(e.target);
-
-    if (target.data("theme-control") === "navbarPosition") {
-      CONFIG.hasOwnProperty("navbarPosition") && setItemToStore("navbarPosition", e.target.value);
-      var pageUrl = getData(target.node.selectedOptions[0], "page-url");
-      !!pageUrl ? window.location.replace(pageUrl) : window.location.replace(window.location.href.split("#")[0]);
+    if (target.data('theme-control') === 'navbarPosition') {
+      Object.prototype.hasOwnProperty.call(CONFIG, 'navbarPosition') && setItemToStore('navbarPosition', e.target.value);
+      var pageUrl = getData(target.node.selectedOptions[0], 'page-url');
+      pageUrl ? window.location.replace(pageUrl) : window.location.replace(window.location.href.split('#')[0]);
+    }
+  });
+  themeController.on('clickControl', function (_ref14) {
+    var _ref14$detail = _ref14.detail,
+      control = _ref14$detail.control,
+      value = _ref14$detail.value;
+    if (control === 'theme') {
+      handleThemeDropdownIcon(value);
     }
   });
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                   Tinymce                                  */
-
 /* -------------------------------------------------------------------------- */
-
 
 var tinymceInit = function tinymceInit() {
   if (window.tinymce) {
-    var tinymces = document.querySelectorAll('.tinymce');
-
+    var tinymces = document.querySelectorAll('[data-tinymce]');
     if (tinymces.length) {
       window.tinymce.execCommand('mceFocus', false, 'course-description');
       window.tinymce.init({
         selector: '.tinymce',
         height: '50vh',
         menubar: false,
+        license_key: 'gpl',
         skin: utils.settings.tinymce.theme,
-        content_style: ".mce-content-body { color: ".concat(utils.getGrays().black, " }"),
+        content_style: "\n          .mce-content-body {\n            color: ".concat(utils.getColors().emphasis, ";\n            background-color: ").concat(utils.getColor('tinymce-bg'), ";\n          }\n        "),
         mobile: {
           theme: 'mobile',
           toolbar: ['undo', 'bold']
         },
         statusbar: false,
         plugins: 'link,image,lists,table,media',
-        toolbar: 'styleselect | bold italic link bullist numlist image blockquote table media undo redo',
+        toolbar: 'styles | bold italic link bullist numlist image blockquote table media undo redo',
         directionality: utils.getItemFromStore('isRTL') ? 'rtl' : 'ltr',
         theme_advanced_toolbar_align: 'center',
         setup: function setup(editor) {
@@ -4356,25 +4127,24 @@ var tinymceInit = function tinymceInit() {
         }
       });
     }
-
     var themeController = document.body;
-    themeController && themeController.addEventListener('clickControl', function (_ref12) {
-      var control = _ref12.detail.control;
-
-      if (control === 'theme') {
-        window.tinyMCE.editors.forEach(function (el) {
-          el.dom.addStyle(".mce-content-body{color: ".concat(utils.getGrays().black, " !important;}"));
-        });
-      }
-    });
+    if (themeController) {
+      themeController.addEventListener('clickControl', function (_ref15) {
+        var control = _ref15.detail.control;
+        if (control === 'theme') {
+          tinymces.forEach(function (tinymceEl) {
+            var instance = window.tinymce.get(tinymceEl.id);
+            instance.dom.addStyle("\n                .mce-content-body {\n                  color: ".concat(utils.getColors().emphasis, " !important;\n                  background-color: ").concat(utils.getColor('tinymce-bg'), " !important;\n                }\n              "));
+          });
+        }
+      });
+    }
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                    Toast                                   */
-
 /* -------------------------------------------------------------------------- */
-
 
 var toastInit = function toastInit() {
   var toastElList = [].slice.call(document.querySelectorAll('.toast'));
@@ -4382,7 +4152,6 @@ var toastInit = function toastInit() {
     return new window.bootstrap.Toast(toastEl);
   });
   var liveToastBtn = document.getElementById('liveToastBtn');
-
   if (liveToastBtn) {
     var liveToast = new window.bootstrap.Toast(document.getElementById('liveToast'));
     liveToastBtn.addEventListener('click', function () {
@@ -4390,13 +4159,10 @@ var toastInit = function toastInit() {
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                   Tooltip                                  */
-
 /* -------------------------------------------------------------------------- */
-
-
 var tooltipInit = function tooltipInit() {
   var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
   tooltipTriggerList.map(function (tooltipTriggerEl) {
@@ -4405,15 +4171,10 @@ var tooltipInit = function tooltipInit() {
     });
   });
 };
-/* eslint-disable no-param-reassign */
 
 /* -------------------------------------------------------------------------- */
-
-/*                                   Treeview                                   */
-
+/*                                   Treeview                                  */
 /* -------------------------------------------------------------------------- */
-
-
 var treeviewInit = function treeviewInit() {
   var Events = {
     CHANGE: 'change',
@@ -4441,21 +4202,17 @@ var treeviewInit = function treeviewInit() {
     TREEVIEW_ROW_EVEN: 'treeview-row-even'
   };
   var treeviews = document.querySelectorAll(Selector.TREEVIEW);
-
   var makeStriped = function makeStriped(treeview) {
     var tags = Array.from(treeview.querySelectorAll(Selector.TREEVIEW_ROW));
     var uTags = tags.filter(function (tag) {
       var result = true;
-
       while (tag.parentElement) {
         if (tag.parentElement.classList.contains(ClassName.COLLAPSE_HIDDEN)) {
           result = false;
           break;
         }
-
         tag = tag.parentElement;
       }
-
       return result;
     });
     uTags.forEach(function (tag, index) {
@@ -4468,17 +4225,14 @@ var treeviewInit = function treeviewInit() {
       }
     });
   };
-
   if (treeviews.length) {
     treeviews.forEach(function (treeview) {
       var options = utils.getData(treeview, 'options');
       var striped = options === null || options === void 0 ? void 0 : options.striped;
       var select = options === null || options === void 0 ? void 0 : options.select;
-
       if (striped) {
         makeStriped(treeview);
       }
-
       var collapseElementList = Array.from(treeview.querySelectorAll(Selector.TREEVIEW_LIST));
       var collapseListItem = Array.from(treeview.querySelectorAll(Selector.TREEVIEW_LIST_ITEM));
       collapseListItem.forEach(function (item) {
@@ -4488,47 +4242,38 @@ var treeviewInit = function treeviewInit() {
       });
       collapseElementList.forEach(function (collapse) {
         var collapseId = collapse.id;
-
         if (!striped) {
           collapse.classList.add(ClassName.TREEVIEW_BORDER);
         }
-
         collapse.addEventListener(Events.SHOW_BS_COLLAPSE, function (e) {
           e.target.classList.remove(ClassName.COLLAPSE_HIDDEN);
           e.target.classList.add(ClassName.COLLAPSE_SHOW);
-
           if (striped) {
             makeStriped(treeview);
           } else {
-            e.path[2].classList.add(ClassName.TREEVIEW_BORDER_TRANSPARENT);
+            e.composedPath()[2].classList.add(ClassName.TREEVIEW_BORDER_TRANSPARENT);
           }
         });
         collapse.addEventListener(Events.HIDE_BS_COLLAPSE, function (e) {
           e.target.classList.add(ClassName.COLLAPSE_HIDDEN);
           e.target.classList.remove(ClassName.COLLAPSE_SHOW);
-
           if (striped) {
             makeStriped(treeview);
           } else {
-            var childs = e.path[2].querySelectorAll(Selector.CHILD_SELECTOR);
-
-            if (!e.path[2].classList.contains(ClassName.TREEVIEW) && childs.length === 0) {
-              e.path[2].classList.remove(ClassName.TREEVIEW_BORDER_TRANSPARENT);
+            var childs = e.composedPath()[2].querySelectorAll(Selector.CHILD_SELECTOR);
+            if (!e.composedPath()[2].classList.contains(ClassName.TREEVIEW) && childs.length === 0) {
+              e.composedPath()[2].classList.remove(ClassName.TREEVIEW_BORDER_TRANSPARENT);
             }
           }
         });
-
         if (collapse.dataset.show === 'true') {
           var parents = [collapse];
-
           while (collapse.parentElement) {
             if (collapse.parentElement.classList.contains(ClassName.TREEVIEW_LIST)) {
               parents.unshift(collapse.parentElement);
             }
-
             collapse = collapse.parentElement;
           }
-
           parents.forEach(function (collapseEl) {
             // eslint-disable-next-line no-new
             new window.bootstrap.Collapse(collapseEl, {
@@ -4536,7 +4281,6 @@ var treeviewInit = function treeviewInit() {
             });
           });
         }
-
         if (select) {
           var inputElement = treeview.querySelector("input[data-target='#".concat(collapseId, "']"));
           inputElement.addEventListener(Events.CHANGE, function (e) {
@@ -4550,16 +4294,13 @@ var treeviewInit = function treeviewInit() {
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                 Typed Text                                 */
-
 /* -------------------------------------------------------------------------- */
-
 
 var typedTextInit = function typedTextInit() {
   var typedTexts = document.querySelectorAll('.typed-text');
-
   if (typedTexts.length && window.Typed) {
     typedTexts.forEach(function (typedText) {
       return new window.Typed(typedText, {
@@ -4571,7 +4312,6 @@ var typedTextInit = function typedTextInit() {
     });
   }
 };
-
 var unresolvedTicketsTabInit = function unresolvedTicketsTabInit() {
   var dropdownToggle = document.querySelectorAll('.dropdown-toggle-item a');
   var layout = document.querySelector('.table-layout');
@@ -4581,91 +4321,117 @@ var unresolvedTicketsTabInit = function unresolvedTicketsTabInit() {
     });
   });
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                 step wizard                                */
-
 /* -------------------------------------------------------------------------- */
-
 
 var wizardInit = function wizardInit() {
-  var wizards = document.querySelectorAll('.theme-wizard');
-  var tabPillEl = document.querySelectorAll('#pill-tab2 [data-bs-toggle="pill"]');
-  var tabProgressBar = document.querySelector('.theme-wizard .progress');
+  var getData = utils.getData;
+  var selectors = {
+    WIZARDS: '.theme-wizard',
+    TOGGLE_BUTTON_EL: '[data-wizard-step]',
+    FORMS: '[data-wizard-form]',
+    PASSWORD_INPUT: '[data-wizard-password]',
+    CONFIRM_PASSWORD_INPUT: '[data-wizard-confirm-password]',
+    NEXT_BTN: '.next button',
+    PREV_BTN: '.previous button',
+    FOOTER: '.theme-wizard .card-footer'
+  };
+  var events = {
+    SUBMIT: 'submit',
+    SHOW: 'show.bs.tab',
+    SHOWN: 'shown.bs.tab',
+    CLICK: 'click'
+  };
+  var wizards = document.querySelectorAll(selectors.WIZARDS);
   wizards.forEach(function (wizard) {
-    var tabToggleButtonEl = wizard.querySelectorAll('[data-wizard-step]');
-    var inputEmail = wizard.querySelector('[data-wizard-validate-email]');
-    var emailPattern = inputEmail.getAttribute('pattern');
-    var inputPassword = wizard.querySelector('[data-wizard-validate-password]');
-    var inputConfirmPassword = wizard.querySelector('[data-wizard-validate-confirm-password]');
-    var form = wizard.querySelector('[novalidate]');
-    var nextButton = wizard.querySelector('.next button');
-    var prevButton = wizard.querySelector('.previous button');
-    var cardFooter = wizard.querySelector('.theme-wizard .card-footer');
+    var tabToggleButtonEl = wizard.querySelectorAll(selectors.TOGGLE_BUTTON_EL);
+    var forms = wizard.querySelectorAll(selectors.FORMS);
+    var passwordInput = wizard.querySelector(selectors.PASSWORD_INPUT);
+    var confirmPasswordInput = wizard.querySelector(selectors.CONFIRM_PASSWORD_INPUT);
+    var nextButton = wizard.querySelector(selectors.NEXT_BTN);
+    var prevButton = wizard.querySelector(selectors.PREV_BTN);
+    var wizardFooter = wizard.querySelector(selectors.FOOTER);
+    var submitEvent = new Event(events.SUBMIT, {
+      bubbles: true,
+      cancelable: true
+    });
+    var tabs = Array.from(tabToggleButtonEl).map(function (item) {
+      return window.bootstrap.Tab.getOrCreateInstance(item);
+    });
     var count = 0;
-
-    var validatePattern = function validatePattern(pattern, value) {
-      var regexPattern = new RegExp(pattern);
-      return regexPattern.test(String(value).toLowerCase());
-    };
-
-    prevButton.classList.add('d-none'); // on button click tab change
-
-    nextButton.addEventListener('click', function () {
-      if ((!(inputEmail.value && validatePattern(emailPattern, inputEmail.value)) || !inputPassword.value || !inputConfirmPassword.value) && form.className.includes('needs-validation')) {
-        form.classList.add('was-validated');
-      } else {
+    var showEvent = null;
+    forms.forEach(function (form) {
+      form.addEventListener(events.SUBMIT, function (e) {
+        e.preventDefault();
+        if (form.classList.contains('needs-validation')) {
+          if (passwordInput && confirmPasswordInput) {
+            if (passwordInput.value !== confirmPasswordInput.value) {
+              confirmPasswordInput.setCustomValidity('Invalid field.');
+            } else {
+              confirmPasswordInput.setCustomValidity('');
+            }
+          }
+          if (!form.checkValidity()) {
+            showEvent.preventDefault();
+            return false;
+          }
+        }
         count += 1;
-        var tab = new window.bootstrap.Tab(tabToggleButtonEl[count]);
-        tab.show();
+        return null;
+      });
+    });
+    nextButton.addEventListener(events.CLICK, function () {
+      if (count + 1 < tabs.length) {
+        tabs[count + 1].show();
       }
     });
-    prevButton.addEventListener('click', function () {
+    prevButton.addEventListener(events.CLICK, function () {
       count -= 1;
-      var tab = new window.bootstrap.Tab(tabToggleButtonEl[count]);
-      tab.show();
+      tabs[count].show();
     });
-
     if (tabToggleButtonEl.length) {
       tabToggleButtonEl.forEach(function (item, index) {
-        /* eslint-disable */
-        item.addEventListener('shown.bs.tab', function (e) {
-          if ((!(inputEmail.value && validatePattern(emailPattern, inputEmail.value)) || !inputPassword.value || !inputConfirmPassword.value) && form.className.includes('needs-validation')) {
-            e.preventDefault();
-            form.classList.add('was-validated');
-            return null;
-            /* eslint-enable */
+        item.addEventListener(events.SHOW, function (e) {
+          var step = getData(item, 'wizard-step');
+          showEvent = e;
+          if (step > count) {
+            forms[count].dispatchEvent(submitEvent);
           }
-
-          count = index; // can't go back tab
-
+        });
+        item.addEventListener(events.SHOWN, function () {
+          count = index;
+          // can't go back tab
           if (count === tabToggleButtonEl.length - 1) {
             tabToggleButtonEl.forEach(function (tab) {
               tab.setAttribute('data-bs-toggle', 'modal');
               tab.setAttribute('data-bs-target', '#error-modal');
             });
-          } //add done class
-
-
+          }
+          // add done class
           for (var i = 0; i < count; i += 1) {
             tabToggleButtonEl[i].classList.add('done');
-          } //remove done class
-
-
+            if (i > 0) {
+              tabToggleButtonEl[i - 1].classList.add('complete');
+            }
+          }
+          // remove done class
           for (var j = count; j < tabToggleButtonEl.length; j += 1) {
             tabToggleButtonEl[j].classList.remove('done');
-          } // card footer remove at last step
+            if (j > 0) {
+              tabToggleButtonEl[j - 1].classList.remove('complete');
+            }
+          }
 
-
+          // card footer remove at last step
           if (count > tabToggleButtonEl.length - 2) {
-            item.classList.add('done');
-            cardFooter.classList.add('d-none');
+            wizardFooter.classList.add('d-none');
           } else {
-            cardFooter.classList.remove('d-none');
-          } // prev-button removing
-
-
-          if (count > 0) {
+            wizardFooter.classList.remove('d-none');
+          }
+          // prev-button removing
+          if (count > 0 && count !== tabToggleButtonEl.length - 1) {
             prevButton.classList.remove('d-none');
           } else {
             prevButton.classList.add('d-none');
@@ -4673,21 +4439,10 @@ var wizardInit = function wizardInit() {
         });
       });
     }
-  }); // control wizard progressbar
-
-  if (tabPillEl.length) {
-    var dividedProgressbar = 100 / tabPillEl.length;
-    tabProgressBar.querySelector('.progress-bar').style.width = "".concat(dividedProgressbar, "%");
-    tabPillEl.forEach(function (item, index) {
-      item.addEventListener('shown.bs.tab', function () {
-        tabProgressBar.querySelector('.progress-bar').style.width = "".concat(dividedProgressbar * (index + 1), "%");
-      });
-    });
-  }
+  });
 };
-
 var _window3 = window,
-    dayjs = _window3.dayjs;
+  dayjs = _window3.dayjs;
 var currentDay = dayjs && dayjs().format('DD');
 var currentMonth = dayjs && dayjs().format('MM');
 var prevMonth = dayjs && dayjs().subtract(1, 'month').format('MM');
@@ -4702,7 +4457,7 @@ var events = [{
   location: 'Boston Harborwalk, Christopher Columbus Park, <br /> Boston, MA 02109, United States',
   organizer: 'Boston Harbor Now'
 }, {
-  title: 'Crain\'s New York Business ',
+  title: "Crain's New York Business",
   start: "".concat(currentYear, "-").concat(currentMonth, "-11"),
   description: "Crain's 2020 Hall of Fame. Sponsored Content By Crain's Content Studio. Crain's Content Studio Presents: New Jersey: Perfect for Business. Crain's Business Forum: Letitia James, New York State Attorney General. Crain's NYC Summit: Examining racial disparities during the pandemic",
   className: 'bg-primary-subtle'
@@ -4770,10 +4525,10 @@ var events = [{
   description: 'Applications are open for the New Media Writing Prize 2020. The New Media Writing Prize (NMWP) showcases exciting and inventive stories and poetry that integrate a variety of formats, platforms, and digital media.',
   className: 'bg-primary-subtle'
 }];
+
 /*-----------------------------------------------
 |   Calendar
 -----------------------------------------------*/
-
 var appCalendarInit = function appCalendarInit() {
   var Selectors = {
     ACTIVE: '.active',
@@ -4786,8 +4541,8 @@ var appCalendarInit = function appCalendarInit() {
     DATA_VIEW_TITLE: '[data-view-title]',
     EVENT_DETAILS_MODAL: '#eventDetailsModal',
     EVENT_DETAILS_MODAL_CONTENT: '#eventDetailsModal .modal-content',
-    EVENT_START_DATE: '#addEventModal [name="startDate"]',
-    INPUT_TITLE: '[name="title"]'
+    EVENT_START_DATE: "#addEventModal [name='startDate']",
+    INPUT_TITLE: "[name='title']"
   };
   var Events = {
     CLICK: 'click',
@@ -4802,18 +4557,18 @@ var appCalendarInit = function appCalendarInit() {
     ACTIVE: 'active'
   };
   var eventList = events.reduce(function (acc, val) {
-    return val.schedules ? acc.concat(val.schedules.concat(val)) : acc.concat(val);
+    if (val.schedules) {
+      return acc.concat(val.schedules.concat(val));
+    }
+    return acc.concat(val);
   }, []);
-
   var updateTitle = function updateTitle(title) {
     document.querySelector(Selectors.CALENDAR_TITLE).textContent = title;
   };
-
   var appCalendar = document.querySelector(Selectors.CALENDAR);
   var addEventForm = document.querySelector(Selectors.ADD_EVENT_FORM);
   var addEventModal = document.querySelector(Selectors.ADD_EVENT_MODAL);
   var eventDetailsModal = document.querySelector(Selectors.EVENT_DETAILS_MODAL);
-
   if (appCalendar) {
     var calendar = renderCalendar(appCalendar, {
       headerToolbar: false,
@@ -4846,10 +4601,7 @@ var appCalendarInit = function appCalendarInit() {
       dateClick: function dateClick(info) {
         var modal = new window.bootstrap.Modal(addEventModal);
         modal.show();
-        /*eslint-disable-next-line*/
-
         var flatpickr = document.querySelector(Selectors.EVENT_START_DATE)._flatpickr;
-
         flatpickr.setDate([info.dateStr]);
       }
     });
@@ -4858,23 +4610,19 @@ var appCalendarInit = function appCalendarInit() {
       button.addEventListener(Events.CLICK, function (e) {
         var el = e.currentTarget;
         var type = utils.getData(el, DataKeys.EVENT);
-
         switch (type) {
           case 'prev':
             calendar.prev();
             updateTitle(calendar.currentData.viewTitle);
             break;
-
           case 'next':
             calendar.next();
             updateTitle(calendar.currentData.viewTitle);
             break;
-
           case 'today':
             calendar.today();
             updateTitle(calendar.currentData.viewTitle);
             break;
-
           default:
             calendar.today();
             updateTitle(calendar.currentData.viewTitle);
@@ -4897,12 +4645,12 @@ var appCalendarInit = function appCalendarInit() {
     addEventForm && addEventForm.addEventListener(Events.SUBMIT, function (e) {
       e.preventDefault();
       var _e$target = e.target,
-          title = _e$target.title,
-          startDate = _e$target.startDate,
-          endDate = _e$target.endDate,
-          label = _e$target.label,
-          description = _e$target.description,
-          allDay = _e$target.allDay;
+        title = _e$target.title,
+        startDate = _e$target.startDate,
+        endDate = _e$target.endDate,
+        label = _e$target.label,
+        description = _e$target.description,
+        allDay = _e$target.allDay;
       calendar.addEvent({
         title: title.value,
         start: startDate.value,
@@ -4915,17 +4663,15 @@ var appCalendarInit = function appCalendarInit() {
       window.bootstrap.Modal.getInstance(addEventModal).hide();
     });
   }
-
-  addEventModal && addEventModal.addEventListener(Events.SHOWN_BS_MODAL, function (_ref13) {
-    var currentTarget = _ref13.currentTarget;
+  addEventModal && addEventModal.addEventListener(Events.SHOWN_BS_MODAL, function (_ref16) {
+    var currentTarget = _ref16.currentTarget;
     currentTarget.querySelector(Selectors.INPUT_TITLE).focus();
   });
 };
+
 /*-----------------------------------------------
 |   Project Management Calendar
 -----------------------------------------------*/
-
-
 var managementCalendarInit = function managementCalendarInit() {
   var Selectors = {
     ADD_EVENT_FORM: '#addEventForm',
@@ -4947,31 +4693,25 @@ var managementCalendarInit = function managementCalendarInit() {
     EVENT: 'event'
   };
   var managementCalendar = document.querySelector(Selectors.CALENDAR);
-
   if (managementCalendar) {
     var calendarData = utils.getData(managementCalendar, 'calendar-option');
     var managementCalendarEvents = document.getElementById(calendarData === null || calendarData === void 0 ? void 0 : calendarData.events);
     var addEventForm = document.querySelector(Selectors.ADD_EVENT_FORM);
     var addEventModal = document.querySelector(Selectors.ADD_EVENT_MODAL);
     var eventDetailsModal = document.querySelector(Selectors.EVENT_DETAILS_MODAL);
-
     var updateTitle = function updateTitle(title) {
       var selectTitle = document.getElementById(calendarData === null || calendarData === void 0 ? void 0 : calendarData.title);
-
       if (selectTitle) {
         selectTitle.textContent = title;
       }
     };
-
     var updateDay = function updateDay(day) {
       var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
       var selectDay = document.getElementById(calendarData === null || calendarData === void 0 ? void 0 : calendarData.day);
-
       if (selectDay) {
         selectDay.textContent = days[day];
       }
     };
-
     if (managementEvents) {
       managementEvents.forEach(function (e) {
         managementEventList.push({
@@ -4982,15 +4722,12 @@ var managementCalendarInit = function managementCalendarInit() {
         });
       });
     }
-
     if (managementCalendarEvents) {
       managementEvents.forEach(function (e) {
-        managementCalendarEvents.innerHTML += "\n          <li class= 'border-top pt-3 mb-3 pb-1 cursor-pointer' data-calendar-events>\n            <div class= 'border-start border-3 border-".concat(e.classNames, " ps-3 mt-1'>\n              <h6 class=\"mb-1 fw-semi-bold text-700\">").concat(e.title, "</h6>\n              <p class= 'fs--2 text-600 mb-0'>").concat(e.startTime || '', " ").concat(e.endTime ? '-' : '', " ").concat(e.endTime || '', "</p>\n            </div>\n          </li> ");
+        managementCalendarEvents.innerHTML += "\n          <li class= 'border-top pt-3 mb-3 pb-1 cursor-pointer' data-calendar-events>\n            <div class= 'border-start border-3 border-".concat(e.classNames, " ps-3 mt-1'>\n              <h6 class=\"mb-1 fw-semi-bold text-700 hover-primary\">").concat(e.title, "</h6>\n              <p class= 'fs-11 text-600 mb-0'>").concat(e.startTime || '', " ").concat(e.endTime ? '-' : '', " ").concat(e.endTime || '', "</p>\n            </div>\n          </li> ");
       });
     }
-
     var eventManagementInfo = document.querySelectorAll(Selectors.EVENT_MANAGEMENT_INFO);
-
     if (eventManagementInfo) {
       eventManagementInfo.forEach(function (li, index) {
         li.addEventListener(Events.CLICK, function () {
@@ -5002,7 +4739,6 @@ var managementCalendarInit = function managementCalendarInit() {
         });
       });
     }
-
     if (managementCalendar) {
       var calendar = renderCalendar(managementCalendar, {
         headerToolbar: false,
@@ -5012,10 +4748,7 @@ var managementCalendarInit = function managementCalendarInit() {
         dateClick: function dateClick(info) {
           var modal = new window.bootstrap.Modal(addEventModal);
           modal.show();
-          /*eslint-disable-next-line*/
-
           var flatpickr = document.querySelector(Selectors.EVENT_START_DATE)._flatpickr;
-
           flatpickr.setDate([info.dateStr]);
         },
         events: managementEventList
@@ -5026,23 +4759,19 @@ var managementCalendarInit = function managementCalendarInit() {
         button.addEventListener(Events.CLICK, function (e) {
           var el = e.currentTarget;
           var type = utils.getData(el, DataKeys.EVENT);
-
           switch (type) {
             case 'prev':
               calendar.prev();
               updateTitle(calendar.currentData.viewTitle);
               break;
-
             case 'next':
               calendar.next();
               updateTitle(calendar.currentData.viewTitle);
               break;
-
             case 'today':
               calendar.today();
               updateTitle(calendar.currentData.viewTitle);
               break;
-
             default:
               calendar.today();
               updateTitle(calendar.currentData.viewTitle);
@@ -5050,7 +4779,6 @@ var managementCalendarInit = function managementCalendarInit() {
           }
         });
       });
-
       if (addEventForm) {
         addEventForm.addEventListener(Events.SUBMIT, function (e) {
           e.preventDefault();
@@ -5061,7 +4789,6 @@ var managementCalendarInit = function managementCalendarInit() {
     }
   }
 };
-
 var thisDay = window.dayjs && window.dayjs().format('DD');
 var plus2Day = window.dayjs && window.dayjs().add(2, 'day').format('DD');
 var thisMonthNumber = window.dayjs && window.dayjs().format('MM');
@@ -5127,26 +4854,659 @@ var managementEvents = [{
     organizer: 'Boston Harbor Now'
   }
 }];
-
 var getStackIcon = function getStackIcon(icon, transform) {
   return "\n  <span class=\"fa-stack ms-n1 me-3\">\n    <i class=\"fas fa-circle fa-stack-2x text-200\"></i>\n    <i class=\"".concat(icon, " fa-stack-1x text-primary\" data-fa-transform=").concat(transform, "></i>\n  </span>\n");
 };
-
 var getTemplate = function getTemplate(event) {
-  return "\n<div class=\"modal-header bg-light ps-card pe-5 border-bottom-0\">\n  <div>\n    <h5 class=\"modal-title mb-0\">".concat(event.title, "</h5>\n    ").concat(event.extendedProps.organizer ? "<p class=\"mb-0 fs--1 mt-1\">\n        by <a href=\"#!\">".concat(event.extendedProps.organizer, "</a>\n      </p>") : '', "\n  </div>\n  <button type=\"button\" class=\"btn-close position-absolute end-0 top-0 mt-3 me-3\" data-bs-dismiss=\"modal\" aria-label=\"Close\"></button>\n</div>\n<div class=\"modal-body px-card pb-card pt-1 fs--1\">\n  ").concat(event.extendedProps.description ? "\n      <div class=\"d-flex mt-3\">\n        ".concat(getStackIcon('fas fa-align-left'), "\n        <div class=\"flex-1\">\n          <h6>Description</h6>\n          <p class=\"mb-0\">\n            \n          ").concat(event.extendedProps.description.split(' ').slice(0, 30).join(' '), "\n          </p>\n        </div>\n      </div>\n    ") : '', " \n  <div class=\"d-flex mt-3\">\n    ").concat(getStackIcon('fas fa-calendar-check'), "\n    <div class=\"flex-1\">\n        <h6>Date and Time</h6>\n        <p class=\"mb-1\">\n          ").concat(window.dayjs && window.dayjs(event.start).format('dddd, MMMM D, YYYY, h:mm A'), " \n          ").concat(event.end ? "\u2013 <br/>".concat(window.dayjs && window.dayjs(event.end).subtract(1, 'day').format('dddd, MMMM D, YYYY, h:mm A')) : '', "\n        </p>\n    </div>\n  </div>\n  ").concat(event.extendedProps.location ? "\n        <div class=\"d-flex mt-3\">\n          ".concat(getStackIcon('fas fa-map-marker-alt'), "\n          <div class=\"flex-1\">\n              <h6>Location</h6>\n              <p class=\"mb-0\">").concat(event.extendedProps.location, "</p>\n          </div>\n        </div>\n      ") : '', "\n  ").concat(event.schedules ? "\n        <div class=\"d-flex mt-3\">\n        ".concat(getStackIcon('fas fa-clock'), "\n        <div class=\"flex-1\">\n            <h6>Schedule</h6>\n            \n            <ul class=\"list-unstyled timeline mb-0\">\n              ").concat(event.schedules.map(function (schedule) {
+  return "\n<div class=\"modal-header bg-body-tertiary ps-card pe-5 border-bottom-0\">\n  <div>\n    <h5 class=\"modal-title mb-0\">".concat(event.title, "</h5>\n    ").concat(event.extendedProps.organizer ? "<p class=\"mb-0 fs-10 mt-1\">\n        by <a href=\"#!\">".concat(event.extendedProps.organizer, "</a>\n      </p>") : '', "\n  </div>\n  <button type=\"button\" class=\"btn-close position-absolute end-0 top-0 mt-3 me-3\" data-bs-dismiss=\"modal\" aria-label=\"Close\"></button>\n</div>\n<div class=\"modal-body px-card pb-card pt-1 fs-10\">\n  ").concat(event.extendedProps.description ? "\n      <div class=\"d-flex mt-3\">\n        ".concat(getStackIcon('fas fa-align-left'), "\n        <div class=\"flex-1\">\n          <h6>Description</h6>\n          <p class=\"mb-0\">\n            \n          ").concat(event.extendedProps.description.split(' ').slice(0, 30).join(' '), "\n          </p>\n        </div>\n      </div>\n    ") : '', " \n  <div class=\"d-flex mt-3\">\n    ").concat(getStackIcon('fas fa-calendar-check'), "\n    <div class=\"flex-1\">\n        <h6>Date and Time</h6>\n        <p class=\"mb-1\">\n          ").concat(window.dayjs && window.dayjs(event.start).format('dddd, MMMM D, YYYY, h:mm A'), " \n          ").concat(event.end ? "\u2013 <br/>".concat(window.dayjs && window.dayjs(event.end).subtract(1, 'day').format('dddd, MMMM D, YYYY, h:mm A')) : '', "\n        </p>\n    </div>\n  </div>\n  ").concat(event.extendedProps.location ? "\n        <div class=\"d-flex mt-3\">\n          ".concat(getStackIcon('fas fa-map-marker-alt'), "\n          <div class=\"flex-1\">\n              <h6>Location</h6>\n              <p class=\"mb-0\">").concat(event.extendedProps.location, "</p>\n          </div>\n        </div>\n      ") : '', "\n  ").concat(event.schedules ? "\n        <div class=\"d-flex mt-3\">\n        ".concat(getStackIcon('fas fa-clock'), "\n        <div class=\"flex-1\">\n            <h6>Schedule</h6>\n            \n            <ul class=\"list-unstyled timeline mb-0\">\n              ").concat(event.schedules.map(function (schedule) {
     return "<li>".concat(schedule.title, "</li>");
-  }).join(''), "\n            </ul>\n        </div>\n      ") : '', "\n  </div>\n</div>\n<div class=\"modal-footer d-flex justify-content-end bg-light px-card border-top-0\">\n  <a href=\"").concat(document.location.href.split('/').slice(0, 5).join('/'), "/app/events/create-an-event.html\" class=\"btn btn-falcon-default btn-sm\">\n    <span class=\"fas fa-pencil-alt fs--2 mr-2\"></span> Edit\n  </a>\n  <a href='").concat(document.location.href.split('/').slice(0, 5).join('/'), "/app/events/event-detail.html' class=\"btn btn-falcon-primary btn-sm\">\n    See more details\n    <span class=\"fas fa-angle-right fs--2 ml-1\"></span>\n  </a>\n</div>\n");
+  }).join(''), "\n            </ul>\n        </div>\n      ") : '', "\n  </div>\n</div>\n<div class=\"modal-footer d-flex justify-content-end bg-body-tertiary px-card border-top-0\">\n  <a href=\"").concat(document.location.href.split('/').slice(0, 5).join('/'), "/app/events/create-an-event.html\" class=\"btn btn-falcon-default btn-sm\">\n    <span class=\"fas fa-pencil-alt fs-11 mr-2\"></span> Edit\n  </a>\n  <a href='").concat(document.location.href.split('/').slice(0, 5).join('/'), "/app/events/event-detail.html' class=\"btn btn-falcon-primary btn-sm\">\n    See more details\n    <span class=\"fas fa-angle-right fs-11 ml-1\"></span>\n  </a>\n</div>\n");
 };
+
+/* -------------------------------------------------------------------------- */
+/*                                  bar-chart                                 */
 /* -------------------------------------------------------------------------- */
 
+var barChartInit = function barChartInit() {
+  var barChartElement = document.getElementById('chartjs-bar-chart');
+  var getOptions = function getOptions() {
+    return {
+      type: 'bar',
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        datasets: [{
+          label: '# of Votes',
+          data: [12, 19, 3, 5, 6, 3],
+          backgroundColor: [utils.getSubtleColors().secondary, utils.getSubtleColors().warning, utils.getSubtleColors().info, utils.getSubtleColors().success, utils.getSubtleColors().info, utils.getSubtleColors().primary],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        plugins: {
+          tooltip: chartJsDefaultTooltip(),
+          legend: {
+            labels: {
+              color: utils.getGrays()['500']
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: {
+              color: utils.getGrays()['500']
+            },
+            grid: {
+              color: utils.getGrays()['300'],
+              drawBorder: false
+            }
+          },
+          y: {
+            ticks: {
+              color: utils.getGrays()['500']
+            },
+            grid: {
+              color: utils.getGrays()['300'],
+              drawBorder: false
+            }
+          }
+        }
+      }
+    };
+  };
+  chartJsInit(barChartElement, getOptions);
+};
+
+/* -------------------------------------------------------------------------- */
+/*                            Chart Bubble                                    */
+/* -------------------------------------------------------------------------- */
+
+var chartBubble = function chartBubble() {
+  var pie = document.getElementById('chartjs-bubble-chart');
+  var getOptions = function getOptions() {
+    return {
+      type: 'bubble',
+      data: {
+        datasets: [{
+          label: 'Dataset 1',
+          data: getBubbleDataset(5, 5, 15, 0, 100),
+          backgroundColor: utils.getColor('info'),
+          hoverBackgroundColor: utils.getColor('info')
+        }, {
+          label: 'Dataset 2',
+          data: getBubbleDataset(5, 5, 15, 0, 100),
+          backgroundColor: utils.getColor('success'),
+          hoverBackgroundColor: utils.getColor('success')
+        }, {
+          label: 'Dataset 3',
+          data: getBubbleDataset(5, 5, 15, 0, 100),
+          backgroundColor: utils.getColor('warning'),
+          hoverBackgroundColor: utils.getColor('warning')
+        }]
+      },
+      options: {
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: {
+              color: utils.getGrays()['500']
+            }
+          },
+          tooltip: chartJsDefaultTooltip()
+        },
+        scales: {
+          x: {
+            ticks: {
+              color: utils.getGrays()['500']
+            },
+            grid: {
+              color: utils.getGrays()['300'],
+              drawBorder: false
+            }
+          },
+          y: {
+            ticks: {
+              color: utils.getGrays()['500']
+            },
+            grid: {
+              color: utils.getGrays()['300'],
+              drawBorder: false
+            }
+          }
+        }
+      }
+    };
+  };
+  chartJsInit(pie, getOptions);
+};
+
+/* -------------------------------------------------------------------------- */
+/*                            Chart Combo                                  */
+/* -------------------------------------------------------------------------- */
+var chartCombo = function chartCombo() {
+  var combo = document.getElementById('chartjs-combo-chart');
+  var getOptions = function getOptions() {
+    return {
+      type: 'bar',
+      data: {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        datasets: [{
+          type: 'line',
+          label: 'Dataset 1',
+          borderColor: utils.getColor('primary'),
+          borderWidth: 2,
+          fill: false,
+          data: [55, 80, -60, -22, -50, 40, 90]
+        }, {
+          type: 'bar',
+          label: 'Dataset 2',
+          backgroundColor: utils.getSubtleColors().danger,
+          data: [4, -80, 90, -22, 70, 35, -50],
+          borderWidth: 1
+        }, {
+          type: 'bar',
+          label: 'Dataset 3',
+          backgroundColor: utils.getSubtleColors().primary,
+          data: [-30, 30, -18, 100, -45, -25, -50],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        maintainAspectRatio: false,
+        plugins: {
+          tooltip: chartJsDefaultTooltip(),
+          legend: {
+            position: 'top',
+            labels: {
+              color: utils.getGrays()['500']
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: {
+              color: utils.getGrays()['500']
+            },
+            grid: {
+              color: utils.getGrays()['300'],
+              drawBorder: false
+            }
+          },
+          y: {
+            ticks: {
+              color: utils.getGrays()['500']
+            },
+            grid: {
+              color: utils.getGrays()['300'],
+              drawBorder: false
+            }
+          }
+        }
+      }
+    };
+  };
+  chartJsInit(combo, getOptions);
+};
+
+/* -------------------------------------------------------------------------- */
+/*                            Chart Doughnut                                  */
+/* -------------------------------------------------------------------------- */
+var chartDoughnut = function chartDoughnut() {
+  var doughnut = document.getElementById('chartjs-doughnut-chart');
+  var getOptions = function getOptions() {
+    return {
+      type: 'doughnut',
+      data: {
+        datasets: [{
+          data: [5, 3, 2, 1, 1],
+          backgroundColor: [utils.rgbaColor(utils.getColor('facebook'), 0.75), utils.rgbaColor(utils.getColor('youtube'), 0.75), utils.rgbaColor(utils.getColor('twitter'), 0.75), utils.rgbaColor(utils.getColor('linkedin'), 0.75), utils.rgbaColor(utils.getColor('github'), 0.75)],
+          borderWidth: 1,
+          borderColor: utils.getGrays()['100']
+        }],
+        labels: ['Facebook', 'Youtube', 'Twitter', 'Linkedin', 'GitHub']
+      },
+      options: {
+        plugins: {
+          tooltip: chartJsDefaultTooltip(),
+          legend: {
+            labels: {
+              color: utils.getGrays()['500']
+            }
+          }
+        },
+        maintainAspectRatio: false
+      }
+    };
+  };
+  chartJsInit(doughnut, getOptions);
+};
+
+/* -------------------------------------------------------------------------- */
+/*                            Chart Half Doughnut                             */
+/* -------------------------------------------------------------------------- */
+var chartHalfDoughnutInit = function chartHalfDoughnutInit() {
+  var $chartHalfDoughnuts = document.querySelectorAll('[data-half-doughnut]');
+  $chartHalfDoughnuts.forEach(function ($chartHalfDoughnut) {
+    if ($chartHalfDoughnut) {
+      var getOptions = function getOptions() {
+        var userOptions = utils.getData($chartHalfDoughnut, 'half-doughnut');
+        var defaultOptions = {
+          type: 'doughnut',
+          data: {
+            labels: ['Reached', 'Target'],
+            datasets: [{
+              data: [50, 50],
+              backgroundColor: ['primary', 'gray-300'],
+              borderWidth: [0, 0, 0, 0]
+            }]
+          },
+          options: {
+            rotation: -90,
+            circumference: '180',
+            cutout: '80%',
+            hover: {
+              mode: null
+            },
+            plugins: {
+              legend: {
+                display: false
+              },
+              tooltip: {
+                enabled: false
+              }
+            }
+          }
+        };
+        var options = window._.merge(defaultOptions, userOptions);
+        var mergedDatasets = options.data.datasets[0];
+        mergedDatasets.backgroundColor = [utils.getColor(mergedDatasets.backgroundColor[0]), utils.getColor(mergedDatasets.backgroundColor[1])];
+        return options;
+      };
+      chartJsInit($chartHalfDoughnut, getOptions);
+    }
+  });
+};
+
+/* -------------------------------------------------------------------------- */
+/*                            Chart Line                                  */
+/* -------------------------------------------------------------------------- */
+var chartLine = function chartLine() {
+  var line = document.getElementById('chartjs-line-chart');
+  var getOptions = function getOptions() {
+    return {
+      type: 'bar',
+      data: {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        datasets: [{
+          type: 'line',
+          label: 'Dataset 1',
+          borderColor: utils.getColor('primary'),
+          borderWidth: 2,
+          fill: false,
+          data: [55, 80, 60, 22, 50, 40, 90],
+          tension: 0.3
+        }]
+      },
+      options: {
+        plugins: {
+          tooltip: chartJsDefaultTooltip(),
+          legend: {
+            labels: {
+              color: utils.getGrays()['500']
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: {
+              color: utils.getGrays()['500']
+            },
+            grid: {
+              color: utils.getGrays()['300'],
+              drawBorder: false
+            }
+          },
+          y: {
+            ticks: {
+              color: utils.getGrays()['500']
+            },
+            grid: {
+              color: utils.getGrays()['300'],
+              drawBorder: false
+            }
+          }
+        }
+      }
+    };
+  };
+  chartJsInit(line, getOptions);
+};
+
+/* -------------------------------------------------------------------------- */
+/*                            Chart Pie                                  */
+/* -------------------------------------------------------------------------- */
+var chartPie = function chartPie() {
+  var pie = document.getElementById('chartjs-pie-chart');
+  var getOptions = function getOptions() {
+    return {
+      type: 'pie',
+      data: {
+        datasets: [{
+          data: [5, 3, 2, 1, 1],
+          backgroundColor: [utils.rgbaColor(utils.getColor('facebook'), 0.75), utils.rgbaColor(utils.getColor('youtube'), 0.75), utils.rgbaColor(utils.getColor('twitter'), 0.75), utils.rgbaColor(utils.getColor('linkedin'), 0.75), utils.rgbaColor(utils.getColor('github'), 0.75)],
+          borderWidth: 1,
+          borderColor: utils.getGrays()['100']
+        }],
+        labels: ['Facebook', 'Youtube', 'Twitter', 'Linkedin', 'GitHub']
+      },
+      options: {
+        plugins: {
+          tooltip: chartJsDefaultTooltip(),
+          legend: {
+            labels: {
+              color: utils.getGrays()['500']
+            }
+          }
+        },
+        maintainAspectRatio: false
+      }
+    };
+  };
+  chartJsInit(pie, getOptions);
+};
+
+/* -------------------------------------------------------------------------- */
+/*                            Chart Polar                                  */
+/* -------------------------------------------------------------------------- */
+var chartPolar = function chartPolar() {
+  var polar = document.getElementById('chartjs-polar-chart');
+  var getOptions = function getOptions() {
+    return {
+      type: 'polarArea',
+      data: {
+        datasets: [{
+          data: [10, 20, 50, 40, 30],
+          backgroundColor: [utils.rgbaColor(utils.getColor('facebook'), 0.5), utils.rgbaColor(utils.getColor('youtube'), 0.5), utils.rgbaColor(utils.getColor('twitter'), 0.5), utils.rgbaColor(utils.getColor('linkedin'), 0.5), utils.rgbaColor(utils.getColor('success'), 0.5)],
+          borderWidth: 1,
+          borderColor: utils.getGrays()['400']
+        }],
+        labels: ['Facebook', 'Youtube', 'Twitter', 'Linkedin', 'Medium']
+      },
+      options: {
+        plugins: {
+          tooltip: chartJsDefaultTooltip(),
+          legend: {
+            labels: {
+              color: utils.getGrays()['500']
+            }
+          }
+        },
+        maintainAspectRatio: false,
+        scales: {
+          r: {
+            grid: {
+              color: utils.getGrays()['300']
+            }
+          }
+        }
+      }
+    };
+  };
+  chartJsInit(polar, getOptions);
+};
+
+/* -------------------------------------------------------------------------- */
+/*                            Chart Radar                                  */
+/* -------------------------------------------------------------------------- */
+var chartRadar = function chartRadar() {
+  var radar = document.getElementById('chartjs-radar-chart');
+  var getOptions = function getOptions() {
+    return {
+      type: 'radar',
+      data: {
+        labels: ['English', 'Maths', 'Physics', 'Chemistry', 'Biology', 'History'],
+        datasets: [{
+          label: 'Student A',
+          backgroundColor: utils.rgbaColor(utils.getColor('success'), 0.5),
+          data: [65, 75, 70, 80, 60, 80],
+          borderWidth: 1
+        }, {
+          label: 'Student B',
+          backgroundColor: utils.rgbaColor(utils.getColor('primary'), 0.5),
+          data: [54, 65, 60, 70, 70, 75],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        plugins: {
+          tooltip: chartJsDefaultTooltip(),
+          legend: {
+            labels: {
+              color: utils.getGrays()['500']
+            }
+          }
+        },
+        maintainAspectRatio: false,
+        scales: {
+          r: {
+            grid: {
+              color: utils.getGrays()['300']
+            }
+          }
+        }
+      }
+    };
+  };
+  chartJsInit(radar, getOptions);
+};
+
+/* -------------------------------------------------------------------------- */
+/*                            Chart Scatter                                   */
+/* -------------------------------------------------------------------------- */
+var chartScatter = function chartScatter() {
+  var scatter = document.getElementById('chartjs-scatter-chart');
+  var getOptions = function getOptions() {
+    return {
+      type: 'scatter',
+      data: {
+        datasets: [{
+          label: 'Dataset one',
+          data: [{
+            x: -98,
+            y: 42
+          }, {
+            x: -85,
+            y: -29
+          }, {
+            x: -87,
+            y: -70
+          }, {
+            x: -53,
+            y: 28
+          }, {
+            x: -29,
+            y: 4
+          }, {
+            x: -2,
+            y: -42
+          }, {
+            x: 5,
+            y: 3
+          }, {
+            x: 39,
+            y: 19
+          }, {
+            x: 49,
+            y: 79
+          }, {
+            x: 83,
+            y: -9
+          }, {
+            x: 93,
+            y: 12
+          }],
+          pointBackgroundColor: utils.getColor('primary'),
+          borderColor: utils.getColor('primary'),
+          borderWidth: 1
+        }, {
+          label: 'Dataset Two',
+          data: [{
+            x: 53,
+            y: 12
+          }, {
+            x: -78,
+            y: 42
+          }, {
+            x: -65,
+            y: -39
+          }, {
+            x: -57,
+            y: -20
+          }, {
+            x: 57,
+            y: 28
+          }, {
+            x: -35,
+            y: 75
+          }, {
+            x: -29,
+            y: -43
+          }, {
+            x: 15,
+            y: 31
+          }, {
+            x: 97,
+            y: 19
+          }, {
+            x: 49,
+            y: 69
+          }, {
+            x: 33,
+            y: -57
+          }],
+          pointBackgroundColor: utils.getColor('warning'),
+          borderColor: utils.getColor('warning'),
+          borderWidth: 1,
+          borderRadius: '50%'
+        }]
+      },
+      options: {
+        plugins: {
+          tooltip: chartJsDefaultTooltip(),
+          legend: {
+            labels: {
+              color: utils.getGrays()['500']
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: {
+              color: utils.getGrays()['500']
+            },
+            grid: {
+              color: utils.getGrays()['300'],
+              drawBorder: false
+            }
+          },
+          y: {
+            ticks: {
+              color: utils.getGrays()['500']
+            },
+            grid: {
+              color: utils.getGrays()['300'],
+              drawBorder: false
+            }
+          }
+        },
+        animation: {
+          duration: 2000
+        }
+      }
+    };
+  };
+  chartJsInit(scatter, getOptions);
+};
+
+/* -------------------------------------------------------------------------- */
+/*                            ChartJs Initialization                          */
+/* -------------------------------------------------------------------------- */
+
+var chartJsInit = function chartJsInit(chartEl, config) {
+  if (!chartEl) return;
+  var ctx = chartEl.getContext('2d');
+  var chart = new window.Chart(ctx, config());
+  var themeController = document.body;
+  themeController.addEventListener('clickControl', function (_ref17) {
+    var control = _ref17.detail.control;
+    if (control === 'theme') {
+      chart.destroy();
+      chart = new window.Chart(ctx, config());
+    }
+    return null;
+  });
+};
+var chartJsDefaultTooltip = function chartJsDefaultTooltip() {
+  return {
+    backgroundColor: utils.getGrays()['100'],
+    borderColor: utils.getGrays()['300'],
+    borderWidth: 1,
+    titleColor: utils.getColors().emphasis,
+    callbacks: {
+      labelTextColor: function labelTextColor() {
+        return utils.getColors().emphasis;
+      }
+    }
+  };
+};
+var getBubbleDataset = function getBubbleDataset(count, rmin, rmax, min, max) {
+  var arr = Array.from(Array(count).keys());
+  return arr.map(function () {
+    return {
+      x: utils.getRandomNumber(min, max),
+      y: utils.getRandomNumber(min, max),
+      r: utils.getRandomNumber(rmin, rmax)
+    };
+  });
+};
+
+/* -------------------------------------------------------------------------- */
+/*                            Chart Scatter                                   */
+/* -------------------------------------------------------------------------- */
+var productShareDoughnutInit = function productShareDoughnutInit() {
+  var marketShareDoughnutElement = document.getElementById('marketShareDoughnut');
+  var getOptions = function getOptions() {
+    return {
+      type: 'doughnut',
+      data: {
+        labels: ['Flacon', 'Sparrow'],
+        datasets: [{
+          data: [50, 88],
+          backgroundColor: [utils.getColor('primary'), utils.getColor('gray-300')],
+          borderColor: [utils.getColor('primary'), utils.getColor('gray-300')]
+        }]
+      },
+      options: {
+        tooltips: chartJsDefaultTooltip(),
+        rotation: -90,
+        circumference: '180',
+        cutout: '80%',
+        plugins: {
+          legend: {
+            display: false
+          }
+        }
+      }
+    };
+  };
+  chartJsInit(marketShareDoughnutElement, getOptions);
+};
+
+/* -------------------------------------------------------------------------- */
 /*                          D3 Packed Bubble Chart                            */
-
 /* -------------------------------------------------------------------------- */
-
 
 var D3PackedBubbleInit = function D3PackedBubbleInit() {
   var $d3PackedBubble = document.querySelector('.d3-packed-bubble-chart');
-
   if ($d3PackedBubble) {
     var width = 960;
     var height = 960;
@@ -5274,7 +5634,6 @@ var D3PackedBubbleInit = function D3PackedBubbleInit() {
       value: 34,
       color: '#71AFFF'
     }];
-
     var generateChart = function generateChart(data) {
       var bubble = function bubble(bubbleData) {
         return d3.pack().size([width, height]).padding(itemsSpacing)(d3.hierarchy({
@@ -5283,7 +5642,6 @@ var D3PackedBubbleInit = function D3PackedBubbleInit() {
           return d.value;
         }));
       };
-
       tooltip.style('visibility', 'hidden');
       svg.attr('width', '100%').attr('height', '100%').attr('viewBox', "-20 10 ".concat(width, " ").concat(height));
       var root = bubble(data);
@@ -5317,20 +5675,16 @@ var D3PackedBubbleInit = function D3PackedBubbleInit() {
       });
       label.transition().delay(400).ease(d3.easeExpInOut).duration(2000).style('opacity', 1);
     };
-
     generateChart(packedBubbleData);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                           Trending Keywords                                */
-
 /* -------------------------------------------------------------------------- */
-
 
 var trendingKeywordsInit = function trendingKeywordsInit() {
   var $d3TrendingKeywords = document.querySelector('.d3-trending-keywords');
-
   if ($d3TrendingKeywords) {
     var width = 960;
     var height = 960;
@@ -5458,7 +5812,6 @@ var trendingKeywordsInit = function trendingKeywordsInit() {
       value: 34,
       color: '#71AFFF'
     }];
-
     var generateChart = function generateChart(data) {
       var bubble = function bubble(bubbleData) {
         return d3.pack().size([width, height]).padding(itemsSpacing)(d3.hierarchy({
@@ -5467,7 +5820,6 @@ var trendingKeywordsInit = function trendingKeywordsInit() {
           return d.value;
         }));
       };
-
       tooltip.style('visibility', 'hidden');
       svg.attr('width', '100%').attr('height', '100%').attr('viewBox', "-20 10 ".concat(width, " ").concat(height));
       var root = bubble(data);
@@ -5501,648 +5853,22 @@ var trendingKeywordsInit = function trendingKeywordsInit() {
       });
       label.transition().delay(400).ease(d3.easeExpInOut).duration(2000).style('opacity', 1);
     };
-
     generateChart(trendingKeywordsData);
   }
 };
-/* -------------------------------------------------------------------------- */
-
-/*                                  bar-chart                                 */
 
 /* -------------------------------------------------------------------------- */
-
-
-var barChartInit = function barChartInit() {
-  var barChartElement = document.getElementById('chartjs-bar-chart');
-
-  var getOptions = function getOptions() {
-    return {
-      type: 'bar',
-      data: {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-        datasets: [{
-          label: '# of Votes',
-          data: [12, 19, 3, 5, 6, 3],
-          backgroundColor: [utils.rgbaColor(utils.getColor('secondary'), 0.2), utils.rgbaColor(utils.getColor('warning'), 0.2), utils.rgbaColor(utils.getColor('info'), 0.2), utils.rgbaColor(utils.getColor('success'), 0.2), utils.rgbaColor(utils.getColor('info'), 0.2), utils.rgbaColor(utils.getColor('primary'), 0.2)],
-          borderColor: [utils.getColor('secondary'), utils.getColor('warning'), utils.getColor('info'), utils.getColor('success'), utils.getColor('info'), utils.getColor('primary')],
-          borderWidth: 1
-        }]
-      },
-      options: {
-        plugins: {
-          tooltip: chartJsDefaultTooltip()
-        },
-        scales: {
-          x: {
-            grid: {
-              color: utils.rgbaColor(utils.getGrays().black, 0.1)
-            }
-          },
-          y: {
-            grid: {
-              color: utils.rgbaColor(utils.getGrays().black, 0.1),
-              drawBorder: true
-            }
-          }
-        }
-      }
-    };
-  };
-
-  chartJsInit(barChartElement, getOptions);
-};
-/* eslint-disable */
-
-/* -------------------------------------------------------------------------- */
-
-/*                            Chart Bubble                                    */
-
-/* -------------------------------------------------------------------------- */
-
-
-var chartBubble = function chartBubble() {
-  var pie = document.getElementById('chartjs-bubble-chart');
-
-  var getOptions = function getOptions() {
-    return {
-      type: 'bubble',
-      data: {
-        datasets: [{
-          label: 'Dataset 1',
-          data: getBubbleDataset(5, 5, 15, 0, 100),
-          backgroundColor: utils.getSubtleColors()['primary'],
-          hoverBackgroundColor: utils.getColors()['primary']
-        }, {
-          label: 'Dataset 2',
-          data: getBubbleDataset(5, 5, 15, 0, 100),
-          backgroundColor: utils.getSubtleColors()['success'],
-          hoverBackgroundColor: utils.getColors()['success']
-        }, {
-          label: 'Dataset 3',
-          data: getBubbleDataset(5, 5, 15, 0, 100),
-          backgroundColor: utils.getSubtleColors()['danger'],
-          hoverBackgroundColor: utils.getColors()['danger']
-        }]
-      },
-      options: {
-        plugins: {
-          legend: {
-            position: 'top'
-          },
-          tooltip: chartJsDefaultTooltip()
-        },
-        scales: {
-          x: {
-            grid: {
-              color: utils.rgbaColor(utils.getGrays()['black'], 0.1)
-            }
-          },
-          y: {
-            grid: {
-              color: utils.rgbaColor(utils.getGrays()['black'], 0.1)
-            }
-          }
-        }
-      }
-    };
-  };
-
-  chartJsInit(pie, getOptions);
-};
-/* -------------------------------------------------------------------------- */
-
-/*                            Chart Combo                                  */
-
-/* -------------------------------------------------------------------------- */
-
-
-var chartCombo = function chartCombo() {
-  var combo = document.getElementById('chartjs-combo-chart');
-
-  var getOptions = function getOptions() {
-    return {
-      type: 'bar',
-      data: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [{
-          type: 'line',
-          label: 'Dataset 1',
-          borderColor: utils.getColor('primary'),
-          borderWidth: 2,
-          fill: false,
-          data: [55, 80, -60, -22, -50, 40, 90]
-        }, {
-          type: 'bar',
-          label: 'Dataset 2',
-          backgroundColor: utils.getSubtleColors().danger,
-          data: [4, -80, 90, -22, 70, 35, -50],
-          borderWidth: 1
-        }, {
-          type: 'bar',
-          label: 'Dataset 3',
-          backgroundColor: utils.getSubtleColors().primary,
-          data: [-30, 30, -18, 100, -45, -25, -50],
-          borderWidth: 1
-        }]
-      },
-      options: {
-        maintainAspectRatio: false,
-        plugins: {
-          tooltip: chartJsDefaultTooltip()
-        },
-        scales: {
-          x: {
-            grid: {
-              color: utils.rgbaColor(utils.getGrays().black, 0.1)
-            }
-          },
-          y: {
-            grid: {
-              color: utils.rgbaColor(utils.getGrays().black, 0.1)
-            }
-          }
-        }
-      }
-    };
-  };
-
-  chartJsInit(combo, getOptions);
-};
-/* -------------------------------------------------------------------------- */
-
-/*                            Chart Doughnut                                  */
-
-/* -------------------------------------------------------------------------- */
-
-
-var chartDoughnut = function chartDoughnut() {
-  var doughnut = document.getElementById('chartjs-doughnut-chart');
-
-  var getOptions = function getOptions() {
-    return {
-      type: 'doughnut',
-      data: {
-        datasets: [{
-          data: [5, 3, 2, 1, 1],
-          backgroundColor: [utils.rgbaColor(utils.getColor('facebook'), 0.2), utils.rgbaColor(utils.getColor('youtube'), 0.2), utils.rgbaColor(utils.getColor('twitter'), 0.2), utils.rgbaColor(utils.getColor('linkedin'), 0.2), utils.rgbaColor(utils.getColor('github'), 0.2)],
-          borderWidth: 1,
-          borderColor: [utils.getColor('facebook'), utils.getColor('youtube'), utils.getColor('twitter'), utils.getColor('linkedin'), utils.getColor('github')]
-        }],
-        labels: ['Facebook', 'Youtube', 'Twitter', 'Linkedin', 'GitHub']
-      },
-      options: {
-        plugins: {
-          tooltip: chartJsDefaultTooltip()
-        },
-        maintainAspectRatio: false
-      }
-    };
-  };
-
-  chartJsInit(doughnut, getOptions);
-};
-/* -------------------------------------------------------------------------- */
-
-/*                            Chart Half Doughnut                             */
-
-/* -------------------------------------------------------------------------- */
-
-
-var chartHalfDoughnutInit = function chartHalfDoughnutInit() {
-  var $chartHalfDoughnuts = document.querySelectorAll('[data-half-doughnut]');
-  $chartHalfDoughnuts.forEach(function ($chartHalfDoughnut) {
-    if ($chartHalfDoughnut) {
-      var getOptions = function getOptions() {
-        var userOptions = utils.getData($chartHalfDoughnut, 'half-doughnut');
-        var defaultOptions = {
-          type: 'doughnut',
-          data: {
-            labels: ['Reached', 'Target'],
-            datasets: [{
-              data: [50, 50],
-              backgroundColor: ['primary', 'gray-300'],
-              borderWidth: [0, 0, 0, 0]
-            }]
-          },
-          options: {
-            rotation: -90,
-            circumference: '180',
-            cutout: '80%',
-            hover: {
-              mode: null
-            },
-            plugins: {
-              legend: {
-                display: false
-              },
-              tooltip: {
-                enabled: false
-              }
-            }
-          }
-        };
-
-        var options = window._.merge(defaultOptions, userOptions);
-
-        var mergedDatasets = options.data.datasets[0];
-        mergedDatasets.backgroundColor = [utils.getColor(mergedDatasets.backgroundColor[0]), utils.getColor(mergedDatasets.backgroundColor[1])];
-        return options;
-      };
-
-      chartJsInit($chartHalfDoughnut, getOptions);
-    }
-  });
-};
-/* -------------------------------------------------------------------------- */
-
-/*                            Chart Line                                  */
-
-/* -------------------------------------------------------------------------- */
-
-
-var chartLine = function chartLine() {
-  var line = document.getElementById('chartjs-line-chart');
-
-  var getOptions = function getOptions() {
-    return {
-      type: 'bar',
-      data: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [{
-          type: 'line',
-          label: 'Dataset 1',
-          borderColor: utils.getColor('primary'),
-          borderWidth: 2,
-          fill: false,
-          data: [55, 80, 60, 22, 50, 40, 90],
-          tension: 0.3
-        }]
-      },
-      options: {
-        plugins: {
-          tooltip: chartJsDefaultTooltip()
-        },
-        scales: {
-          x: {
-            grid: {
-              color: utils.rgbaColor(utils.getGrays().black, 0.1)
-            }
-          },
-          y: {
-            grid: {
-              color: utils.rgbaColor(utils.getGrays().black, 0.1)
-            }
-          }
-        }
-      }
-    };
-  };
-
-  chartJsInit(line, getOptions);
-};
-/* -------------------------------------------------------------------------- */
-
-/*                            Chart Pie                                  */
-
-/* -------------------------------------------------------------------------- */
-
-
-var chartPie = function chartPie() {
-  var pie = document.getElementById('chartjs-pie-chart');
-
-  var getOptions = function getOptions() {
-    return {
-      type: 'pie',
-      data: {
-        datasets: [{
-          data: [5, 3, 2, 1, 1],
-          backgroundColor: [utils.rgbaColor(utils.getColor('facebook'), 0.75), utils.rgbaColor(utils.getColor('youtube'), 0.75), utils.rgbaColor(utils.getColor('twitter'), 0.75), utils.rgbaColor(utils.getColor('linkedin'), 0.75), utils.rgbaColor(utils.getColor('github'), 0.75)],
-          borderWidth: 1,
-          borderColor: utils.getGrays()['100']
-        }],
-        labels: ['Facebook', 'Youtube', 'Twitter', 'Linkedin', 'GitHub']
-      },
-      options: {
-        plugins: {
-          tooltip: chartJsDefaultTooltip()
-        },
-        maintainAspectRatio: false
-      }
-    };
-  };
-
-  chartJsInit(pie, getOptions);
-};
-/* -------------------------------------------------------------------------- */
-
-/*                            Chart Polar                                  */
-
-/* -------------------------------------------------------------------------- */
-
-
-var chartPolar = function chartPolar() {
-  var polar = document.getElementById('chartjs-polar-chart');
-
-  var getOptions = function getOptions() {
-    return {
-      type: 'polarArea',
-      data: {
-        datasets: [{
-          data: [10, 20, 50, 40, 30],
-          backgroundColor: [utils.rgbaColor(utils.getColor('facebook'), 0.5), utils.rgbaColor(utils.getColor('youtube'), 0.5), utils.rgbaColor(utils.getColor('twitter'), 0.5), utils.rgbaColor(utils.getColor('linkedin'), 0.5), utils.rgbaColor(utils.getColor('success'), 0.5)],
-          borderWidth: 1,
-          borderColor: utils.getGrays()['400']
-        }],
-        labels: ['Facebook', 'Youtube', 'Twitter', 'Linkedin', 'Medium']
-      },
-      options: {
-        plugins: {
-          tooltip: chartJsDefaultTooltip()
-        },
-        maintainAspectRatio: false,
-        scales: {
-          r: {
-            grid: {
-              color: utils.rgbaColor(utils.getGrays().black, 0.1)
-            }
-          }
-        }
-      }
-    };
-  };
-
-  chartJsInit(polar, getOptions);
-};
-/* -------------------------------------------------------------------------- */
-
-/*                            Chart Radar                                  */
-
-/* -------------------------------------------------------------------------- */
-
-
-var chartRadar = function chartRadar() {
-  var radar = document.getElementById('chartjs-radar-chart');
-
-  var getOptions = function getOptions() {
-    return {
-      type: 'radar',
-      data: {
-        labels: ['English', 'Maths', 'Physics', 'Chemistry', 'Biology', 'History'],
-        datasets: [{
-          label: 'Student A',
-          backgroundColor: utils.rgbaColor(utils.getColor('success'), 0.5),
-          data: [65, 75, 70, 80, 60, 80],
-          borderWidth: 1
-        }, {
-          label: 'Student B',
-          backgroundColor: utils.rgbaColor(utils.getColor('primary'), 0.5),
-          data: [54, 65, 60, 70, 70, 75],
-          borderWidth: 1
-        }]
-      },
-      options: {
-        plugins: {
-          tooltip: chartJsDefaultTooltip()
-        },
-        maintainAspectRatio: false,
-        scales: {
-          r: {
-            grid: {
-              color: utils.rgbaColor(utils.getGrays().black, 0.1)
-            }
-          }
-        }
-      }
-    };
-  };
-
-  chartJsInit(radar, getOptions);
-};
-/* -------------------------------------------------------------------------- */
-
-/*                            Chart Scatter                                   */
-
-/* -------------------------------------------------------------------------- */
-
-
-var chartScatter = function chartScatter() {
-  var scatter = document.getElementById('chartjs-scatter-chart');
-
-  var getOptions = function getOptions() {
-    return {
-      type: 'scatter',
-      data: {
-        datasets: [{
-          label: 'Dataset one',
-          data: [{
-            x: -98,
-            y: 42
-          }, {
-            x: -85,
-            y: -29
-          }, {
-            x: -87,
-            y: -70
-          }, {
-            x: -53,
-            y: 28
-          }, {
-            x: -29,
-            y: 4
-          }, {
-            x: -2,
-            y: -42
-          }, {
-            x: 5,
-            y: 3
-          }, {
-            x: 39,
-            y: 19
-          }, {
-            x: 49,
-            y: 79
-          }, {
-            x: 83,
-            y: -9
-          }, {
-            x: 93,
-            y: 12
-          }],
-          pointBackgroundColor: utils.getColor('primary'),
-          borderColor: utils.getColor('primary'),
-          borderWidth: 1
-        }, {
-          label: 'Dataset Two',
-          data: [{
-            x: 53,
-            y: 12
-          }, {
-            x: -78,
-            y: 42
-          }, {
-            x: -65,
-            y: -39
-          }, {
-            x: -57,
-            y: -20
-          }, {
-            x: 57,
-            y: 28
-          }, {
-            x: -35,
-            y: 75
-          }, {
-            x: -29,
-            y: -43
-          }, {
-            x: 15,
-            y: 31
-          }, {
-            x: 97,
-            y: 19
-          }, {
-            x: 49,
-            y: 69
-          }, {
-            x: 33,
-            y: -57
-          }],
-          pointBackgroundColor: utils.getColor('warning'),
-          borderColor: utils.getColor('warning'),
-          borderWidth: 1,
-          borderRadius: '50%'
-        }]
-      },
-      options: {
-        plugins: {
-          tooltip: chartJsDefaultTooltip()
-        },
-        scales: {
-          x: {
-            grid: {
-              color: utils.rgbaColor(utils.getGrays().black, 0.1)
-            }
-          },
-          y: {
-            grid: {
-              color: utils.rgbaColor(utils.getGrays().black, 0.1)
-            }
-          }
-        },
-        animation: {
-          duration: 2000
-        }
-      }
-    };
-  };
-
-  chartJsInit(scatter, getOptions);
-};
-/* -------------------------------------------------------------------------- */
-
-/*                            ChartJs Initialization                          */
-
-/* -------------------------------------------------------------------------- */
-
-
-var chartJsInit = function chartJsInit(chartEl, config) {
-  if (!chartEl) return;
-  var ctx = chartEl.getContext('2d');
-  var chart = new window.Chart(ctx, config());
-  var themeController = document.body;
-  themeController.addEventListener('clickControl', function (_ref14) {
-    var control = _ref14.detail.control;
-
-    if (control === 'theme') {
-      chart.destroy();
-      chart = new window.Chart(ctx, config());
-    }
-
-    return null;
-  });
-};
-
-var chartJsDefaultTooltip = function chartJsDefaultTooltip() {
-  return {
-    backgroundColor: utils.getGrays()['100'],
-    borderColor: utils.getGrays()['300'],
-    borderWidth: 1,
-    titleColor: utils.getGrays().black,
-    callbacks: {
-      labelTextColor: function labelTextColor() {
-        return utils.getGrays().black;
-      }
-    }
-  };
-};
-
-var getBubbleDataset = function getBubbleDataset(count, rmin, rmax, min, max) {
-  var arr = Array.from(Array(count).keys());
-  return arr.map(function () {
-    return {
-      x: utils.getRandomNumber(min, max),
-      y: utils.getRandomNumber(min, max),
-      r: utils.getRandomNumber(rmin, rmax)
-    };
-  });
-};
-/* eslint-disable */
-
-/* -------------------------------------------------------------------------- */
-
-/*                            Chart Scatter                                   */
-
-/* -------------------------------------------------------------------------- */
-
-
-var productShareDoughnutInit = function productShareDoughnutInit() {
-  var marketShareDoughnutElement = document.getElementById('marketShareDoughnut');
-
-  var getOptions = function getOptions() {
-    return {
-      type: 'doughnut',
-      data: {
-        labels: ['Flacon', 'Sparrow'],
-        datasets: [{
-          data: [50, 88],
-          backgroundColor: [utils.getColor('primary'), utils.getColor('gray-300')],
-          borderColor: [utils.getColor('primary'), utils.getColor('gray-300')]
-        }]
-      },
-      options: {
-        tooltips: chartJsDefaultTooltip(),
-        rotation: -90,
-        circumference: '180',
-        cutout: '80%',
-        plugins: {
-          legend: {
-            display: false
-          }
-        }
-      }
-    };
-  };
-
-  chartJsInit(marketShareDoughnutElement, getOptions);
-};
-/* -------------------------------------------------------------------------- */
-
 /*                             Echarts Active Users                           */
-
 /* -------------------------------------------------------------------------- */
-
 
 var activeUsersChartReportInit = function activeUsersChartReportInit() {
   var $echartsActiveUsersChart = document.querySelector('.echart-active-users-report');
-
   if ($echartsActiveUsersChart) {
     var userOptions = utils.getData($echartsActiveUsersChart, 'options');
     var chart = window.echarts.init($echartsActiveUsersChart);
-
     var _tooltipFormatter = function _tooltipFormatter(params) {
-      return "\n      <div>\n        <p class='mb-2 text-600'>".concat(window.dayjs(params[0].axisValue).format('MMM DD, YYYY'), "</p>\n        <div class='ms-1'>\n          <h6 class=\"fs--1 text-700\"><span class=\"fas fa-circle text-primary me-2\"></span>").concat(params[0].value, "</h6>\n          <h6 class=\"fs--1 text-700\"><span class=\"fas fa-circle text-success me-2\"></span>").concat(params[1].value, "</h6>\n          <h6 class=\"fs--1 text-700\"><span class=\"fas fa-circle text-info me-2\"></span>").concat(params[2].value, "</h6>\n        </div>\n      </div>\n      ");
+      return "\n      <div>\n        <p class='mb-2 text-600'>".concat(window.dayjs(params[0].axisValue).format('MMM DD, YYYY'), "</p>\n        <div class='ms-1'>\n          <h6 class=\"fs-10 text-700\"><span class=\"fas fa-circle text-primary me-2\"></span>").concat(params[0].value, "</h6>\n          <h6 class=\"fs-10 text-700\"><span class=\"fas fa-circle text-success me-2\"></span>").concat(params[1].value, "</h6>\n          <h6 class=\"fs-10 text-700\"><span class=\"fas fa-circle text-info me-2\"></span>").concat(params[2].value, "</h6>\n        </div>\n      </div>\n      ");
     };
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         color: [utils.getColor('primary'), utils.getColor('success'), utils.getColor('info')],
@@ -6152,7 +5878,7 @@ var activeUsersChartReportInit = function activeUsersChartReportInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -6273,20 +5999,16 @@ var activeUsersChartReportInit = function activeUsersChartReportInit() {
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                Market Share                                */
-
 /* -------------------------------------------------------------------------- */
-
 
 var assignmentScoresInit = function assignmentScoresInit() {
   var $echartAssignmentScores = document.querySelector('.echart-assignment-scores');
-
   if ($echartAssignmentScores) {
     var userOptions = utils.getData($echartAssignmentScores, 'options');
     var chart = window.echarts.init($echartAssignmentScores);
@@ -6303,7 +6025,6 @@ var assignmentScoresInit = function assignmentScoresInit() {
       value: 2,
       name: '0-40%'
     }];
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         color: [utils.getColors().success, utils.getColors().primary, utils.getColors().info, utils.getColors().warning],
@@ -6313,7 +6034,7 @@ var assignmentScoresInit = function assignmentScoresInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -6359,16 +6080,13 @@ var assignmentScoresInit = function assignmentScoresInit() {
         }]
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                Audience Chart                              */
-
 /* -------------------------------------------------------------------------- */
-
 
 var audienceChartInit = function audienceChartInit() {
   var data = {
@@ -6380,26 +6098,24 @@ var audienceChartInit = function audienceChartInit() {
       duration: [[625, 269, 479, 654, 549, 305, 671], [499, 670, 550, 222, 696, 695, 469]]
     }
   };
-
   var tooltipFormatter = function tooltipFormatter(params) {
     var percentage = (params[0].value - params[1].value) / params[1].value * 100;
-    var perTemp = "\n      <div class=\"d-flex align-items-center ms-2\">\n        <span class=\"fas fa-caret-".concat(percentage < 0 ? 'down' : 'up', " text-").concat(percentage < 0 ? 'danger' : 'success', "\"></span>\n        <h6 class=\"fs--2 mb-0 ms-1 fw-semi-bold\">").concat(Math.abs(percentage).toFixed(2), " %</h6>\n      </div>\n    ");
+    var perTemp = "\n      <div class=\"d-flex align-items-center ms-2\">\n        <span class=\"fas fa-caret-".concat(percentage < 0 ? 'down' : 'up', " text-").concat(percentage < 0 ? 'danger' : 'success', "\"></span>\n        <h6 class=\"fs-11 mb-0 ms-1 fw-semi-bold\">").concat(Math.abs(percentage).toFixed(2), " %</h6>\n      </div>\n    ");
     var currentDate = new Date(params[0].axisValue);
     var prevDate = new Date(new Date().setDate(currentDate.getDate() - 7));
-    return "<div>\n          <p class='mb-0 fs--2 text-600'>".concat(window.dayjs(params[0].axisValue).format('MMM DD'), " vs ").concat(window.dayjs(prevDate).format('MMM DD'), "</p>\n          <div class=\"d-flex align-items-center\">\n            <p class='mb-0 text-600 fs--1'>\n              Users: <span class='text-800 fw-semi-bold fs--1'>").concat(params[0].data, "</span>\n            </p>\n            ").concat(perTemp, "\n          </div>\n        </div>");
+    return "<div>\n          <p class='mb-0 fs-11 text-600'>".concat(window.dayjs(params[0].axisValue).format('MMM DD'), " vs ").concat(window.dayjs(prevDate).format('MMM DD'), "</p>\n          <div class=\"d-flex align-items-center\">\n            <p class='mb-0 text-600 fs-10'>\n              Users: <span class='text-800 fw-semi-bold fs-10'>").concat(params[0].data, "</span>\n            </p>\n            ").concat(perTemp, "\n          </div>\n        </div>");
   };
-
   var getDefaultOptions = function getDefaultOptions(data1, data2) {
     return function () {
       return {
-        color: utils.getGrays().white,
+        color: utils.getGrays()['100'],
         tooltip: {
           trigger: 'axis',
           padding: [7, 10],
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -6503,15 +6219,12 @@ var audienceChartInit = function audienceChartInit() {
       };
     };
   };
-
   var initChart = function initChart(el, options) {
     var userOptions = utils.getData(el, 'options');
     var chart = window.echarts.init(el);
     echartSetOption(chart, userOptions, options);
   };
-
   var tab = document.querySelector('#audience-chart-tab');
-
   if (tab) {
     initChart(document.querySelector('.echart-audience'), getDefaultOptions(data.dataset.users[0], data.dataset.users[1]));
     var triggerTabList = Array.from(tab.querySelectorAll('[data-bs-toggle="tab"]'));
@@ -6524,31 +6237,26 @@ var audienceChartInit = function audienceChartInit() {
     });
   }
 };
-/* -------------------------------------------------------------------------- */
-
-/*                      Echarts Total Sales E-commerce                        */
 
 /* -------------------------------------------------------------------------- */
-
+/*                      Echarts Total Sales Courses                           */
+/* -------------------------------------------------------------------------- */
 
 var avgEnrollmentRateInit = function avgEnrollmentRateInit() {
   var $echartsLineAvgEnrollmentLms = document.querySelector('.echart-avg-enrollment-rate');
-
   function getFormatter(params) {
-    return params.map(function (_ref15) {
-      var seriesName = _ref15.seriesName,
-          value = _ref15.value,
-          borderColor = _ref15.borderColor;
-      return "<span class= \"fas fa-circle fs--2\" style=\"color: ".concat(borderColor, "\"></span>\n            <span class='text-600'>\n              ").concat(seriesName, " : <strong>").concat(value, "</strong>\n            </span>");
+    return params.map(function (_ref18) {
+      var seriesName = _ref18.seriesName,
+        value = _ref18.value,
+        borderColor = _ref18.borderColor;
+      return "<span class= \"fas fa-circle fs-11\" style=\"color: ".concat(borderColor, "\"></span>\n            <span class='text-600'>\n              ").concat(seriesName, " : <strong>").concat(value, "</strong>\n            </span>");
     }).join('<br/>');
   }
-
   if ($echartsLineAvgEnrollmentLms) {
     var userOptions = utils.getData($echartsLineAvgEnrollmentLms, 'options');
     var onSaleCourseRate = document.querySelector("#".concat(userOptions.optionOne));
     var regularPaidCourseRate = document.querySelector("#".concat(userOptions.optionTwo));
     var chart = window.echarts.init($echartsLineAvgEnrollmentLms);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         color: utils.getGrays()['100'],
@@ -6558,7 +6266,7 @@ var avgEnrollmentRateInit = function avgEnrollmentRateInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           formatter: function formatter(params) {
@@ -6655,6 +6363,7 @@ var avgEnrollmentRateInit = function avgEnrollmentRateInit() {
             showMinLabel: false,
             show: true,
             color: utils.getColor('gray-400'),
+            margin: 15,
             formatter: function formatter(value) {
               return "".concat(Math.round(value / 1000 * 10) / 10, "k");
             }
@@ -6716,11 +6425,11 @@ var avgEnrollmentRateInit = function avgEnrollmentRateInit() {
           right: '10px',
           left: '30px',
           bottom: '15%',
-          top: '5%'
+          top: '5%',
+          outerBoundsMode: 'none'
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
     onSaleCourseRate.addEventListener('click', function () {
       onSaleCourseRate.classList.toggle('opacity-50');
@@ -6738,20 +6447,16 @@ var avgEnrollmentRateInit = function avgEnrollmentRateInit() {
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                            Bandwidth Saved                                 */
-
 /* -------------------------------------------------------------------------- */
-
 
 var bandwidthSavedInit = function bandwidthSavedInit() {
   var $echartsBandwidthSaved = document.querySelector('.echart-bandwidth-saved');
-
   if ($echartsBandwidthSaved) {
     var userOptions = utils.getData($echartsBandwidthSaved, 'options');
     var chart = window.echarts.init($echartsBandwidthSaved);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         series: [{
@@ -6819,30 +6524,25 @@ var bandwidthSavedInit = function bandwidthSavedInit() {
         }]
       };
     };
-
-    var initChart = function initChart() {
+    var _initChart = function initChart() {
       if (utils.isScrolledIntoView($echartsBandwidthSaved)) {
         echartSetOption(chart, userOptions, getDefaultOptions);
-        window.removeEventListener('scroll', initChart);
+        window.removeEventListener('scroll', _initChart);
       }
     };
-
-    window.addEventListener('scroll', initChart);
+    window.addEventListener('scroll', _initChart);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                     Echart Bar Member info                                 */
-
 /* -------------------------------------------------------------------------- */
-
 
 var basicEchartsInit = function basicEchartsInit() {
   var $echartBasicCharts = document.querySelectorAll('[data-echarts]');
   $echartBasicCharts.forEach(function ($echartBasicChart) {
     var userOptions = utils.getData($echartBasicChart, 'echarts');
     var chart = window.echarts.init($echartBasicChart);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         color: utils.getColors().primary,
@@ -6855,7 +6555,7 @@ var basicEchartsInit = function basicEchartsInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -6901,36 +6601,29 @@ var basicEchartsInit = function basicEchartsInit() {
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   });
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                             Echarts Bounce Rate                            */
-
 /* -------------------------------------------------------------------------- */
-
 
 var bounceRateChartInit = function bounceRateChartInit() {
   var $echartsBounceRateChart = document.querySelector('.echart-bounce-rate');
-
   var tooltipFormatter = function tooltipFormatter(params) {
-    return "<div>\n          <p class='mb-0 text-600'>".concat(window.dayjs(params[0].axisValue).format('DD, MMMM'), "</p>\n          <div class=\"d-flex align-items-center\">\n            <p class=\"mb-0 text-600\">\n              Rate : <span class='text-800'>").concat(params[0].value, "%</span>\n            </p>\n          </div>\n        </div>");
+    return "\n    <div>\n      <p class='mb-0 text-600'>".concat(window.dayjs(params[0].axisValue).format('DD, MMMM'), "</p>\n      <div class=\"d-flex align-items-center\">\n        <p class=\"mb-0 text-600\">\n          Rate : <span class='text-800'>").concat(params[0].value, "%</span>\n        </p>\n      </div>\n    </div>\n  ");
   };
-
   var dataset = {
     week: [41, 45, 37, 44, 35, 39, 43],
     month: [40, 37, 42, 44, 36, 39, 37, 43, 38, 35, 43, 39, 42, 36, 37, 36, 42, 44, 34, 41, 37, 41, 40, 40, 43, 34, 41, 35, 44, 41, 40]
   };
-
   if ($echartsBounceRateChart) {
     var userOptions = utils.getData($echartsBounceRateChart, 'options');
     var chart = window.echarts.init($echartsBounceRateChart);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
-        color: utils.getGrays().white,
+        color: utils.getGrays()['100'],
         title: {
           text: 'Bounce Rate',
           padding: [5, 0, 0, 0],
@@ -6938,7 +6631,9 @@ var bounceRateChartInit = function bounceRateChartInit() {
             color: utils.getGrays()['900'],
             fontSize: 13,
             fontWeight: 600
-          }
+          },
+          left: 'left',
+          top: 'top'
         },
         tooltip: {
           trigger: 'axis',
@@ -6949,7 +6644,7 @@ var bounceRateChartInit = function bounceRateChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -7030,14 +6725,13 @@ var bounceRateChartInit = function bounceRateChartInit() {
           right: '10px',
           left: '40px',
           bottom: '10%',
-          top: '13%'
+          top: '13%',
+          outerBoundsMode: 'none'
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
     var selectMenu = document.querySelector("[data-target='.echart-bounce-rate']");
-
     if (selectMenu) {
       selectMenu.addEventListener('change', function (e) {
         var value = e.currentTarget.value;
@@ -7055,32 +6749,27 @@ var bounceRateChartInit = function bounceRateChartInit() {
     }
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                Browsed Courses                           */
-
 /* -------------------------------------------------------------------------- */
-
 
 var browsedCoursesInit = function browsedCoursesInit() {
   var $echartsBrowsedCourses = document.querySelector('.echart-browsed-courses');
   var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
   var tooltipFormatter = function tooltipFormatter(params) {
-    return "\n    <div>\n      <p class='mb-2 text-600'>\n      ".concat(window.dayjs(params[0].axisValue).isValid() ? window.dayjs(params[0].axisValue).format('MMMM YYYY') : params[0].axisValue, "\n      </p>\n      ").concat(params.map(function (_ref16) {
-      var seriesName = _ref16.seriesName,
-          value = _ref16.value,
-          borderColor = _ref16.borderColor;
-      return "<span class= \"fas fa-circle fs--2\" style=\"color: ".concat(borderColor, "\"></span>\n            <span class='text-600'>\n              ").concat(seriesName, " : <strong>").concat(value, "</strong>\n            </span>");
+    return "\n    <div>\n      <p class='mb-2 text-600'>\n      ".concat(window.dayjs(params[0].axisValue).isValid() ? window.dayjs(params[0].axisValue).format('MMMM YYYY') : params[0].axisValue, "\n      </p>\n      ").concat(params.map(function (_ref19) {
+      var seriesName = _ref19.seriesName,
+        value = _ref19.value,
+        borderColor = _ref19.borderColor;
+      return "\n          <span class= \"fas fa-circle fs-11\" style=\"color: ".concat(borderColor, "\"></span>\n          <span class='text-600'>\n            ").concat(seriesName, " : <strong>").concat(value, "</strong>\n          </span>\n        ");
     }).join('<br />'), "\n    </div>");
   };
-
   if ($echartsBrowsedCourses) {
     var userOptions = utils.getData($echartsBrowsedCourses, 'options');
     var newCourseBrowsedEl = document.querySelector("#".concat(userOptions.optionOne));
     var paidCourseBrowsedEl = document.querySelector("#".concat(userOptions.optionTwo));
     var chart = window.echarts.init($echartsBrowsedCourses);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         color: utils.getGrays()['100'],
@@ -7122,7 +6811,7 @@ var browsedCoursesInit = function browsedCoursesInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -7173,15 +6862,13 @@ var browsedCoursesInit = function browsedCoursesInit() {
         }
       };
     };
-
-    var initChart = function initChart() {
+    var _initChart2 = function initChart() {
       if (utils.isScrolledIntoView($echartsBrowsedCourses)) {
         echartSetOption(chart, userOptions, getDefaultOptions);
-        window.removeEventListener('scroll', initChart);
+        window.removeEventListener('scroll', _initChart2);
       }
     };
-
-    window.addEventListener('scroll', initChart);
+    window.addEventListener('scroll', _initChart2);
     newCourseBrowsedEl.addEventListener('click', function () {
       newCourseBrowsedEl.classList.toggle('opacity-50');
       chart.dispatchAction({
@@ -7198,31 +6885,25 @@ var browsedCoursesInit = function browsedCoursesInit() {
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                             Echarts Candle Chart                           */
-
 /* -------------------------------------------------------------------------- */
-
 
 var candleChartInit = function candleChartInit() {
   var ECHART_CANDLE_CHART = '.echart-candle-chart';
   var ECHART_ZOOM_IN = "[data-zoom='in']";
   var ECHART_ZOOM_OUT = "[data-zoom='out']";
   var $echartsCandleChart = document.querySelector(ECHART_CANDLE_CHART);
-
   if ($echartsCandleChart) {
     var userOptions = utils.getData($echartsCandleChart, 'options');
     var chart = window.echarts.init($echartsCandleChart);
     var $echartsZoomIn = document.getElementById($echartsCandleChart.dataset.actionTarget).querySelector(ECHART_ZOOM_IN);
     var $echartsZoomOut = document.getElementById($echartsCandleChart.dataset.actionTarget).querySelector(ECHART_ZOOM_OUT);
-
     var _utils$getColors = utils.getColors(),
-        warning = _utils$getColors.warning;
-
+      warning = _utils$getColors.warning;
     var _utils$getColors2 = utils.getColors(),
-        primary = _utils$getColors2.primary;
-
+      primary = _utils$getColors2.primary;
     var splitData = function splitData(rawData) {
       var categoryData = [];
       var values = [];
@@ -7235,11 +6916,9 @@ var candleChartInit = function candleChartInit() {
         values: values
       };
     };
-
     var data = splitData([['2013/1/24', 2320.26, 2320.26, 2287.3, 2362.94], ['2013/1/25', 2300, 2291.3, 2288.26, 2308.38], ['2013/1/28', 2295.35, 2346.5, 2295.35, 2346.92], ['2013/1/29', 2347.22, 2358.98, 2337.35, 2363.8], ['2013/1/30', 2360.75, 2382.48, 2347.89, 2383.76], ['2013/1/31', 2383.43, 2385.42, 2371.23, 2391.82], ['2013/2/1', 2377.41, 2419.02, 2369.57, 2421.15], ['2013/2/4', 2425.92, 2428.15, 2417.58, 2440.38], ['2013/2/5', 2411, 2433.13, 2403.3, 2437.42], ['2013/2/6', 2432.68, 2434.48, 2427.7, 2441.73], ['2013/2/7', 2430.69, 2418.53, 2394.22, 2433.89], ['2013/2/8', 2416.62, 2432.4, 2414.4, 2443.03], ['2013/2/18', 2441.91, 2421.56, 2415.43, 2444.8], ['2013/2/19', 2420.26, 2382.91, 2373.53, 2427.07], ['2013/2/20', 2383.49, 2397.18, 2370.61, 2397.94], ['2013/2/21', 2378.82, 2325.95, 2309.17, 2378.82], ['2013/2/22', 2322.94, 2314.16, 2308.76, 2330.88], ['2013/2/25', 2320.62, 2325.82, 2315.01, 2338.78], ['2013/2/26', 2313.74, 2293.34, 2289.89, 2340.71], ['2013/2/27', 2297.77, 2313.22, 2292.03, 2324.63], ['2013/2/28', 2322.32, 2365.59, 2308.92, 2366.16], ['2013/3/1', 2364.54, 2359.51, 2330.86, 2369.65], ['2013/3/4', 2332.08, 2273.4, 2259.25, 2333.54], ['2013/3/5', 2274.81, 2326.31, 2270.1, 2328.14], ['2013/3/6', 2333.61, 2347.18, 2321.6, 2351.44], ['2013/3/7', 2340.44, 2324.29, 2304.27, 2352.02], ['2013/3/8', 2326.42, 2318.61, 2314.59, 2333.67], ['2013/3/11', 2314.68, 2310.59, 2296.58, 2320.96], ['2013/3/12', 2309.16, 2286.6, 2264.83, 2333.29], ['2013/3/13', 2282.17, 2263.97, 2253.25, 2286.33], ['2013/3/14', 2255.77, 2270.28, 2253.31, 2276.22], ['2013/3/15', 2269.31, 2278.4, 2250, 2312.08], ['2013/3/18', 2267.29, 2240.02, 2239.21, 2276.05], ['2013/3/19', 2244.26, 2257.43, 2232.02, 2261.31], ['2013/3/20', 2257.74, 2317.37, 2257.42, 2317.86], ['2013/3/21', 2318.21, 2324.24, 2311.6, 2330.81], ['2013/3/22', 2321.4, 2328.28, 2314.97, 2332], ['2013/3/25', 2334.74, 2326.72, 2319.91, 2344.89], ['2013/3/26', 2318.58, 2297.67, 2281.12, 2319.99], ['2013/3/27', 2299.38, 2301.26, 2289, 2323.48], ['2013/3/28', 2273.55, 2236.3, 2232.91, 2273.55], ['2013/3/29', 2238.49, 2236.62, 2228.81, 2246.87], ['2013/4/1', 2229.46, 2234.4, 2227.31, 2243.95], ['2013/4/2', 2234.9, 2227.74, 2220.44, 2253.42], ['2013/4/3', 2232.69, 2225.29, 2217.25, 2241.34], ['2013/4/8', 2196.24, 2211.59, 2180.67, 2212.59], ['2013/4/9', 2215.47, 2225.77, 2215.47, 2234.73], ['2013/4/10', 2224.93, 2226.13, 2212.56, 2233.04], ['2013/4/11', 2236.98, 2219.55, 2217.26, 2242.48], ['2013/4/12', 2218.09, 2206.78, 2204.44, 2226.26]]);
     var zoomStart = 0;
     var zoomEnd = 70;
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         tooltip: {
@@ -7251,7 +6930,7 @@ var candleChartInit = function candleChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           position: function position(pos, params, dom, rect, size) {
@@ -7325,7 +7004,8 @@ var candleChartInit = function candleChartInit() {
         dataZoom: [{
           type: 'inside',
           start: zoomStart,
-          end: zoomEnd
+          end: zoomEnd,
+          minValueSpan: 3
         }],
         series: [{
           name: 'candlestick',
@@ -7346,9 +7026,7 @@ var candleChartInit = function candleChartInit() {
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
-
     var dispatchZoomAction = function dispatchZoomAction() {
       chart.dispatchAction({
         type: 'dataZoom',
@@ -7356,16 +7034,13 @@ var candleChartInit = function candleChartInit() {
         end: zoomEnd
       });
     };
-
     $echartsZoomIn.addEventListener('click', function () {
       if (zoomEnd > 10) {
         zoomEnd -= 10;
       }
-
       if (zoomEnd <= 10) {
         $echartsZoomIn.disabled = true;
       }
-
       if (zoomEnd > 0) {
         $echartsZoomOut.disabled = false;
         dispatchZoomAction();
@@ -7375,11 +7050,9 @@ var candleChartInit = function candleChartInit() {
       if (zoomEnd < 100) {
         zoomEnd += 10;
       }
-
       if (zoomEnd >= 100) {
         $echartsZoomOut.disabled = true;
       }
-
       if (zoomEnd > 0) {
         $echartsZoomIn.disabled = false;
         dispatchZoomAction();
@@ -7393,23 +7066,19 @@ var candleChartInit = function candleChartInit() {
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                             Echarts Total Sales                            */
-
 /* -------------------------------------------------------------------------- */
-
 
 var closedVsGoalInit = function closedVsGoalInit() {
   var ECHART_LINE_TOTAL_SALES = '.echart-closed-vs-goal';
   var $echartsLineTotalSales = document.querySelector(ECHART_LINE_TOTAL_SALES);
   var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
   if ($echartsLineTotalSales) {
     // Get options from data attribute
     var userOptions = utils.getData($echartsLineTotalSales, 'options');
     var chart = window.echarts.init($echartsLineTotalSales);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         color: [utils.getColors().primary, utils.getColors().warning],
@@ -7419,7 +7088,7 @@ var closedVsGoalInit = function closedVsGoalInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           formatter: tooltipFormatter,
@@ -7430,6 +7099,7 @@ var closedVsGoalInit = function closedVsGoalInit() {
         },
         legend: {
           left: 'left',
+          top: 'top',
           data: ['Closed Amount', 'Revenue Date'],
           itemWidth: 10,
           itemHeight: 10,
@@ -7547,29 +7217,25 @@ var closedVsGoalInit = function closedVsGoalInit() {
           right: '25px',
           left: '100px',
           bottom: '60px',
-          top: '35px'
+          top: '35px',
+          outerBoundsMode: 'none'
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                             Course Enrollment                              */
-
 /* -------------------------------------------------------------------------- */
-
 
 var courseEnrollmentsInit = function courseEnrollmentsInit() {
   var $echartBarCourseEnrollments = document.querySelector('.echart-bar-course-enrollments');
   var data = [['course', 'Free Course', 'Paid Course', 'On sale Course'], ['Sun', 4300, 8500, 5000], ['Mon', 8300, 7300, 4500], ['Tue', 8600, 6200, 3600], ['Wed', 7200, 5300, 4500], ['Thu', 8000, 5000, 2600], ['Fri', 5000, 7000, 8800], ['Sat', 8000, 9000, 6000]];
-
   if ($echartBarCourseEnrollments) {
     var userOptions = utils.getData($echartBarCourseEnrollments, 'options');
     var chart = window.echarts.init($echartBarCourseEnrollments);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         color: [utils.rgbaColor(utils.getColors().info, 0.6), utils.getColors().primary, utils.rgbaColor(utils.getColors().warning, 0.4)],
@@ -7582,19 +7248,21 @@ var courseEnrollmentsInit = function courseEnrollmentsInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays().primary,
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
           formatter: function formatter(params) {
-            return "<div class=\"font-weight-semi-bold\">".concat(params.seriesName, "</div><div class=\"fs--1 text-600\"><strong>").concat(params.name, ":</strong> ").concat(params.value[params.componentIndex + 1], "</div>");
+            return "<div class=\"fw-semibold\">".concat(params.seriesName, "</div><div class=\"fs-10 text-600\"><strong>").concat(params.name, ":</strong> ").concat(params.value[params.componentIndex + 1], "</div>");
           }
         },
         legend: {
           data: ['Free Course', 'Paid Course', 'On sale Course'],
           left: 'left',
+          top: 'top',
           itemWidth: 10,
           itemHeight: 10,
+          itemGap: 10,
           borderRadius: 0,
           icon: 'circle',
           inactiveColor: utils.getGrays()['400'],
@@ -7710,23 +7378,19 @@ var courseEnrollmentsInit = function courseEnrollmentsInit() {
         }
       };
     };
-
-    var initChart = function initChart() {
+    var _initChart3 = function initChart() {
       if (utils.isScrolledIntoView($echartBarCourseEnrollments)) {
         echartSetOption(chart, userOptions, getDefaultOptions);
-        window.removeEventListener('scroll', initChart);
+        window.removeEventListener('scroll', _initChart3);
       }
     };
-
-    window.addEventListener('scroll', initChart);
+    window.addEventListener('scroll', _initChart3);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                             Echarts Pie Chart                              */
-
 /* -------------------------------------------------------------------------- */
-
 
 var courseStatusInit = function courseStatusInit() {
   var $echartsCourseStatus = document.querySelector('.echart-course-status');
@@ -7755,11 +7419,9 @@ var courseStatusInit = function courseStatusInit() {
       color: utils.getColor('success')
     }
   }];
-
   if ($echartsCourseStatus) {
     var userOptions = utils.getData($echartsCourseStatus, 'options');
     var chart = window.echarts.init($echartsCourseStatus);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         legend: {
@@ -7784,7 +7446,7 @@ var courseStatusInit = function courseStatusInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -7794,23 +7456,19 @@ var courseStatusInit = function courseStatusInit() {
         }
       };
     };
-
-    var initChart = function initChart() {
+    var _initChart4 = function initChart() {
       if (utils.isScrolledIntoView($echartsCourseStatus)) {
         echartSetOption(chart, userOptions, getDefaultOptions);
-        window.removeEventListener('scroll', initChart);
+        window.removeEventListener('scroll', _initChart4);
       }
     };
-
-    window.addEventListener('scroll', initChart);
+    window.addEventListener('scroll', _initChart4);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                Audience Chart                              */
-
 /* -------------------------------------------------------------------------- */
-
 
 var revenueChartInit = function revenueChartInit() {
   var data = {
@@ -7822,15 +7480,13 @@ var revenueChartInit = function revenueChartInit() {
       profit: [[545, 400, 450, 627, 673, 605, 686, 501, 843, 518, 504, 715, 955, 622, 627, 716, 736, 952, 619, 558, 937, 785, 872, 550, 400], [340, 360, 330, 300, 410, 380, 450, 400, 420, 240, 200, 250, 355, 320, 500, 630, 680, 400, 420, 450, 650, 620, 700, 450, 340]]
     }
   };
-
   var tooltipFormatter = function tooltipFormatter(params) {
-    return "<div class=\"card\">\n                <div class=\"card-header bg-light py-2\">\n                  <h6 class=\"text-600 mb-0\">".concat(params[0].axisValue, "</h6>\n                </div>\n              <div class=\"card-body py-2\">\n                <h6 class=\"text-600 fw-normal\">\n                  <span class=\"fas fa-circle text-primary me-2\"></span>Revenue: \n                  <span class=\"fw-medium\">$").concat(params[0].data, "</span></h6>\n                <h6 class=\"text-600 mb-0 fw-normal\"> \n                  <span class=\"fas fa-circle text-warning me-2\"></span>Revenue Goal: \n                  <span class=\"fw-medium\">$").concat(params[1].data, "</span></h6>\n              </div>\n            </div>");
+    return "\n    <div class=\"card\">\n      <div class=\"card-header bg-body-tertiary py-2\">\n        <h6 class=\"text-600 mb-0\">".concat(params[0].axisValue, "</h6>\n      </div>\n      <div class=\"card-body py-2\">\n        <h6 class=\"text-600 fw-normal\">\n          <span class=\"fas fa-circle text-primary me-2\"></span>Revenue: \n          <span class=\"fw-medium\">$").concat(params[0].data, "</span></h6>\n        <h6 class=\"text-600 mb-0 fw-normal\"> \n          <span class=\"fas fa-circle text-warning me-2\"></span>Revenue Goal: \n          <span class=\"fw-medium\">$").concat(params[1].data, "</span></h6>\n      </div>\n    </div>\n  ");
   };
-
   var getDefaultOptions = function getDefaultOptions(data1, data2) {
     return function () {
       return {
-        color: utils.getGrays().white,
+        color: utils.getColors().white,
         tooltip: {
           trigger: 'axis',
           padding: 0,
@@ -7927,28 +7583,23 @@ var revenueChartInit = function revenueChartInit() {
       };
     };
   };
-
   var initChart = function initChart(el, options) {
     var userOptions = utils.getData(el, 'options');
     var chart = window.echarts.init(el);
     echartSetOption(chart, userOptions, options);
   };
-
   var chartKeys = ['revenue', 'users', 'deals', 'profit'];
   chartKeys.forEach(function (key) {
     var el = document.querySelector(".echart-crm-".concat(key));
     el && initChart(el, getDefaultOptions(data.dataset[key][0], data.dataset[key][1]));
   });
 };
-
 var echartsCustomerSatisfactionInit = function echartsCustomerSatisfactionInit() {
   var $echartCustomerSatisfaction = document.querySelector('.echart-customer-setisfaction');
-
   if ($echartCustomerSatisfaction) {
     // Get options from data attribute
     var userOptions = utils.getData($echartCustomerSatisfaction, 'options');
     var chart = window.echarts.init($echartCustomerSatisfaction);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         legend: {
@@ -7977,7 +7628,7 @@ var echartsCustomerSatisfactionInit = function echartsCustomerSatisfactionInit()
           center: ['50%', '45%'],
           itemStyle: {
             borderWidth: 2,
-            borderColor: localStorage.getItem('theme') === 'dark' ? '#121E2D' : utils.getGrays()['100']
+            borderColor: utils.isDark() === 'dark' ? '#121E2D' : utils.getGrays()['100']
           },
           data: [{
             value: 1100,
@@ -7989,7 +7640,7 @@ var echartsCustomerSatisfactionInit = function echartsCustomerSatisfactionInit()
             value: 550,
             name: 'Nagative',
             itemStyle: {
-              color: utils.rgbaColor(utils.getColor('primary'), 0.50)
+              color: utils.rgbaColor(utils.getColor('primary'), 0.5)
             }
           }]
         }],
@@ -7999,7 +7650,7 @@ var echartsCustomerSatisfactionInit = function echartsCustomerSatisfactionInit()
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -8009,27 +7660,22 @@ var echartsCustomerSatisfactionInit = function echartsCustomerSatisfactionInit()
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                             Echarts Bounce Rate                            */
-
 /* -------------------------------------------------------------------------- */
-
 
 var dealStorageFunnelInit = function dealStorageFunnelInit() {
   var $echartDealStorageFunnel = document.querySelector('.echart-deal-storage-funnel');
-
   if ($echartDealStorageFunnel) {
     var userOptions = utils.getData($echartDealStorageFunnel, 'options');
     var data = userOptions.data,
-        dataAxis1 = userOptions.dataAxis1,
-        dataAxis2 = userOptions.dataAxis2;
+      dataAxis1 = userOptions.dataAxis1,
+      dataAxis2 = userOptions.dataAxis2;
     var chart = window.echarts.init($echartDealStorageFunnel);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         yAxis: [{
@@ -8063,7 +7709,7 @@ var dealStorageFunnelInit = function dealStorageFunnelInit() {
             borderRadius: 5,
             backgroundColor: utils.getSubtleColors().primary,
             padding: [6, 16, 6, 16],
-            width: 115
+            width: 60
           },
           axisTick: {
             show: false
@@ -8111,21 +7757,19 @@ var dealStorageFunnelInit = function dealStorageFunnelInit() {
           data: data
         }],
         grid: {
-          right: '65px',
+          right: '64px',
           left: '0',
           bottom: '0',
-          top: '0'
+          top: '0',
+          outerBoundsMode: 'none'
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-
 var echartsDistributionOfPerformanceInit = function echartsDistributionOfPerformanceInit() {
   var $distributionOfPerformance = document.querySelector('.echart-distribution-of-performance');
-
   if ($distributionOfPerformance) {
     var userOptions = utils.getData($distributionOfPerformance, 'options');
     var chart = window.echarts.init($distributionOfPerformance);
@@ -8137,10 +7781,9 @@ var echartsDistributionOfPerformanceInit = function echartsDistributionOfPerform
         shadowColor: utils.rgbaColor(utils.getColor('dark'), 0.3)
       }
     };
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
-        color: [utils.getColor('primary'), localStorage.getItem('theme') === 'dark' ? '#236EA1' : '#7DD7FE'],
+        color: [utils.getColor('primary'), utils.isDark() === 'dark' ? '#236EA1' : '#7DD7FE'],
         legend: {
           data: ['Agent Support', 'Group Support'],
           icon: 'circle',
@@ -8153,6 +7796,7 @@ var echartsDistributionOfPerformanceInit = function echartsDistributionOfPerform
             fontSize: '13px'
           },
           left: 0,
+          top: 0,
           itemGap: 16
         },
         tooltip: {
@@ -8221,49 +7865,39 @@ var echartsDistributionOfPerformanceInit = function echartsDistributionOfPerform
           top: '15%',
           bottom: 0,
           left: 0,
-          right: 0,
-          containLabel: true
+          right: 0
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* eslint-disable */
-
-
 var getPosition = function getPosition(pos, params, dom, rect, size) {
   return {
     top: pos[1] - size.contentSize[1] - 10,
     left: pos[0] - size.contentSize[0] / 2
   };
 };
-
 var echartSetOption = function echartSetOption(chart, userOptions, getDefaultOptions) {
-  var themeController = document.body; // Merge user options with lodash
-
+  var themeController = document.body;
+  // Merge user options with lodash
   chart.setOption(window._.merge(getDefaultOptions(), userOptions));
-  themeController.addEventListener('clickControl', function (_ref17) {
-    var control = _ref17.detail.control;
-
+  themeController.addEventListener('clickControl', function (_ref20) {
+    var control = _ref20.detail.control;
     if (control === 'theme') {
       chart.setOption(window._.merge(getDefaultOptions(), userOptions));
     }
   });
 };
-
 var tooltipFormatter = function tooltipFormatter(params) {
-  var tooltipItem = "";
+  var tooltipItem = '';
   params.forEach(function (el) {
-    tooltipItem = tooltipItem + "<div class='ms-1'>\n        <h6 class=\"text-700\"><span class=\"fas fa-circle me-1 fs--2\" style=\"color:".concat(el.borderColor ? el.borderColor : el.color, "\"></span>\n          ").concat(el.seriesName, " : ").concat(_typeof(el.value) === 'object' ? el.value[1] : el.value, "\n        </h6>\n      </div>");
+    tooltipItem += "<div class='ms-1'>\n        <h6 class=\"text-700\">\n          <span class=\"fas fa-circle me-1 fs-11\" style=\"color:".concat(el.borderColor ? el.borderColor : el.color, "\"></span>\n          ").concat(el.seriesName, " : ").concat(_typeof(el.value) === 'object' ? el.value[1] : el.value, "\n        </h6>\n      </div>");
   });
-  return "<div>\n            <p class='mb-2 text-600'>\n              ".concat(window.dayjs(params[0].axisValue).isValid() ? window.dayjs(params[0].axisValue).format('MMMM DD') : params[0].axisValue, "\n            </p>\n            ").concat(tooltipItem, "\n          </div>");
+  return "\n    <div>\n      <p class='mb-2 text-600'>\n        ".concat(window.dayjs(params[0].axisValue).isValid() ? window.dayjs(params[0].axisValue).format('MMMM DD') : params[0].axisValue, "\n      </p>\n      ").concat(tooltipItem, "\n    </div>");
 };
-
 var resizeEcharts = function resizeEcharts() {
   var $echarts = document.querySelectorAll('[data-echart-responsive]');
-
   if ($echarts.length) {
     $echarts.forEach(function (item) {
       if (utils.getData(item, 'echart-responsive')) {
@@ -8274,7 +7908,6 @@ var resizeEcharts = function resizeEcharts() {
     });
   }
 };
-
 utils.resize(function () {
   return resizeEcharts();
 });
@@ -8293,17 +7926,15 @@ echartTabs && echartTabs.forEach(function (tab) {
     chart && window.echarts.init(chart).resize();
   });
 });
+
 /* -------------------------------------------------------------------------- */
-
 /*                             Echarts Gross Revenue                          */
-
 /* -------------------------------------------------------------------------- */
 
 var grossRevenueChartInit = function grossRevenueChartInit() {
   var ECHART_GROSS_REVENUE = '.echart-gross-revenue-chart';
   var $echartsGrossRevenue = document.querySelector(ECHART_GROSS_REVENUE);
   var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
   if ($echartsGrossRevenue) {
     // Get options from data attribute
     var userOptions = utils.getData($echartsGrossRevenue, 'options');
@@ -8314,26 +7945,24 @@ var grossRevenueChartInit = function grossRevenueChartInit() {
     var LEGEND_PREV_MONTH = "#".concat(userOptions.optionTwo);
     var $legendCurrentMonth = document.getElementById(LEGEND_MONTH_TARGET).querySelector(LEGEND_CURRENT_MONTH);
     var $legendPrevMonth = document.getElementById(LEGEND_MONTH_TARGET).querySelector(LEGEND_PREV_MONTH);
-
     var dates = function dates(month) {
       return utils.getDates(window.dayjs().month(month).date(1), window.dayjs().month(Number(month) + 1).date(0), 1000 * 60 * 60 * 24 * 3);
     };
-
     var monthsnumber = [[20, 40, 20, 80, 50, 80, 120, 80, 50, 120, 110, 110], [60, 80, 60, 80, 65, 130, 120, 100, 30, 40, 30, 70], [100, 70, 80, 50, 120, 100, 130, 140, 90, 100, 40, 50], [80, 50, 60, 40, 60, 120, 100, 130, 60, 80, 50, 60], [70, 80, 100, 70, 90, 60, 80, 130, 40, 60, 50, 80], [90, 40, 80, 80, 100, 140, 100, 130, 90, 60, 70, 50], [80, 60, 80, 60, 40, 100, 120, 100, 30, 40, 30, 70], [20, 40, 20, 50, 70, 60, 110, 80, 90, 30, 50, 50], [60, 70, 30, 40, 80, 140, 80, 140, 120, 130, 100, 110], [90, 90, 40, 60, 40, 110, 90, 110, 60, 80, 60, 70], [50, 80, 50, 80, 50, 80, 120, 80, 50, 120, 110, 110], [60, 90, 60, 70, 40, 70, 100, 140, 30, 40, 30, 70], [20, 40, 20, 50, 30, 80, 120, 100, 30, 40, 30, 70]];
-
     var _tooltipFormatter2 = function _tooltipFormatter2(params) {
       var currentDate = window.dayjs(params[0].axisValue);
       var tooltipItem = '';
       params.forEach(function (el) {
-        tooltipItem += "<h6 class=\"fs--1 text-700\"><span class=\"fas fa-circle me-2\" style=\"color:".concat(el.borderColor, "\"></span>\n        ").concat(currentDate.format('MMM DD'), " : ").concat(el.value, "\n      </h6>");
+        tooltipItem += "<h6 class=\"fs-10 text-700\"><span class=\"fas fa-circle me-2\" style=\"color:".concat(el.borderColor, "\"></span>\n        ").concat(currentDate.format('MMM DD'), " : ").concat(el.value, "\n      </h6>");
       });
       return "<div class='ms-1'>\n                ".concat(tooltipItem, "\n              </div>");
     };
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         title: {
           text: 'Sales over time',
+          left: 'left',
+          top: 'top',
           textStyle: {
             fontWeight: 500,
             fontSize: 13,
@@ -8344,14 +7973,14 @@ var grossRevenueChartInit = function grossRevenueChartInit() {
           show: false,
           data: ['currentMonth', 'prevMonth']
         },
-        color: utils.getGrays().white,
+        color: utils.getColors().white,
         tooltip: {
           trigger: 'axis',
           padding: [7, 10],
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           formatter: _tooltipFormatter2,
@@ -8451,13 +8080,14 @@ var grossRevenueChartInit = function grossRevenueChartInit() {
           right: '8px',
           left: '40px',
           bottom: '15%',
-          top: '20%'
+          top: '20%',
+          outerBoundsMode: 'none'
         }
       };
     };
+    echartSetOption(chart, userOptions, getDefaultOptions);
 
-    echartSetOption(chart, userOptions, getDefaultOptions); // Change chart options accordiong to the selected month
-
+    // Change chart options accordiong to the selected month
     var monthSelect = document.querySelector(SELECT_MONTH);
     var month = 0;
     var currentMonthData = monthsnumber[Number(month) + 1];
@@ -8495,26 +8125,23 @@ var grossRevenueChartInit = function grossRevenueChartInit() {
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                Traffic Channels                           */
-
 /* -------------------------------------------------------------------------- */
-
 
 var leadConversionInit = function leadConversionInit() {
   var $leadConversion = document.querySelector('.echart-lead-conversion');
-
   if ($leadConversion) {
     var userOptions = utils.getData($leadConversion, 'options');
     var chart = window.echarts.init($leadConversion);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         color: [utils.rgbaColor(utils.getColors().primary, 0.7), utils.rgbaColor(utils.getColors().info, 0.6), utils.rgbaColor(utils.getColors().secondary, 0.2), utils.rgbaColor(utils.getColors().warning, 0.6)],
         legend: {
           data: ['Campaigns', 'Lead', 'Opportunity', 'Deal'],
           left: '0%',
+          top: 0,
           icon: 'circle',
           inactiveColor: utils.getGrays()['400'],
           textStyle: {
@@ -8567,7 +8194,7 @@ var leadConversionInit = function leadConversionInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -8603,23 +8230,19 @@ var leadConversionInit = function leadConversionInit() {
         }],
         grid: {
           right: 5,
-          left: 5,
+          left: 0,
           bottom: 8,
-          top: 60,
-          containLabel: true
+          top: 60
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                             Echarts Line Payment                           */
-
 /* -------------------------------------------------------------------------- */
-
 
 var linePaymentChartInit = function linePaymentChartInit() {
   var $echartsLinePaymentChart = document.querySelector('.echart-line-payment');
@@ -8629,11 +8252,9 @@ var linePaymentChartInit = function linePaymentChartInit() {
     failed: [1, 0, 2, 1, 2, 1, 1, 0, 0, 1, 0, 2]
   };
   var labels = ['9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM', '6:00 PM', '7:00 PM', '8:00 PM'];
-
   if ($echartsLinePaymentChart) {
     var userOptions = utils.getData($echartsLinePaymentChart, 'options');
     var chart = window.echarts.init($echartsLinePaymentChart);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         tooltip: {
@@ -8652,7 +8273,7 @@ var linePaymentChartInit = function linePaymentChartInit() {
           textStyle: {
             fontWeight: 500,
             fontSize: 12,
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           }
         },
         xAxis: {
@@ -8715,10 +8336,10 @@ var linePaymentChartInit = function linePaymentChartInit() {
           }),
           symbol: 'emptyCircle',
           itemStyle: {
-            color: localStorage.getItem('theme') === 'light' ? utils.getGrays().white : utils.getColors().primary
+            color: utils.isDark() === 'light' ? utils.getColors().white : utils.getColors().primary
           },
           lineStyle: {
-            color: localStorage.getItem('theme') === 'light' ? utils.rgbaColor(utils.getGrays().white, 0.8) : utils.getColors().primary
+            color: utils.isDark() === 'light' ? utils.rgbaColor(utils.getColors().white, 0.8) : utils.getColors().primary
           },
           areaStyle: {
             color: {
@@ -8729,10 +8350,10 @@ var linePaymentChartInit = function linePaymentChartInit() {
               y2: 1,
               colorStops: [{
                 offset: 0,
-                color: localStorage.getItem('theme') === 'light' ? 'rgba(255, 255, 255, 0.5)' : utils.rgbaColor(utils.getColors().primary, 0.5)
+                color: utils.isDark() === 'light' ? 'rgba(255, 255, 255, 0.5)' : utils.rgbaColor(utils.getColors().primary, 0.5)
               }, {
                 offset: 1,
-                color: localStorage.getItem('theme') === 'light' ? 'rgba(255, 255, 255, 0)' : utils.rgbaColor(utils.getColors().primary, 0)
+                color: utils.isDark() === 'light' ? 'rgba(255, 255, 255, 0)' : utils.rgbaColor(utils.getColors().primary, 0)
               }]
             }
           },
@@ -8750,7 +8371,6 @@ var linePaymentChartInit = function linePaymentChartInit() {
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
     utils.resize(function () {
       if (window.innerWidth < 768) {
@@ -8764,7 +8384,6 @@ var linePaymentChartInit = function linePaymentChartInit() {
       }
     });
     var selectMenu = document.querySelector('#dashboard-chart-select');
-
     if (selectMenu) {
       selectMenu.addEventListener('change', function (e) {
         var value = e.currentTarget.value;
@@ -8779,12 +8398,10 @@ var linePaymentChartInit = function linePaymentChartInit() {
     }
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                Session By Country Map                      */
-
 /* -------------------------------------------------------------------------- */
-
 
 var locationBySessionInit = function locationBySessionInit() {
   var $locationBySessionMap = document.querySelector('.echart-location-by-session-map');
@@ -9326,13 +8943,10 @@ var locationBySessionInit = function locationBySessionInit() {
   var total = 6961500;
   var maxZoomLevel = 5;
   var minZoomLevel = 1;
-
   if ($locationBySessionMap) {
     var _document$querySelect2, _document$querySelect3, _document$querySelect4;
-
     var userOptions = utils.getData($locationBySessionMap, 'options');
     var chart = window.echarts.init($locationBySessionMap);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         tooltip: {
@@ -9341,14 +8955,13 @@ var locationBySessionInit = function locationBySessionInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
           formatter: function formatter(params) {
-            var _params$data, _params$data2;
-
-            return "<strong>".concat((_params$data = params.data) === null || _params$data === void 0 ? void 0 : _params$data.name, " :</strong> ").concat((((_params$data2 = params.data) === null || _params$data2 === void 0 ? void 0 : _params$data2.value) / total * 100).toFixed(2), "%");
+            var _params$data;
+            return "<strong>".concat((_params$data = params.data) === null || _params$data === void 0 ? void 0 : _params$data.name, " :</strong> ").concat(((params.data && params.data.value / total) * 100).toFixed(2), "%");
           }
         },
         visualMap: {
@@ -9387,10 +9000,9 @@ var locationBySessionInit = function locationBySessionInit() {
         }]
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
     var zoomLevel = 1;
-    (_document$querySelect2 = document.querySelector('.location-by-session-map-reset')) === null || _document$querySelect2 === void 0 ? void 0 : _document$querySelect2.addEventListener('click', function () {
+    (_document$querySelect2 = document.querySelector('.location-by-session-map-reset')) === null || _document$querySelect2 === void 0 || _document$querySelect2.addEventListener('click', function () {
       zoomLevel = 1;
       chart.dispatchAction({
         type: 'restore'
@@ -9401,22 +9013,20 @@ var locationBySessionInit = function locationBySessionInit() {
         }
       });
     });
-    (_document$querySelect3 = document.querySelector('.location-by-session-map-zoom')) === null || _document$querySelect3 === void 0 ? void 0 : _document$querySelect3.addEventListener('click', function () {
+    (_document$querySelect3 = document.querySelector('.location-by-session-map-zoom')) === null || _document$querySelect3 === void 0 || _document$querySelect3.addEventListener('click', function () {
       if (zoomLevel < maxZoomLevel) {
         zoomLevel += 1;
       }
-
       chart.setOption({
         series: {
           zoom: zoomLevel
         }
       });
     });
-    (_document$querySelect4 = document.querySelector('.location-by-session-map-zoomOut')) === null || _document$querySelect4 === void 0 ? void 0 : _document$querySelect4.addEventListener('click', function () {
+    (_document$querySelect4 = document.querySelector('.location-by-session-map-zoomOut')) === null || _document$querySelect4 === void 0 || _document$querySelect4.addEventListener('click', function () {
       if (zoomLevel > minZoomLevel) {
         zoomLevel -= 1;
       }
-
       chart.setOption({
         series: {
           zoom: zoomLevel
@@ -9425,21 +9035,17 @@ var locationBySessionInit = function locationBySessionInit() {
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                Product Share                               */
-
 /* -------------------------------------------------------------------------- */
-
 
 var marketShareEcommerceInit = function marketShareEcommerceInit() {
   var ECHART_PRODUCT_SHARE = '.echart-product-share';
   var $echartProductShare = document.querySelector(ECHART_PRODUCT_SHARE);
-
   if ($echartProductShare) {
     var userOptions = utils.getData($echartProductShare, 'options');
     var chart = window.echarts.init($echartProductShare);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         color: [utils.getColors().primary, utils.getColors().info, utils.getColors().warning],
@@ -9449,7 +9055,7 @@ var marketShareEcommerceInit = function marketShareEcommerceInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -9504,25 +9110,20 @@ var marketShareEcommerceInit = function marketShareEcommerceInit() {
         }]
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                Market Share                                */
-
 /* -------------------------------------------------------------------------- */
-
 
 var marketShareInit = function marketShareInit() {
   var ECHART_MARKET_SHARE = '.echart-market-share';
   var $echartMarketShare = document.querySelector(ECHART_MARKET_SHARE);
-
   if ($echartMarketShare) {
     var userOptions = utils.getData($echartMarketShare, 'options');
     var chart = window.echarts.init($echartMarketShare);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         color: [utils.getColors().primary, utils.getColors().info, utils.getGrays()[300]],
@@ -9532,7 +9133,7 @@ var marketShareInit = function marketShareInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -9587,20 +9188,16 @@ var marketShareInit = function marketShareInit() {
         }]
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                            Bandwidth Saved                                 */
-
 /* -------------------------------------------------------------------------- */
-
 
 var marketingExpensesInit = function marketingExpensesInit() {
   var $echartsMarketingExp = document.querySelector('.echart-marketing-expenses');
-
   if ($echartsMarketingExp) {
     var userOptions = utils.getData($echartsMarketingExp, 'options');
     var chart = window.echarts.init($echartsMarketingExp);
@@ -9680,14 +9277,13 @@ var marketingExpensesInit = function marketingExpensesInit() {
         color: utils.rgbaColor(utils.getColor('info'), 0.8)
       }
     }];
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         tooltip: {
           trigger: 'item',
           backgroundColor: utils.getGrays()['100'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           formatter: '{b}<br/> {c} ({d}%)'
         },
@@ -9717,6 +9313,7 @@ var marketingExpensesInit = function marketingExpensesInit() {
             show: false
           },
           label: {
+            distanceToLabelLine: -10,
             formatter: '{per|{d}%}',
             rich: {
               per: {
@@ -9730,32 +9327,26 @@ var marketingExpensesInit = function marketingExpensesInit() {
         }]
       };
     };
-
-    var initChart = function initChart() {
+    var _initChart5 = function initChart() {
       if (utils.isScrolledIntoView($echartsMarketingExp)) {
         echartSetOption(chart, userOptions, getDefaultOptions);
-        window.removeEventListener('scroll', initChart);
+        window.removeEventListener('scroll', _initChart5);
       }
     };
-
-    window.addEventListener('scroll', initChart);
+    window.addEventListener('scroll', _initChart5);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                Market Share                                */
-
 /* -------------------------------------------------------------------------- */
-
 
 var mostLeadsInit = function mostLeadsInit() {
   var ECHART_MOST_LEADS = '.echart-most-leads';
   var $echartMostLeads = document.querySelector(ECHART_MOST_LEADS);
-
   if ($echartMostLeads) {
     var userOptions = utils.getData($echartMostLeads, 'options');
     var chart = window.echarts.init($echartMostLeads);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         color: [utils.getColors().primary, utils.rgbaColor(utils.getColors().primary, 0.5), utils.getColors().warning, utils.getColors().info],
@@ -9765,7 +9356,7 @@ var mostLeadsInit = function mostLeadsInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -9823,14 +9414,11 @@ var mostLeadsInit = function mostLeadsInit() {
         }]
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-
 var echartsNumberOfTicketsInit = function echartsNumberOfTicketsInit() {
   var $numberOfTickets = document.querySelector('.echart-number-of-tickets');
-
   if ($numberOfTickets) {
     var userOptions = utils.getData($numberOfTickets, 'options');
     var chart = window.echarts.init($numberOfTickets);
@@ -9846,10 +9434,9 @@ var echartsNumberOfTicketsInit = function echartsNumberOfTicketsInit() {
         borderRadius: [5, 5, 5, 5]
       }
     };
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
-        color: [utils.getColor('primary'), localStorage.getItem('theme') === 'dark' ? '#1E4C88' : '#94BCF1', localStorage.getItem('theme') === 'dark' ? '#1A3A64' : '#C0D8F7', localStorage.getItem('theme') === 'dark' ? '#225FAE' : '#6AA3ED'],
+        color: [utils.getColor('primary'), utils.isDark() === 'dark' ? '#1E4C88' : '#94BCF1', utils.isDark() === 'dark' ? '#1A3A64' : '#C0D8F7', utils.isDark() === 'dark' ? '#225FAE' : '#6AA3ED'],
         tooltip: {
           trigger: 'item',
           padding: [7, 10],
@@ -9933,12 +9520,10 @@ var echartsNumberOfTicketsInit = function echartsNumberOfTicketsInit() {
           top: '10%',
           bottom: 0,
           left: 0,
-          right: 0,
-          containLabel: true
+          right: 0
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
     numberOfTicketsLegend.forEach(function (el) {
       el.addEventListener('change', function () {
@@ -9950,26 +9535,21 @@ var echartsNumberOfTicketsInit = function echartsNumberOfTicketsInit() {
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                             Echarts Real Time Users                        */
-
 /* -------------------------------------------------------------------------- */
-
 
 var realTimeUsersChartInit = function realTimeUsersChartInit() {
   var $echartsRealTimeUsers = document.querySelector('.echart-real-time-users');
-
   if ($echartsRealTimeUsers) {
     var userOptions = utils.getData($echartsRealTimeUsers, 'options');
     var chart = window.echarts.init($echartsRealTimeUsers);
     var data = [921, 950, 916, 913, 909, 962, 926, 936, 977, 976, 999, 981, 998, 1000, 900, 906, 973, 911, 994, 982, 917, 972, 952, 963, 991];
     var axisData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25];
-
     var _tooltipFormatter3 = function _tooltipFormatter3(params) {
-      return "\n      <div>\n          <h6 class=\"fs--1 text-700 mb-0\"><span class=\"fas fa-circle me-1 text-info\"></span>\n            Users : ".concat(params[0].value, "\n          </h6>\n      </div>\n      ");
+      return "\n      <div>\n          <h6 class=\"fs-10 text-700 mb-0\"><span class=\"fas fa-circle me-1 text-info\"></span>\n            Users : ".concat(params[0].value, "\n          </h6>\n      </div>\n      ");
     };
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         tooltip: {
@@ -9981,7 +9561,7 @@ var realTimeUsersChartInit = function realTimeUsersChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -10033,7 +9613,6 @@ var realTimeUsersChartInit = function realTimeUsersChartInit() {
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
     var userCounterDom = document.querySelector('.real-time-user');
     setInterval(function () {
@@ -10054,10 +9633,8 @@ var realTimeUsersChartInit = function realTimeUsersChartInit() {
     }, 2000);
   }
 };
-
 var echartsReceivedTicketsInit = function echartsReceivedTicketsInit() {
   var $receivedTickets = document.querySelector('.echart-received-tickets');
-
   if ($receivedTickets) {
     var userOptions = utils.getData($receivedTickets, 'options');
     var chart = window.echarts.init($receivedTickets);
@@ -10070,7 +9647,6 @@ var echartsReceivedTicketsInit = function echartsReceivedTicketsInit() {
         shadowColor: utils.rgbaColor(utils.getColor('dark'), 0.3)
       }
     };
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         color: [utils.getColor('primary'), utils.getColor('info'), utils.getGrays()['300']],
@@ -10086,6 +9662,7 @@ var echartsReceivedTicketsInit = function echartsReceivedTicketsInit() {
             fontSize: '13px'
           },
           left: 0,
+          top: 0,
           itemGap: 16
         },
         tooltip: {
@@ -10158,29 +9735,26 @@ var echartsReceivedTicketsInit = function echartsReceivedTicketsInit() {
         },
         barWidth: '13.03px',
         grid: {
-          top: '13%',
+          top: '12%',
           bottom: 0,
-          left: 0,
+          left: -3,
           right: 0,
-          containLabel: true
+          outerBoundsMode: 'same',
+          outerBoundsContain: 'axisLabel'
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                     Echart Bar Report For This Week                        */
-
 /* -------------------------------------------------------------------------- */
-
 
 var reportForThisWeekInit = function reportForThisWeekInit() {
   var ECHART_BAR_REPORT_FOR_THIS_WEEK = '.echart-bar-report-for-this-week';
   var $echartBarReportForThisWeek = document.querySelector(ECHART_BAR_REPORT_FOR_THIS_WEEK);
-
   if ($echartBarReportForThisWeek) {
     var selectChart = utils.getData($echartBarReportForThisWeek, 'chart');
     var legendThisWeek = document.getElementById(selectChart === null || selectChart === void 0 ? void 0 : selectChart.option1);
@@ -10188,7 +9762,6 @@ var reportForThisWeekInit = function reportForThisWeekInit() {
     var data = [['product', 'This Week', 'Last Week'], ['Sun', 43, 85], ['Mon', 83, 73], ['Tue', 86, 62], ['Wed', 72, 53], ['Thu', 80, 50], ['Fri', 50, 70], ['Sat', 80, 90]];
     var userOptions = utils.getData($echartBarReportForThisWeek, 'options');
     var chart = window.echarts.init($echartBarReportForThisWeek);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         color: [utils.getColors().primary, utils.getGrays()['300']],
@@ -10201,7 +9774,7 @@ var reportForThisWeekInit = function reportForThisWeekInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -10209,7 +9782,7 @@ var reportForThisWeekInit = function reportForThisWeekInit() {
             return getPosition(pos, params, dom, rect, size);
           },
           formatter: function formatter(params) {
-            return "<div class=\"font-weight-semi-bold\">".concat(params.seriesName, "</div><div class=\"fs--1 text-600\"><strong>").concat(params.name, ":</strong> ").concat(params.value[params.componentIndex + 1], "</div>");
+            return "<div class=\"font-weight-semi-bold\">".concat(params.seriesName, "</div><div class=\"fs-10 text-600\"><strong>").concat(params.name, ":</strong> ").concat(params.value[params.componentIndex + 1], "</div>");
           }
         },
         legend: {
@@ -10287,11 +9860,11 @@ var reportForThisWeekInit = function reportForThisWeekInit() {
           right: '0',
           left: '40px',
           bottom: '10%',
-          top: '15%'
+          top: '15%',
+          outerBoundsMode: 'none'
         }
       };
     };
-
     legendLastWeek && legendLastWeek.addEventListener('click', function () {
       legendLastWeek.classList.toggle('opacity-50');
       chart.dispatchAction({
@@ -10309,18 +9882,14 @@ var reportForThisWeekInit = function reportForThisWeekInit() {
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                     Echarts Line Returing Customer Rate                    */
-
 /* -------------------------------------------------------------------------- */
-
-
 var returningCustomerRateInit = function returningCustomerRateInit() {
   var ECHART_LINE_RETURNING_CUSTOMER_RATE = '.echart-line-returning-customer-rate';
   var $echartsLineReturningCustomerRate = document.querySelector(ECHART_LINE_RETURNING_CUSTOMER_RATE);
   var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
   if ($echartsLineReturningCustomerRate) {
     // Get options from data attribute
     var userOptions = utils.getData($echartsLineReturningCustomerRate, 'options');
@@ -10332,11 +9901,9 @@ var returningCustomerRateInit = function returningCustomerRateInit() {
     var $legendReturningMonth = document.getElementById(LEGEND_MONTH_TARGET).querySelector(LEGEND_RETURNING_MONTH);
     var chart = window.echarts.init($echartsLineReturningCustomerRate);
     var monthNumbers = [[20, 40, 20, 80, 50, 80, 120, 80, 50, 120, 110, 110], [60, 80, 60, 80, 65, 130, 120, 100, 30, 40, 30, 70], [100, 70, 80, 50, 120, 100, 130, 140, 90, 100, 40, 50], [80, 50, 60, 40, 60, 120, 100, 130, 60, 80, 50, 60], [70, 80, 100, 70, 90, 60, 80, 130, 40, 60, 50, 80], [90, 40, 80, 80, 100, 140, 100, 130, 90, 60, 70, 50], [80, 60, 80, 60, 40, 100, 120, 100, 30, 40, 30, 70], [20, 40, 20, 50, 70, 60, 110, 80, 90, 30, 50, 50], [60, 70, 30, 40, 80, 140, 80, 140, 120, 130, 100, 110], [90, 90, 40, 60, 40, 110, 90, 110, 60, 80, 60, 70], [50, 80, 50, 80, 50, 80, 120, 80, 50, 120, 110, 110], [60, 90, 60, 70, 40, 70, 100, 140, 30, 40, 30, 70], [20, 40, 20, 50, 30, 80, 120, 100, 30, 40, 30, 70]];
-
     var dates = function dates(month) {
       return utils.getDates(window.dayjs().month(month).date(1), window.dayjs().month(Number(month) + 1).date(0), 1000 * 60 * 60 * 24 * 3);
     };
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         title: {
@@ -10346,7 +9913,9 @@ var returningCustomerRateInit = function returningCustomerRateInit() {
             fontSize: 13,
             fontFamily: 'poppins',
             color: utils.getColor('gray-900')
-          }
+          },
+          left: 'left',
+          top: 'top'
         },
         legend: {
           show: false,
@@ -10358,7 +9927,7 @@ var returningCustomerRateInit = function returningCustomerRateInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -10390,11 +9959,9 @@ var returningCustomerRateInit = function returningCustomerRateInit() {
             color: utils.getColor('gray-400'),
             formatter: function formatter(value) {
               var date = new Date(value);
-
               if (date.getDate() === 1) {
                 return "".concat(months[date.getMonth()].substring(0, 3), " ").concat(date.getDate());
               }
-
               return "".concat(date.getDate());
             },
             margin: 15
@@ -10495,13 +10062,14 @@ var returningCustomerRateInit = function returningCustomerRateInit() {
           right: '7px',
           left: '35px',
           bottom: '8%',
-          top: '15%'
+          top: '15%',
+          outerBoundsMode: 'none'
         }
       };
     };
+    echartSetOption(chart, userOptions, getDefaultOptions);
 
-    echartSetOption(chart, userOptions, getDefaultOptions); // Change chart options accordiong to the selected month
-
+    // Change chart options accordiong to the selected month
     var monthSelect = document.querySelector(SELECT_MONTH);
     monthSelect.addEventListener('change', function (e) {
       var month = e.currentTarget.value;
@@ -10534,27 +10102,22 @@ var returningCustomerRateInit = function returningCustomerRateInit() {
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                          Echarts Sales Pos Location                        */
-
 /* -------------------------------------------------------------------------- */
-
 
 var salesByPosLocationInit = function salesByPosLocationInit() {
   var ECHART_RADAR_SALES_BY_POS_LOCATION = '.echart-radar-sales-by-pos-location';
   var $echartsRadarSalesByPosLocation = document.querySelector(ECHART_RADAR_SALES_BY_POS_LOCATION);
-
   function getformatter(params) {
     //const indicators = ['Marketing','Sales', 'Dev', 'Support', 'Tech', 'Admin']
-    return "<strong > ".concat(params.name, " </strong>\n    <div class=\"fs--1 text-600\">\n      <strong >Marketing</strong>: ").concat(params.value[0], "  <br>\n      <strong>Sales</strong>: ").concat(params.value[1], "  <br>\n      <strong>Dev</strong>: ").concat(params.value[2], "  <br>\n      <strong>Support</strong>: ").concat(params.value[3], "  <br>\n      <strong>Tech</strong>: ").concat(params.value[4], "  <br>\n      <strong>Admin</strong>: ").concat(params.value[5], "  <br>\n    </div>");
+    return "<strong > ".concat(params.name, " </strong>\n    <div class=\"fs-10 text-600\">\n      <strong >Marketing</strong>: ").concat(params.value[0], "  <br>\n      <strong>Sales</strong>: ").concat(params.value[1], "  <br>\n      <strong>Dev</strong>: ").concat(params.value[2], "  <br>\n      <strong>Support</strong>: ").concat(params.value[3], "  <br>\n      <strong>Tech</strong>: ").concat(params.value[4], "  <br>\n      <strong>Admin</strong>: ").concat(params.value[5], "  <br>\n    </div>");
   }
-
   if ($echartsRadarSalesByPosLocation) {
     // Get options from data attribute
     var userOptions = utils.getData($echartsRadarSalesByPosLocation, 'options');
     var chart = window.echarts.init($echartsRadarSalesByPosLocation);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         tooltip: {
@@ -10563,7 +10126,7 @@ var salesByPosLocationInit = function salesByPosLocationInit() {
           backgroundColor: utils.getColor('gray-100'),
           borderColor: utils.getColor('gray-300'),
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -10645,7 +10208,7 @@ var salesByPosLocationInit = function salesByPosLocationInit() {
             value: [40, 60, 30, 15, 60, 35],
             name: 'Spending',
             areaStyle: {
-              color: [utils.rgbaColor(utils.getColors().primary, 0.24)]
+              color: utils.rgbaColor(utils.getColors().primary, 0.24)
             },
             symbol: 'circle',
             symbolSize: 8,
@@ -10660,14 +10223,11 @@ var salesByPosLocationInit = function salesByPosLocationInit() {
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-
 var echartsSatisfactionSurveyInit = function echartsSatisfactionSurveyInit() {
   var $satisfactionSurvey = document.querySelector('.echart-satisfaction-survey');
-
   if ($satisfactionSurvey) {
     var userOptions = utils.getData($satisfactionSurvey, 'options');
     var chart = window.echarts.init($satisfactionSurvey);
@@ -10686,7 +10246,6 @@ var echartsSatisfactionSurveyInit = function echartsSatisfactionSurveyInit() {
         color: utils.getGrays()['300']
       }
     };
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         color: [utils.getColor('primary'), utils.getGrays()['200']],
@@ -10702,6 +10261,7 @@ var echartsSatisfactionSurveyInit = function echartsSatisfactionSurveyInit() {
             fontSize: '13px'
           },
           left: 0,
+          top: 0,
           itemGap: 16
         },
         tooltip: {
@@ -10767,28 +10327,25 @@ var echartsSatisfactionSurveyInit = function echartsSatisfactionSurveyInit() {
         },
         barWidth: '13.03px',
         grid: {
-          top: '13%',
+          top: '12%',
           bottom: 0,
-          left: 0,
+          left: -3,
           right: 0,
-          containLabel: true
+          outerBoundsMode: 'same',
+          outerBoundsContain: 'axisLabel'
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                Session By Device                           */
-
 /* -------------------------------------------------------------------------- */
-
 
 var sessionByBrowserChartInit = function sessionByBrowserChartInit() {
   var $sessionByBroswser = document.querySelector('.echart-session-by-browser');
-
   if ($sessionByBroswser) {
     var userOptions = utils.getData($sessionByBroswser, 'options');
     var chart = window.echarts.init($sessionByBroswser);
@@ -10824,7 +10381,6 @@ var sessionByBrowserChartInit = function sessionByBrowserChartInit() {
         name: 'Mozilla'
       }]
     };
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         color: [utils.getColors().primary, utils.getColors().success, utils.getColors().info],
@@ -10834,7 +10390,7 @@ var sessionByBrowserChartInit = function sessionByBrowserChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -10874,10 +10430,8 @@ var sessionByBrowserChartInit = function sessionByBrowserChartInit() {
         }]
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
     var selectMenu = document.querySelector("[data-target='.echart-session-by-browser']");
-
     if (selectMenu) {
       selectMenu.addEventListener('change', function (e) {
         var value = e.currentTarget.value;
@@ -10890,12 +10444,10 @@ var sessionByBrowserChartInit = function sessionByBrowserChartInit() {
     }
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                Session By Country Map                      */
-
 /* -------------------------------------------------------------------------- */
-
 
 var sessionByCountryMapInit = function sessionByCountryMapInit() {
   var $sessionByCountryMap = document.querySelector('.echart-session-by-country-map');
@@ -11435,13 +10987,10 @@ var sessionByCountryMapInit = function sessionByCountryMapInit() {
     value: 13076.978
   }];
   var total = 6961500;
-
   if ($sessionByCountryMap) {
     var _document$querySelect5;
-
     var userOptions = utils.getData($sessionByCountryMap, 'options');
     var chart = window.echarts.init($sessionByCountryMap);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         tooltip: {
@@ -11450,14 +10999,13 @@ var sessionByCountryMapInit = function sessionByCountryMapInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
           formatter: function formatter(params) {
-            var _params$data3, _params$data4;
-
-            return "<strong>".concat((_params$data3 = params.data) === null || _params$data3 === void 0 ? void 0 : _params$data3.name, " :</strong> ").concat((((_params$data4 = params.data) === null || _params$data4 === void 0 ? void 0 : _params$data4.value) / total * 100).toFixed(2), "%");
+            var _params$data2;
+            return "<strong>".concat((_params$data2 = params.data) === null || _params$data2 === void 0 ? void 0 : _params$data2.name, " :</strong> ").concat(((params.data && params.data.value / total) * 100).toFixed(2), "%");
           }
         },
         toolbox: {
@@ -11502,30 +11050,25 @@ var sessionByCountryMapInit = function sessionByCountryMapInit() {
         }]
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
-    (_document$querySelect5 = document.querySelector('.session-by-country-map-reset')) === null || _document$querySelect5 === void 0 ? void 0 : _document$querySelect5.addEventListener('click', function () {
+    (_document$querySelect5 = document.querySelector('.session-by-country-map-reset')) === null || _document$querySelect5 === void 0 || _document$querySelect5.addEventListener('click', function () {
       chart.dispatchAction({
         type: 'restore'
       });
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                Session By Country                          */
-
 /* -------------------------------------------------------------------------- */
-
 
 var sessionByCountryChartInit = function sessionByCountryChartInit() {
   var $sessionByCountry = document.querySelector('.echart-session-by-country');
   var data = [['CHINA', 'INDIA', 'USA', 'IRAN', 'BRAZIL', 'PAKISTAN'], [19.53, 17.32, 4.49, 3.46, 2.8, 1.7]];
-
   if ($sessionByCountry) {
     var userOptions = utils.getData($sessionByCountry, 'options');
     var chart = window.echarts.init($sessionByCountry);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         tooltip: {
@@ -11537,14 +11080,13 @@ var sessionByCountryChartInit = function sessionByCountryChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
           position: function position(pos, params, dom, rect, size) {
             return getPosition(pos, params, dom, rect, size);
           } // formatter: tooltipFormatter
-
         },
         xAxis: {
           type: 'category',
@@ -11611,32 +11153,26 @@ var sessionByCountryChartInit = function sessionByCountryChartInit() {
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-
 var echartTicketPriority = function echartTicketPriority() {
   var $paginationBtnNext = document.querySelector('[data-list-pagination-chart="next"]');
   var $paginationBtnPrev = document.querySelector('[data-list-pagination-chart="prev"]');
   var $paginationContainer = document.querySelector('[data-list-pagination-chart]');
-
   if ($paginationBtnNext) {
     $paginationBtnNext.addEventListener('click', function () {
       basicEchartsInit();
     });
   }
-
   if ($paginationBtnPrev) {
     $paginationBtnPrev.addEventListener('click', function () {
       basicEchartsInit();
     });
   }
-
   if ($paginationContainer) {
     $paginationContainer.addEventListener('click', function (e) {
       if (e.target.tagName === 'BUTTON') {
-        console.log(e.target);
         setTimeout(function () {
           basicEchartsInit();
         });
@@ -11644,24 +11180,20 @@ var echartTicketPriority = function echartTicketPriority() {
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                Traffic Channels                           */
-
 /* -------------------------------------------------------------------------- */
-
 
 var ticketVolumeChartInit = function ticketVolumeChartInit() {
   var $ticketVolume = document.querySelector('.echart-ticket-volume');
-
   if ($ticketVolume) {
     var userOptions = utils.getData($ticketVolume, 'options');
     var chart = window.echarts.init($ticketVolume);
     var ticketVolumeLegend = document.querySelectorAll('[data-ticket-volume]');
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
-        color: [utils.getColors().primary, localStorage.getItem('theme') === 'dark' ? '#235FAD' : '#6AA2EC', localStorage.getItem('theme') === 'dark' ? '#1C4477' : '#AACAF4', localStorage.getItem('theme') === 'dark' ? '#152C48' : '#DFEBFB'],
+        color: [utils.getColors().primary, utils.isDark() === 'dark' ? '#235FAD' : '#6AA2EC', utils.isDark() === 'dark' ? '#1C4477' : '#AACAF4', utils.isDark() === 'dark' ? '#152C48' : '#DFEBFB'],
         legend: {
           data: ['On Hold Tickets', 'Open Tickets', 'Due Tickets', 'Unassigned Tickets'],
           show: false
@@ -11714,7 +11246,7 @@ var ticketVolumeChartInit = function ticketVolumeChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -11740,7 +11272,7 @@ var ticketVolumeChartInit = function ticketVolumeChartInit() {
           data: [15, 10, 7, 7, 5, 6, 15, 10, 7, 12],
           emphasis: {
             itemStyle: {
-              color: localStorage.getItem('theme') === 'dark' ? '#2567BD' : '#5595E9'
+              color: utils.isDark() === 'dark' ? '#2567BD' : '#5595E9'
             }
           }
         }, {
@@ -11750,7 +11282,7 @@ var ticketVolumeChartInit = function ticketVolumeChartInit() {
           data: [5, 4, 4, 6, 6, 8, 7, 4, 3, 5],
           emphasis: {
             itemStyle: {
-              color: localStorage.getItem('theme') === 'dark' ? '#205396' : '#7FB0EF'
+              color: utils.isDark() === 'dark' ? '#205396' : '#7FB0EF'
             }
           }
         }, {
@@ -11763,7 +11295,7 @@ var ticketVolumeChartInit = function ticketVolumeChartInit() {
           },
           emphasis: {
             itemStyle: {
-              color: localStorage.getItem('theme') === 'dark' ? '#1A3F6F' : '#AACAF4'
+              color: utils.isDark() === 'dark' ? '#1A3F6F' : '#AACAF4'
             }
           }
         }],
@@ -11775,7 +11307,6 @@ var ticketVolumeChartInit = function ticketVolumeChartInit() {
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
     ticketVolumeLegend.forEach(function (el) {
       el.addEventListener('change', function () {
@@ -11787,12 +11318,10 @@ var ticketVolumeChartInit = function ticketVolumeChartInit() {
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                Audience Chart                              */
-
 /* -------------------------------------------------------------------------- */
-
 
 var topCustomersChartInit = function topCustomersChartInit() {
   var data = {
@@ -11807,7 +11336,6 @@ var topCustomersChartInit = function topCustomersChartInit() {
       sunday: [[11, 50, 45, 78, 45, 54, 80, 90, 50, 65]]
     }
   };
-
   var getDefaultOptions = function getDefaultOptions(data1) {
     return function () {
       return {
@@ -11818,7 +11346,7 @@ var topCustomersChartInit = function topCustomersChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -11909,15 +11437,12 @@ var topCustomersChartInit = function topCustomersChartInit() {
       };
     };
   };
-
   var initChart = function initChart(el, options) {
     var userOptions = utils.getData(el, 'options');
     var chart = window.echarts.init(el);
     echartSetOption(chart, userOptions, options);
   };
-
   var tab = document.querySelector('#top-customers-chart-tab');
-
   if (tab) {
     initChart(document.querySelector('.echart-top-customers'), getDefaultOptions(data.dataset.monday[0]));
     var triggerTabList = Array.from(tab.querySelectorAll('[data-bs-toggle="tab"]'));
@@ -11930,22 +11455,18 @@ var topCustomersChartInit = function topCustomersChartInit() {
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                Top Products                                */
-
 /* -------------------------------------------------------------------------- */
-
 
 var topProductsInit = function topProductsInit() {
   var ECHART_BAR_TOP_PRODUCTS = '.echart-bar-top-products';
   var $echartBarTopProducts = document.querySelector(ECHART_BAR_TOP_PRODUCTS);
-
   if ($echartBarTopProducts) {
     var data = [['product', '2019', '2018'], ['Boots4', 43, 85], ['Reign Pro', 83, 73], ['Slick', 86, 62], ['Falcon', 72, 53], ['Sparrow', 80, 50], ['Hideway', 50, 70], ['Freya', 80, 90]];
     var userOptions = utils.getData($echartBarTopProducts, 'options');
     var chart = window.echarts.init($echartBarTopProducts);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         color: [utils.getColors().primary, utils.getGrays()['300']],
@@ -11958,7 +11479,7 @@ var topProductsInit = function topProductsInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -11966,7 +11487,7 @@ var topProductsInit = function topProductsInit() {
             return getPosition(pos, params, dom, rect, size);
           },
           formatter: function formatter(params) {
-            return "<div class=\"font-weight-semi-bold\">".concat(params.seriesName, "</div><div class=\"fs--1 text-600\"><strong>").concat(params.name, ":</strong> ").concat(params.value[params.componentIndex + 1], "</div>");
+            return "<div class=\"font-weight-semi-bold\">".concat(params.seriesName, "</div><div class=\"fs-10 text-600\"><strong>").concat(params.name, ":</strong> ").concat(params.value[params.componentIndex + 1], "</div>");
           }
         },
         legend: {
@@ -11979,7 +11500,9 @@ var topProductsInit = function topProductsInit() {
           inactiveColor: utils.getGrays()['400'],
           textStyle: {
             color: utils.getGrays()['700']
-          }
+          },
+          top: 'top',
+          itemGap: 10
         },
         xAxis: {
           type: 'category',
@@ -12049,33 +11572,32 @@ var topProductsInit = function topProductsInit() {
           right: '0',
           left: '30px',
           bottom: '10%',
-          top: '20%'
+          top: '20%',
+          outerBoundsMode: 'none'
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                Total Order                                 */
-
 /* -------------------------------------------------------------------------- */
-
 
 var totalOrderInit = function totalOrderInit() {
-  var ECHART_LINE_TOTAL_ORDER = '.echart-line-total-order'; //
+  var ECHART_LINE_TOTAL_ORDER = '.echart-line-total-order';
+
+  //
   // ─── TOTAL ORDER CHART ──────────────────────────────────────────────────────────
   //
-
   var $echartLineTotalOrder = document.querySelector(ECHART_LINE_TOTAL_ORDER);
-
   if ($echartLineTotalOrder) {
     // Get options from data attribute
     var userOptions = utils.getData($echartLineTotalOrder, 'options');
-    var chart = window.echarts.init($echartLineTotalOrder); // Default options
+    var chart = window.echarts.init($echartLineTotalOrder);
 
+    // Default options
     var getDefaultOptions = function getDefaultOptions() {
       return {
         tooltip: {
@@ -12143,7 +11665,7 @@ var totalOrderInit = function totalOrderInit() {
             width: 3
           },
           itemStyle: {
-            color: utils.getGrays().white,
+            color: utils.getColors().white,
             borderColor: utils.getColors().primary,
             borderWidth: 2
           },
@@ -12180,30 +11702,26 @@ var totalOrderInit = function totalOrderInit() {
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                      Echarts Total Sales E-commerce                        */
-
 /* -------------------------------------------------------------------------- */
-
 
 var totalSalesEcommerce = function totalSalesEcommerce() {
   var ECHART_LINE_TOTAL_SALES_ECOMM = '.echart-line-total-sales-ecommerce';
   var $echartsLineTotalSalesEcomm = document.querySelector(ECHART_LINE_TOTAL_SALES_ECOMM);
   var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
   function getFormatter(params) {
-    return params.map(function (_ref18, index) {
-      var value = _ref18.value,
-          borderColor = _ref18.borderColor;
-      return "<span class= \"fas fa-circle\" style=\"color: ".concat(borderColor, "\"></span>\n    <span class='text-600'>").concat(index === 0 ? 'Last Month' : 'Previous Year', ": ").concat(value, "</span>");
+    return params.map(function (_ref21) {
+      var value = _ref21.value,
+        borderColor = _ref21.borderColor,
+        seriesName = _ref21.seriesName;
+      return "\n          <span class= \"fas fa-circle\" style=\"color: ".concat(borderColor, "\"></span>\n          <span class='text-600'>").concat(seriesName === 'lastMonth' ? 'Last Month' : 'Previous Year', ": ").concat(value, "</span>\n        ");
     }).join('<br/>');
   }
-
   if ($echartsLineTotalSalesEcomm) {
     // Get options from data attribute
     var userOptions = utils.getData($echartsLineTotalSalesEcomm, 'options');
@@ -12212,7 +11730,6 @@ var totalSalesEcommerce = function totalSalesEcommerce() {
     var totalSalesLastMonth = document.querySelector(TOTAL_SALES_LAST_MONTH);
     var totalSalesPreviousYear = document.querySelector(TOTAL_SALES_PREVIOUS_YEAR);
     var chart = window.echarts.init($echartsLineTotalSalesEcomm);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         color: utils.getGrays()['100'],
@@ -12222,7 +11739,7 @@ var totalSalesEcommerce = function totalSalesEcommerce() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           formatter: function formatter(params) {
@@ -12266,8 +11783,8 @@ var totalSalesEcommerce = function totalSalesEcommerce() {
               var date = new Date(value);
               return "".concat(months[date.getMonth()], " ").concat(date.getDate());
             },
-            margin: 15 // showMaxLabel: false
-
+            margin: 15
+            // showMaxLabel: false
           }
         },
         yAxis: {
@@ -12347,7 +11864,6 @@ var totalSalesEcommerce = function totalSalesEcommerce() {
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
     totalSalesLastMonth.addEventListener('click', function () {
       chart.dispatchAction({
@@ -12363,33 +11879,28 @@ var totalSalesEcommerce = function totalSalesEcommerce() {
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                             Echarts Total Sales                            */
-
 /* -------------------------------------------------------------------------- */
-
 
 var totalSalesInit = function totalSalesInit() {
   var ECHART_LINE_TOTAL_SALES = '.echart-line-total-sales';
   var SELECT_MONTH = '.select-month';
   var $echartsLineTotalSales = document.querySelector(ECHART_LINE_TOTAL_SALES);
   var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
   function getFormatter(params) {
     var _params$ = params[0],
-        name = _params$.name,
-        value = _params$.value;
+      name = _params$.name,
+      value = _params$.value;
     var date = new Date(name);
     return "".concat(months[0], " ").concat(date.getDate(), ", ").concat(value);
   }
-
   if ($echartsLineTotalSales) {
     // Get options from data attribute
     var userOptions = utils.getData($echartsLineTotalSales, 'options');
     var chart = window.echarts.init($echartsLineTotalSales);
     var monthsnumber = [[60, 80, 60, 80, 65, 130, 120, 100, 30, 40, 30, 70], [100, 70, 80, 50, 120, 100, 130, 140, 90, 100, 40, 50], [80, 50, 60, 40, 60, 120, 100, 130, 60, 80, 50, 60], [70, 80, 100, 70, 90, 60, 80, 130, 40, 60, 50, 80], [90, 40, 80, 80, 100, 140, 100, 130, 90, 60, 70, 50], [80, 60, 80, 60, 40, 100, 120, 100, 30, 40, 30, 70], [20, 40, 20, 50, 70, 60, 110, 80, 90, 30, 50, 50], [60, 70, 30, 40, 80, 140, 80, 140, 120, 130, 100, 110], [90, 90, 40, 60, 40, 110, 90, 110, 60, 80, 60, 70], [50, 80, 50, 80, 50, 80, 120, 80, 50, 120, 110, 110], [60, 90, 60, 70, 40, 70, 100, 140, 30, 40, 30, 70], [20, 40, 20, 50, 30, 80, 120, 100, 30, 40, 30, 70]];
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         color: utils.getGrays()['100'],
@@ -12399,7 +11910,7 @@ var totalSalesInit = function totalSalesInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           formatter: function formatter(params) {
@@ -12498,18 +12009,19 @@ var totalSalesInit = function totalSalesInit() {
           }
         }],
         grid: {
-          right: '28px',
-          left: '40px',
-          bottom: '15%',
-          top: '5%'
+          right: utils.getItemFromStore('isRTL') ? '10px' : '7%',
+          left: utils.getItemFromStore('isRTL') ? '5%' : 0,
+          bottom: '5%',
+          top: '3%',
+          outerBoundsMode: 'same',
+          outerBoundsContain: 'axisLabel'
         }
       };
     };
+    echartSetOption(chart, userOptions, getDefaultOptions);
 
-    echartSetOption(chart, userOptions, getDefaultOptions); // Change chart options accordiong to the selected month
-
+    // Change chart options accordiong to the selected month
     var monthSelect = document.querySelector(SELECT_MONTH);
-
     if (monthSelect) {
       monthSelect.addEventListener('change', function (e) {
         var month = e.currentTarget.value;
@@ -12518,8 +12030,8 @@ var totalSalesInit = function totalSalesInit() {
           tooltip: {
             formatter: function formatter(params) {
               var _params$2 = params[0],
-                  name = _params$2.name,
-                  value = _params$2.value;
+                name = _params$2.name,
+                value = _params$2.value;
               var date = new Date(name);
               return "".concat(months[month], " ").concat(date.getDate(), ", ").concat(value);
             }
@@ -12541,27 +12053,24 @@ var totalSalesInit = function totalSalesInit() {
     }
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                Traffic Channels                           */
-
 /* -------------------------------------------------------------------------- */
-
 
 var trafficChannelChartInit = function trafficChannelChartInit() {
   var $trafficChannels = document.querySelector('.echart-traffic-channels');
-
   if ($trafficChannels) {
     var userOptions = utils.getData($trafficChannels, 'options');
     var chart = window.echarts.init($trafficChannels);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         color: [utils.getColors().primary, utils.rgbaColor(utils.getColors().primary, 0.8), utils.rgbaColor(utils.getColors().primary, 0.6), utils.rgbaColor(utils.getColors().primary, 0.4), utils.rgbaColor(utils.getColors().primary, 0.2)],
         legend: {
           data: ['Display', 'Direct', 'Organic Search', 'Paid Search', 'Other'],
           left: 5,
-          // bottom: 10,
+          top: 0,
+          padding: [0, 0, 10],
           itemWidth: 10,
           itemHeight: 10,
           borderRadius: 0,
@@ -12624,7 +12133,7 @@ var trafficChannelChartInit = function trafficChannelChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -12670,14 +12179,11 @@ var trafficChannelChartInit = function trafficChannelChartInit() {
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-
 var echartsUnresolvedTicketsInit = function echartsUnresolvedTicketsInit() {
   var $unresolvedTickets = document.querySelector('.echart-unresolved-tickets');
-
   if ($unresolvedTickets) {
     var userOptions = utils.getData($unresolvedTickets, 'options');
     var chart = window.echarts.init($unresolvedTickets);
@@ -12692,10 +12198,9 @@ var echartsUnresolvedTicketsInit = function echartsUnresolvedTicketsInit() {
         shadowColor: utils.rgbaColor(utils.getColor('dark'), 0.3)
       }
     };
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
-        color: [utils.getColor('primary'), utils.getColor('info'), localStorage.getItem('theme') === 'dark' ? '#229BD2' : '#73D3FE', localStorage.getItem('theme') === 'dark' ? '#195979' : '#A9E4FF'],
+        color: [utils.getColor('primary'), utils.getColor('info'), utils.isDark() === 'dark' ? '#229BD2' : '#73D3FE', utils.isDark() === 'dark' ? '#195979' : '#A9E4FF'],
         tooltip: {
           trigger: 'item',
           padding: [7, 10],
@@ -12778,15 +12283,15 @@ var echartsUnresolvedTicketsInit = function echartsUnresolvedTicketsInit() {
         }],
         barWidth: '15px',
         grid: {
-          top: '8%',
+          top: '7%',
           bottom: 10,
           left: 0,
           right: 2,
-          containLabel: true
+          outerBoundsMode: 'same',
+          outerBoundsContain: 'axisLabel'
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
     unresolvedTicketsLegend.forEach(function (el) {
       el.addEventListener('change', function () {
@@ -12798,12 +12303,10 @@ var echartsUnresolvedTicketsInit = function echartsUnresolvedTicketsInit() {
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                User By Location Map                      */
-
 /* -------------------------------------------------------------------------- */
-
 
 var userByLocationInit = function userByLocationInit() {
   var $userByLocationMap = document.querySelector('.echart-user-by-location-map');
@@ -13344,13 +12847,10 @@ var userByLocationInit = function userByLocationInit() {
   }];
   var maxZoomLevel = 5;
   var minZoomLevel = 1;
-
   if ($userByLocationMap) {
     var _document$querySelect6, _document$querySelect7;
-
     var userOptions = utils.getData($userByLocationMap, 'options');
     var chart = window.echarts.init($userByLocationMap);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         tooltip: {
@@ -13359,14 +12859,13 @@ var userByLocationInit = function userByLocationInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
           formatter: function formatter(params) {
-            var _params$data5, _params$data6;
-
-            return "<strong>".concat((_params$data5 = params.data) === null || _params$data5 === void 0 ? void 0 : _params$data5.name, " :</strong> ").concat((_params$data6 = params.data) === null || _params$data6 === void 0 ? void 0 : _params$data6.value);
+            var _params$data3, _params$data4;
+            return "<strong>".concat((_params$data3 = params.data) === null || _params$data3 === void 0 ? void 0 : _params$data3.name, " :</strong> ").concat((_params$data4 = params.data) === null || _params$data4 === void 0 ? void 0 : _params$data4.value);
           }
         },
         visualMap: {
@@ -13405,25 +12904,22 @@ var userByLocationInit = function userByLocationInit() {
         }]
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
     var zoomLevel = 1;
-    (_document$querySelect6 = document.querySelector('.user-by-location-map-zoom')) === null || _document$querySelect6 === void 0 ? void 0 : _document$querySelect6.addEventListener('click', function () {
+    (_document$querySelect6 = document.querySelector('.user-by-location-map-zoom')) === null || _document$querySelect6 === void 0 || _document$querySelect6.addEventListener('click', function () {
       if (zoomLevel < maxZoomLevel) {
         zoomLevel += 1;
       }
-
       chart.setOption({
         series: {
           zoom: zoomLevel
         }
       });
     });
-    (_document$querySelect7 = document.querySelector('.user-by-location-map-zoomOut')) === null || _document$querySelect7 === void 0 ? void 0 : _document$querySelect7.addEventListener('click', function () {
+    (_document$querySelect7 = document.querySelector('.user-by-location-map-zoomOut')) === null || _document$querySelect7 === void 0 || _document$querySelect7.addEventListener('click', function () {
       if (zoomLevel > minZoomLevel) {
         zoomLevel -= 1;
       }
-
       chart.setOption({
         series: {
           zoom: zoomLevel
@@ -13432,32 +12928,26 @@ var userByLocationInit = function userByLocationInit() {
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                             Echarts Users By Time                          */
-
 /* -------------------------------------------------------------------------- */
-
 
 var usersByTimeChartInit = function usersByTimeChartInit() {
   var $echartUsersByTimeChart = document.querySelector('.echart-users-by-time');
   var hours = ['12 AM', '1 AM', '2 AM', '3 AM', '4 AM', '5 AM', '6 AM', '7 AM', '8 AM', '9 AM', '10 AM', '11 AM', '12 PM', '1 PM', '2 PM', '3 PM', '4 PM', '5 PM', '6 PM', '7 PM', '8 PM', '9 PM', '10 PM', '11 PM'];
   var data = [];
-
   for (var i = 0; i < 24; i += 1) {
     for (var j = 0; j < 7; j += 1) {
       data.push([j, i, utils.getRandomNumber(20, 300)]);
     }
   }
-
   var tooltipFormatter = function tooltipFormatter(params) {
-    return "<div>\n          <p class='mb-0 text-600'>".concat(window.dayjs(params.name).format('MMM DD, YYYY'), "</p>\n          <div class=\"d-flex align-items-center\">\n            <p class=\"mb-0 text-600\">\n              ").concat(window.dayjs().hour(params.data[1]).format('hA'), " : <span class='text-800 fw-semi-bold'>").concat(params.data[2], "</span>\n            </p>\n          </div>\n        </div>");
+    return "\n      <div>\n        <p class='mb-0 text-600'>".concat(window.dayjs(params.name).format('MMM DD, YYYY'), "</p>\n        <div class=\"d-flex align-items-center\">\n          <p class=\"mb-0 text-600\">\n            ").concat(window.dayjs().hour(params.data[1]).format('hA'), " : <span class='text-800 fw-semi-bold'>").concat(params.data[2], "</span>\n          </p>\n        </div>\n      </div>\n  ");
   };
-
   if ($echartUsersByTimeChart) {
     var userOptions = utils.getData($echartUsersByTimeChart, 'options');
     var chart = window.echarts.init($echartUsersByTimeChart);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         gradientColor: [utils.getColor('info'), utils.getColor('primary')],
@@ -13467,7 +12957,7 @@ var usersByTimeChartInit = function usersByTimeChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           formatter: tooltipFormatter
@@ -13518,8 +13008,8 @@ var usersByTimeChartInit = function usersByTimeChartInit() {
         visualMap: {
           type: 'piecewise',
           orient: 'horizontal',
-          left: 'left',
-          bottom: '3%',
+          left: -10,
+          bottom: 2,
           itemSymbol: 'diamond',
           itemWidth: '10px',
           itemHeight: '10px',
@@ -13540,13 +13030,13 @@ var usersByTimeChartInit = function usersByTimeChartInit() {
             show: false
           },
           itemStyle: {
-            borderColor: utils.getColor('white'),
+            borderColor: utils.getGrays()['100'],
             borderWidth: 3
           },
           emphasis: {
             itemStyle: {
               shadowBlur: 3,
-              shadowColor: utils.rgbaColor(utils.getGrays().black, 0.5)
+              shadowColor: utils.rgbaColor(utils.getColors().emphasis, 0.5)
             }
           }
         }],
@@ -13558,24 +13048,19 @@ var usersByTimeChartInit = function usersByTimeChartInit() {
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                            Bandwidth Saved                                 */
-
 /* -------------------------------------------------------------------------- */
-
 
 var weeklyGoalsInit = function weeklyGoalsInit() {
   var $echartsBandwidthSaved = document.querySelector('.echart-weekly-goals-lms');
-
   if ($echartsBandwidthSaved) {
     var userOptions = utils.getData($echartsBandwidthSaved, 'options');
     var chart = window.echarts.init($echartsBandwidthSaved);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         series: [{
@@ -13695,39 +13180,35 @@ var weeklyGoalsInit = function weeklyGoalsInit() {
         }]
       };
     };
-
-    var initChart = function initChart() {
+    var _initChart6 = function initChart() {
       if (utils.isScrolledIntoView($echartsBandwidthSaved)) {
         echartSetOption(chart, userOptions, getDefaultOptions);
-        window.removeEventListener('scroll', initChart);
+        window.removeEventListener('scroll', _initChart6);
       }
     };
-
-    window.addEventListener('scroll', initChart);
+    window.addEventListener('scroll', _initChart6);
   }
 };
-/* eslint-disable */
 
 /* -------------------------------------------------------------------------- */
-
 /*                                Weekly Sales                                */
-
 /* -------------------------------------------------------------------------- */
-
 
 var weeklySalesInit = function weeklySalesInit() {
   var ECHART_BAR_WEEKLY_SALES = '.echart-bar-weekly-sales';
   var $echartBarWeeklySales = document.querySelector(ECHART_BAR_WEEKLY_SALES);
-
   if ($echartBarWeeklySales) {
     // Get options from data attribute
     var userOptions = utils.getData($echartBarWeeklySales, 'options');
-    var data = [120, 200, 150, 80, 70, 110, 120]; // Max value of data
+    var data = [120, 200, 150, 80, 70, 110, 120];
 
-    var yMax = Math.max.apply(Math, data); // const dataBackground = data.map(() => yMax);
+    // Max value of data
+    // const yMax = Math.max(...data);
 
-    var chart = window.echarts.init($echartBarWeeklySales); // Default options
+    // const dataBackground = data.map(() => yMax);
+    var chart = window.echarts.init($echartBarWeeklySales);
 
+    // Default options
     var getDefaultOptions = function getDefaultOptions() {
       return {
         tooltip: {
@@ -13738,7 +13219,7 @@ var weeklySalesInit = function weeklySalesInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           position: function position(pos, params, dom, rect, size) {
@@ -13807,17 +13288,13 @@ var weeklySalesInit = function weeklySalesInit() {
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                            Theme Initialization                            */
-
 /* -------------------------------------------------------------------------- */
-
-
 docReady(detectorInit);
 docReady(handleNavbarVerticalCollapsed);
 docReady(totalOrderInit);
@@ -13843,14 +13320,11 @@ docReady(copyLink);
 docReady(navbarDarkenOnScroll);
 docReady(typedTextInit);
 docReady(tinymceInit);
-docReady(bulkSelectInit);
 docReady(chatInit);
 docReady(quantityInit);
 docReady(navbarComboInit);
-docReady(listInit);
 docReady(swiperInit);
 docReady(ratingInit);
-docReady(draggableInit);
 docReady(kanbanInit);
 docReady(fullCalendarInit);
 docReady(appCalendarInit);
@@ -13925,3 +13399,11 @@ docReady(dataTablesInit);
 docReady(select2Init);
 docReady(hideOnCollapseInit);
 docReady(unresolvedTicketsTabInit);
+docReady(inputmaskInit);
+docReady(emojiMartInit);
+docReady(nouisliderInit);
+docReady(bulkSelectInit);
+docReady(advanceAjaxTableInit);
+docReady(listInit);
+docReady(sortableInit);
+docReady(flatpickrIntit);

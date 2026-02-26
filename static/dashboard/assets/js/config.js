@@ -1,9 +1,7 @@
 "use strict";
 
 /* -------------------------------------------------------------------------- */
-
 /*                              Config                                        */
-
 /* -------------------------------------------------------------------------- */
 var CONFIG = {
   isNavbarVerticalCollapsed: false,
@@ -18,11 +16,11 @@ Object.keys(CONFIG).forEach(function (key) {
     localStorage.setItem(key, CONFIG[key]);
   }
 });
-
 if (JSON.parse(localStorage.getItem('isNavbarVerticalCollapsed'))) {
   document.documentElement.classList.add('navbar-vertical-collapsed');
 }
-
 if (localStorage.getItem('theme') === 'dark') {
   document.documentElement.setAttribute('data-bs-theme', 'dark');
+} else if (localStorage.getItem('theme') === 'auto') {
+  document.documentElement.setAttribute('data-bs-theme', window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 }

@@ -1,0 +1,540 @@
+/*** 
+=============================================
+    Location Info Css
+=============================================
+***/
+.location-info {
+    position: relative;
+    display: block;
+    background: var(--thm-white);
+    padding: 120px 0px 90px;
+    z-index: 1;
+}
+
+.location-info__single {
+    position: relative;
+    display: block;
+    margin-bottom: 30px;
+}
+
+.location-info__single-img {
+    position: relative;
+    display: block;
+    border-radius: 20px;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.location-info__single-img::before {
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--thm-black-bg);
+    opacity: 0;
+    z-index: 1;
+    transition: opacity 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+.location-info__single:hover .location-info__single-img::before {
+    opacity: .4;
+}
+
+.location-info__single-img img {
+    width: 100%;
+    transform: scale(1.0);
+    transition: all 1500ms ease;
+}
+
+.location-info__single:hover .location-info__single-img img {
+    transform: scale(1.05) rotate(0deg);
+}
+
+.location-info__single-content {
+    position: relative;
+    display: block;
+    background: var(--thm-primary-color);
+    padding: 32px 45px 32px;
+    border-radius: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: -37px;
+    z-index: 3;
+}
+
+.location-info__single-content-title {
+    position: relative;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.location-info__single-content-title h3 {
+    color: var(--thm-black-bg);
+    font-size: 17px;
+    line-height: 28px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.location-info__single-content-text {
+    position: relative;
+    display: block;
+}
+
+.location-info__single-content-text p {
+    margin: 0;
+}
+
+.location-info__single-content-text p+p {
+    margin-top: 4px;
+}
+
+.location-info__single-content-text p a {
+    color: var(--thm-body-font-color);
+}
+
+.location-info__single-content-text p a:hover {
+    color: var(--thm-black);
+}
+
+.location-info__single-content-btn {
+    position: relative;
+    display: block;
+}
+
+.location-info__single-content-btn a {
+    color: var(--thm-black-bg);
+    font-size: 17px;
+    line-height: 28px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.location-info__single-content-btn a span::before {
+    position: relative;
+    display: inline-block;
+    font-size: 26px;
+    line-height: 26px;
+    top: 6px;
+}
+
+
+
+
+/*** 
+=============================================
+    Main Contact Form Css
+=============================================
+***/
+.main-contact-form {
+    padding: 120px 0px 0px;
+    z-index: 11;
+}
+
+.main-contact-form__inner {
+    position: relative;
+    display: block;
+    background-color: var(--thm-gray-bg);
+    padding: 70px 70px 72px;
+    border-radius: 10px;
+    z-index: 10;
+}
+
+.main-contact-form__shape-bg {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 360px;
+    background-attachment: scroll;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: top center;
+    opacity: 0.15;
+    z-index: -1;
+}
+
+.main-contact-form__shape-bg::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(270deg, rgba(245, 241, 224, 0) 14.01%, rgba(245, 241, 224, 0.750716) 56.21%, #F5F1E0 93%);
+}
+
+.main-contact-form__inner .sec-title {
+    padding-bottom: 28px;
+}
+
+.contact-form {
+    position: relative;
+    display: block;
+    max-width: 730px;
+}
+
+#contact-form {
+    position: relative;
+    display: block;
+}
+
+#contact-form .row {
+    --bs-gutter-x: 20px;
+}
+
+#contact-form .input-box {
+    position: relative;
+    display: block;
+    margin-bottom: 20px;
+}
+
+#contact-form input[type="text"],
+#contact-form input[type="email"],
+#contact-form textarea {
+    position: relative;
+    display: block;
+    border-radius: 25px;
+    border: 1px solid #d1caba;
+    background-color: #ece6d6;
+    width: 100%;
+    height: 50px;
+    color: var(--thm-body-font-color);
+    font-size: 16px;
+    font-family: var(--thm-font);
+    font-weight: 500;
+    font-style: normal;
+    padding: 0px 25px 0px;
+    transition: all 500ms ease;
+}
+
+#contact-form textarea {
+    height: 130px;
+    padding: 11px 40px 10px;
+    padding-right: 50px;
+}
+
+#contact-form input[type="text"]:focus,
+#contact-form input[type="email"]:focus,
+#contact-form textarea:focus {
+    border-color: var(--thm-border-color);
+}
+
+#contact-form input[type="text"]::-webkit-input-placeholder,
+#contact-form input[type="text"]:-moz-placeholder,
+#contact-form input[type="text"]::-moz-placeholder,
+#contact-form input[type="text"]:-ms-input-placeholder,
+#contact-form input[type="email"]::-webkit-input-placeholder,
+#contact-form input[type="email"]::-moz-placeholder,
+#contact-form input[type="email"]:-ms-input-placeholder,
+#contact-form textarea::-webkit-input-placeholder,
+#contact-form textarea:-moz-placeholder,
+#contact-form textarea::-moz-placeholder,
+#contact-form textarea:-ms-input-placeholder {
+    color: #a6aec1;
+}
+
+#contact-form .nice-select {
+    position: relative;
+    display: block;
+    border-radius: 25px;
+    border: 1px solid #d1caba;
+    background-color: #ece6d6;
+    width: 100%;
+    height: 50px;
+    color: var(--thm-body-font-color);
+    font-size: 16px;
+    line-height: 48px;
+    font-family: var(--thm-font);
+    font-weight: 500;
+    font-style: normal;
+    padding: 0px 25px 0px;
+    transition: all 500ms ease;
+}
+
+#contact-form .nice-select::after {
+    position: absolute;
+    top: 0px;
+    right: 25px;
+    content: "\e98e";
+    font-family: 'icomoon' !important;
+    color: var(--thm-body-font-color);
+    font-size: 13px;
+    margin: 0px;
+    font-weight: 400;
+    border: none !important;
+    transform: rotate(0deg) !important;
+    -webkit-transform-origin: 0% 0%;
+    -ms-transform-origin: 0% 0%;
+    transform-origin: 0% 0%;
+    height: 10px;
+    width: 10px;
+}
+
+#contact-form .nice-select .list {
+    background-color: var(--thm-white);
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgb(0 0 0 / 10%);
+    padding: 0px 0px 0px;
+    margin-top: 0px;
+    -webkit-transform-origin: 100% 0;
+    -ms-transform-origin: 100% 0;
+    transform-origin: 100% 0;
+    -webkit-transform: scale(1.0) translateY(30px);
+    -ms-transform: scale(1.0) translateY(30px);
+    transform: scale(1.0) translateY(30px);
+    -webkit-transition: all 0.4s linear;
+    -o-transition: all 0.4s linear;
+    transition: all 0.4s linear;
+    height: 0;
+    width: 100%;
+    right: 0 !important;
+    left: auto !important;
+}
+
+#contact-form .nice-select.open .list {
+    opacity: 1;
+    pointer-events: auto;
+    -webkit-transform: scale(1) translateY(0);
+    -ms-transform: scale(1) translateY(0);
+    transform: scale(1) translateY(0);
+    height: auto;
+}
+
+#contact-form .nice-select .option {
+    color: var(--thm-black);
+    padding: 0px 20px 0px;
+    font-size: 15px;
+    line-height: 40px;
+    min-height: 40px;
+    border-bottom: none;
+    transition: background-color 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+#contact-form .nice-select .option+.option {
+    border-top: 1px solid rgba(0, 0, 0, 0.10);
+}
+
+#contact-form .nice-select .option:hover,
+#contact-form .nice-select .option.focus,
+#contact-form .nice-select .option.selected.focus {
+    color: var(--thm-black) !important;
+    background-color: var(--thm-primary-color);
+}
+
+
+
+
+#contact-form .checked-box1 {
+    margin-top: 7px;
+}
+
+#contact-form .checked-box1 label {
+    padding-left: 40px;
+    color: var(--thm-body-font-color);
+    font-size: 17px;
+    line-height: 26px;
+}
+
+#contact-form .checked-box1 input[type="checkbox"]+label span {
+    top: 2px;
+    width: 22px;
+    height: 22px;
+    border-radius: 5px;
+    border: 1px solid #d1caba;
+}
+
+#contact-form .checked-box1 input[type="checkbox"]+label span::before {
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    margin: 5px auto 0px;
+}
+
+#contact-form .btn-box {
+    position: relative;
+    display: block;
+    padding-top: 11px;
+    padding-bottom: 0px;
+}
+
+#contact-form .btn-box button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    color: var(--thm-black);
+    font-size: 14px;
+    line-height: 20px;
+    font-family: var(--thm-font-2);
+    font-weight: 700;
+    text-transform: uppercase;
+    transition: all 200ms linear;
+    transition-delay: 0.1s;
+}
+
+#contact-form .btn-box button:hover {
+    color: var(--thm-primary-color);
+}
+
+#contact-form .btn-box button i {
+    position: relative;
+    top: -1px;
+    font-size: 20px;
+    margin-left: 5px;
+}
+
+
+
+
+/*** 
+=============================================
+    Map Style1 Css
+=============================================
+***/
+.map-style1 {
+    position: relative;
+    display: block;
+    margin-top: -100px;
+}
+
+.map-style1__content {
+    position: absolute;
+    top: 190px;
+    left: 0;
+    right: 0;
+    max-width: 240px;
+    width: 100%;
+    margin: 0 auto 0;
+    background-color: var(--thm-white);
+    box-shadow: 0px 0px 25px 0px rgba(0, 0, 0, 0.12);
+    padding: 32px 10px 10px;
+    z-index: 10;
+}
+
+.map-style1__content::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -10px;
+    right: 0;
+    width: 15px;
+    height: 10px;
+    margin: 0 auto;
+    background-color: var(--thm-white);
+    clip-path: polygon(100% 0, 0 0, 50% 100%);
+}
+
+.map-style1__content .title {
+    position: relative;
+    display: block;
+}
+
+.map-style1__content .title h3 {
+    font-size: 18px;
+    line-height: 30px;
+    text-transform: uppercase;
+    margin-bottom: 11px;
+}
+
+.map-style1__content .title p {
+    color: #545956;
+}
+
+.map-style1__content .btn-box {
+    position: relative;
+    display: block;
+    line-height: 0;
+    padding-top: 12px;
+}
+
+.map-style1__content .btn-box a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    color: var(--thm-black);
+    font-size: 16px;
+    line-height: 26px;
+    font-family: var(--thm-font-2);
+    font-weight: 700;
+    text-transform: uppercase;
+    transition: all 200ms linear;
+    transition-delay: 0.1s;
+}
+
+.map-style1__content .btn-box a i {
+    font-size: 20px;
+    margin-right: 9px;
+}
+
+.map-style1__content .btn-box a:hover {
+    color: var(--thm-primary-color);
+}
+
+.map-style1__content .phone-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--thm-black-bg);
+    padding: 10px 30px 10px;
+    margin-top: 16px;
+}
+
+.map-style1__content .phone-box .icon {
+    position: relative;
+    display: block;
+    color: var(--thm-primary-color);
+    font-size: 20px;
+    line-height: 0;
+}
+
+.map-style1__content .phone-box .number {
+    position: relative;
+    display: block;
+    margin-left: 10px;
+    flex: 1;
+}
+
+.map-style1__content .phone-box .number h3 {
+    font-size: 16px;
+    line-height: 30px;
+    text-transform: uppercase;
+}
+
+.map-style1__content .phone-box .number h3 a {
+    color: var(--thm-white);
+    transition: all 200ms linear;
+    transition-delay: 0.1s;
+}
+
+.map-style1__content .phone-box .number h3 a:hover {
+    color: var(--thm-primary-color);
+}
+
+.map-style1 .google-map {
+    position: relative;
+    display: block;
+    background-color: #646464;
+    z-index: 1;
+}
+
+.contact-page__map-box {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 730px;
+    mix-blend-mode: luminosity;
+}
+
+
+
+
+/*** 
+=============================================
+    End Css
+=============================================
+***/

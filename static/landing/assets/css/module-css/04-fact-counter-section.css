@@ -1,0 +1,378 @@
+/*================================
+    Fact Counter Style1 Css
+================================*/
+.fact-counter-style1 {
+    padding: 114px 0px 0px;
+}
+
+.fact-counter-style1__bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 776px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-position: center center;
+}
+
+.fact-counter-style1__bg::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(var(--thm-black-bg-rgb), .9);
+}
+
+.fact-counter-style1__content {
+    position: relative;
+    display: block;
+    text-align: center;
+    margin-bottom: 110px;
+}
+
+.fact-counter-style1__content-text {
+    position: relative;
+    display: block;
+}
+
+.fact-counter-style1__content-text span {
+    color: var(--thm-primary-color);
+    font-size: 24px;
+    line-height: 34px;
+    font-family: var(--thm-font-3);
+    font-weight: 400;
+}
+
+.fact-counter-style1__content-text h2 {
+    color: var(--thm-white);
+    font-size: 45px;
+    line-height: 1.2em;
+    margin-top: 11px;
+}
+
+.fact-counter-style1__content-round {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 37px auto 0px;
+    z-index: 11;
+}
+
+.fact-counter-style1__content-round-text {
+    position: absolute;
+    top: 4px;
+    left: 19px;
+    bottom: 0;
+    right: 0;
+    width: 100px;
+    height: 100px !important;
+    color: var(--thm-white);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 36px;
+    text-transform: uppercase;
+    font-family: var(--thm-font-2);
+    word-spacing: 0px;
+    letter-spacing: -0.1em;
+    transform: rotate(100deg);
+}
+
+.fact-counter-style1__content-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fact-counter-style1__content-video .video-popup {
+    position: relative;
+    display: inline-block;
+    color: var(--thm-primary-color);
+    font-size: 24px;
+    line-height: 0;
+    transition: all 200ms linear;
+    transition-delay: 0.1s;
+}
+
+.fact-counter-style1__content-video .video-popup:hover {
+    color: var(--thm-white);
+}
+
+.fact-counter-style1 ul.row {
+    --bs-gutter-x: 0px;
+}
+
+.fact-counter-style1 ul li {
+    padding: 0;
+    overflow: hidden;
+    border-radius: var(--thm-border-radius);
+    border: 1px solid var(--thm-border-color);
+}
+
+.fact-counter-style1 ul li:nth-child(1),
+.fact-counter-style1 ul li:nth-child(2),
+.fact-counter-style1 ul li:nth-child(4),
+.fact-counter-style1 ul li:nth-child(5) {
+    border-right: none;
+}
+
+.fact-counter-style1 ul li:nth-child(4),
+.fact-counter-style1 ul li:nth-child(4),
+.fact-counter-style1 ul li:nth-child(6) {
+    border-top: none;
+}
+
+.single-fact-counter-style1 {
+    position: relative;
+    display: block;
+    text-align: center;
+    background-color: var(--thm-gray-bg);
+    padding: 49px 70px 36px;
+}
+
+.single-fact-counter-style1.white {
+    background-color: var(--thm-white);
+}
+
+.single-fact-counter-style1__pattren {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-repeat: repeat-x;
+}
+
+.single-fact-counter-style1__icon {
+    position: relative;
+    display: inline-block;
+    font-size: 60px;
+    line-height: 0;
+    transition: all 300ms linear;
+    transition-delay: 0.1s;
+}
+
+.single-fact-counter-style1:hover .single-fact-counter-style1__icon {
+    transform: scale(1.05) rotateY(180deg);
+}
+
+.single-fact-counter-style1__icon .icon-tractor .path1:before,
+.single-fact-counter-style1__icon .icon-organic-food .path1:before,
+.single-fact-counter-style1__icon .icon-cow .path1:before,
+.single-fact-counter-style1__icon .icon-feeding .path1:before,
+.single-fact-counter-style1__icon .icon-farmer-1 .path1:before,
+.single-fact-counter-style1__icon .icon-tree .path1:before {
+    color: var(--thm-primary-color);
+}
+
+.single-fact-counter-style1__icon .icon-tractor .path2:before,
+.single-fact-counter-style1__icon .icon-tractor .path3:before,
+.single-fact-counter-style1__icon .icon-tractor .path4:before,
+.single-fact-counter-style1__icon .icon-tractor .path5:before,
+.single-fact-counter-style1__icon .icon-tractor .path6:before,
+.single-fact-counter-style1__icon .icon-tractor .path7:before,
+.single-fact-counter-style1__icon .icon-organic-food .path2:before,
+.single-fact-counter-style1__icon .icon-organic-food .path3:before,
+.single-fact-counter-style1__icon .icon-cow .path2:before,
+.single-fact-counter-style1__icon .icon-cow .path3:before,
+.single-fact-counter-style1__icon .icon-cow .path4:before,
+.single-fact-counter-style1__icon .icon-cow .path5:before,
+.single-fact-counter-style1__icon .icon-cow .path6:before,
+.single-fact-counter-style1__icon .icon-feeding .path2:before,
+.single-fact-counter-style1__icon .icon-feeding .path3:before,
+.single-fact-counter-style1__icon .icon-farmer-1 .path2:before,
+.single-fact-counter-style1__icon .icon-tree .path2:before {
+    color: var(--thm-black-bg);
+}
+
+.single-fact-counter-style1__title {
+    position: relative;
+    display: block;
+    margin-top: 10px;
+}
+
+.single-fact-counter-style1__title h3 {
+    font-size: 22px;
+    line-height: 30px;
+    font-weight: 600;
+}
+
+.single-fact-counter-style1__count {
+    position: relative;
+    display: inline-flex;
+    align-items: flex-end;
+    margin-top: 14px;
+}
+
+.single-fact-counter-style1__count h2 {
+    color: var(--thm-black-bg);
+    font-size: 48px;
+    line-height: 1.0em;
+    font-family: var(--thm-font-3);
+    font-weight: 400;
+}
+
+.single-fact-counter-style1__count .last {
+    position: relative;
+    color: var(--thm-black-bg);
+    font-size: 48px;
+    line-height: 1.0em;
+    font-family: var(--thm-font-3);
+    font-weight: 400;
+    top: -5px;
+}
+
+
+
+
+/*================================
+    Fact Counter Style2 Css
+================================*/
+.fact-counter-style2 {
+    margin: -132px 0px 0px;
+    z-index: 10;
+}
+
+.fact-counter-style2__inner {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    background-color: var(--thm-gray-bg);
+    border: 1px solid var(--thm-border-color);
+    border-radius: var(--thm-border-radius);
+}
+
+.fact-counter-style2__pattren {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-repeat: repeat;
+}
+
+.fact-counter-style2__inner ul.row {
+    --bs-gutter-x: 0px;
+}
+
+.fact-counter-style2__inner ul li {
+    border-right: 1px solid var(--thm-border-color);
+}
+
+.fact-counter-style2__inner ul li:last-child {
+    border-right: none;
+}
+
+.single-fact-counter-style2 {
+    position: relative;
+    display: block;
+    text-align: center;
+    padding: 49px 0px 36px;
+}
+
+.single-fact-counter-style2__icon {
+    position: relative;
+    display: inline-block;
+    font-size: 60px;
+    line-height: 0;
+    transition: all 300ms linear;
+    transition-delay: 0.1s;
+}
+
+.single-fact-counter-style2:hover .single-fact-counter-style2__icon {
+    transform: scale(1.05) rotateY(180deg);
+}
+
+.single-fact-counter-style2__icon .icon-tractor .path1:before,
+.single-fact-counter-style2__icon .icon-organic-food .path1:before,
+.single-fact-counter-style2__icon .icon-cow .path1:before {
+    color: var(--thm-primary-color);
+}
+
+.single-fact-counter-style2__icon .icon-tractor .path2:before,
+.single-fact-counter-style2__icon .icon-tractor .path3:before,
+.single-fact-counter-style2__icon .icon-tractor .path4:before,
+.single-fact-counter-style2__icon .icon-tractor .path5:before,
+.single-fact-counter-style2__icon .icon-tractor .path6:before,
+.single-fact-counter-style2__icon .icon-tractor .path7:before,
+.single-fact-counter-style2__icon .icon-organic-food .path2:before,
+.single-fact-counter-style2__icon .icon-organic-food .path3:before,
+.single-fact-counter-style2__icon .icon-cow .path2:before,
+.single-fact-counter-style2__icon .icon-cow .path3:before,
+.single-fact-counter-style2__icon .icon-cow .path4:before,
+.single-fact-counter-style2__icon .icon-cow .path5:before,
+.single-fact-counter-style2__icon .icon-cow .path6:before {
+    color: var(--thm-black-bg);
+}
+
+
+
+
+.single-fact-counter-style2__title {
+    position: relative;
+    display: block;
+    margin-top: 10px;
+}
+
+.single-fact-counter-style2__title h3 {
+    font-size: 22px;
+    line-height: 30px;
+    font-weight: 600;
+}
+
+.single-fact-counter-style2__count {
+    position: relative;
+    display: inline-flex;
+    align-items: flex-end;
+    margin-top: 13px;
+}
+
+.single-fact-counter-style2__count h2 {
+    color: var(--thm-black-bg);
+    font-size: 48px;
+    line-height: 1.0em;
+    font-family: var(--thm-font-3);
+    font-weight: 400;
+}
+
+.single-fact-counter-style2__count .last {
+    position: relative;
+    color: var(--thm-black-bg);
+    font-size: 48px;
+    line-height: 1.0em;
+    font-family: var(--thm-font-3);
+    font-weight: 400;
+    top: -5px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*============== End Css ==========*/

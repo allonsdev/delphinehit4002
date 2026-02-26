@@ -1,17 +1,13 @@
 "use strict";
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 /* -------------------------------------------------------------------------- */
-
 /*                                    Utils                                   */
-
 /* -------------------------------------------------------------------------- */
 var docReady = function docReady(fn) {
   // see if DOM is already available
@@ -21,22 +17,21 @@ var docReady = function docReady(fn) {
     setTimeout(fn, 1);
   }
 };
-
 var resize = function resize(fn) {
   return window.addEventListener('resize', fn);
 };
-
 var isIterableArray = function isIterableArray(array) {
   return Array.isArray(array) && !!array.length;
 };
-
 var camelize = function camelize(str) {
-  var text = str.replace(/[-_\s.]+(.)?/g, function (_, c) {
-    return c ? c.toUpperCase() : '';
+  var text = str.replace(/[-_\s.]+(.)?/g, function (match, capture) {
+    if (capture) {
+      return capture.toUpperCase();
+    }
+    return '';
   });
   return "".concat(text.substr(0, 1).toLowerCase()).concat(text.substr(1));
 };
-
 var getData = function getData(el, data) {
   try {
     return JSON.parse(el.dataset[camelize(data)]);
@@ -44,33 +39,31 @@ var getData = function getData(el, data) {
     return el.dataset[camelize(data)];
   }
 };
-/* ----------------------------- Colors function ---------------------------- */
 
+/* ----------------------------- Colors function ---------------------------- */
 
 var hexToRgb = function hexToRgb(hexValue) {
   var hex;
-  hexValue.indexOf('#') === 0 ? hex = hexValue.substring(1) : hex = hexValue; // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
-
+  hexValue.indexOf('#') === 0 ? hex = hexValue.substring(1) : hex = hexValue;
+  // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
   var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
   var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex.replace(shorthandRegex, function (m, r, g, b) {
     return r + r + g + g + b + b;
   }));
   return result ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)] : null;
 };
-
 var rgbaColor = function rgbaColor() {
   var color = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '#fff';
   var alpha = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0.5;
   return "rgba(".concat(hexToRgb(color), ", ").concat(alpha, ")");
 };
-/* --------------------------------- Colors --------------------------------- */
 
+/* --------------------------------- Colors --------------------------------- */
 
 var getColor = function getColor(name) {
   var dom = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : document.documentElement;
   return getComputedStyle(dom).getPropertyValue("--falcon-".concat(name)).trim();
 };
-
 var getColors = function getColors(dom) {
   return {
     primary: getColor('primary', dom),
@@ -80,10 +73,12 @@ var getColors = function getColors(dom) {
     warning: getColor('warning', dom),
     danger: getColor('danger', dom),
     light: getColor('light', dom),
-    dark: getColor('dark', dom)
+    dark: getColor('dark', dom),
+    white: getColor('white', dom),
+    black: getColor('black', dom),
+    emphasis: getColor('emphasis-color', dom)
   };
 };
-
 var getSubtleColors = function getSubtleColors(dom) {
   return {
     primary: getColor('primary-bg-subtle', dom),
@@ -96,10 +91,8 @@ var getSubtleColors = function getSubtleColors(dom) {
     dark: getColor('dark-bg-subtle', dom)
   };
 };
-
 var getGrays = function getGrays(dom) {
   return {
-    white: getColor('gray-white', dom),
     100: getColor('gray-100', dom),
     200: getColor('gray-200', dom),
     300: getColor('gray-300', dom),
@@ -110,24 +103,19 @@ var getGrays = function getGrays(dom) {
     800: getColor('gray-800', dom),
     900: getColor('gray-900', dom),
     1000: getColor('gray-1000', dom),
-    1100: getColor('gray-1100', dom),
-    black: getColor('gray-black', dom)
+    1100: getColor('gray-1100', dom)
   };
 };
-
 var hasClass = function hasClass(el, className) {
   !el && false;
   return el.classList.value.includes(className);
 };
-
 var addClass = function addClass(el, className) {
   el.classList.add(className);
 };
-
 var removeClass = function removeClass(el, className) {
   el.classList.remove(className);
 };
-
 var getOffset = function getOffset(el) {
   var rect = el.getBoundingClientRect();
   var scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
@@ -137,7 +125,6 @@ var getOffset = function getOffset(el) {
     left: rect.left + scrollLeft
   };
 };
-
 function isScrolledIntoView(el) {
   var rect = el.getBoundingClientRect();
   var windowHeight = window.innerHeight || document.documentElement.clientHeight;
@@ -146,7 +133,6 @@ function isScrolledIntoView(el) {
   var horInView = rect.left <= windowWidth && rect.left + rect.width >= 0;
   return vertInView && horInView;
 }
-
 var breakpoints = {
   xs: 0,
   sm: 576,
@@ -155,33 +141,33 @@ var breakpoints = {
   xl: 1200,
   xxl: 1540
 };
-
 var getBreakpoint = function getBreakpoint(el) {
   var classes = el && el.classList.value;
   var breakpoint;
-
   if (classes) {
     breakpoint = breakpoints[classes.split(' ').filter(function (cls) {
       return cls.includes('navbar-expand-');
     }).pop().split('-').pop()];
   }
-
   return breakpoint;
 };
+var getSystemTheme = function getSystemTheme() {
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+};
+var isDark = function isDark() {
+  return localStorage.getItem('theme') === 'auto' ? getSystemTheme() : localStorage.getItem('theme');
+};
 /* --------------------------------- Cookie --------------------------------- */
-
 
 var setCookie = function setCookie(name, value, expire) {
   var expires = new Date();
   expires.setTime(expires.getTime() + expire);
   document.cookie = "".concat(name, "=").concat(value, ";expires=").concat(expires.toUTCString());
 };
-
 var getCookie = function getCookie(name) {
   var keyValue = document.cookie.match("(^|;) ?".concat(name, "=([^;]*)(;|$)"));
   return keyValue ? keyValue[2] : keyValue;
 };
-
 var settings = {
   tinymce: {
     theme: 'oxide'
@@ -190,36 +176,34 @@ var settings = {
     borderColor: 'rgba(255, 255, 255, 0.8)'
   }
 };
+
 /* -------------------------- Chart Initialization -------------------------- */
 
 var newChart = function newChart(chart, config) {
   var ctx = chart.getContext('2d');
   return new window.Chart(ctx, config);
 };
-/* ---------------------------------- Store --------------------------------- */
 
+/* ---------------------------------- Store --------------------------------- */
 
 var getItemFromStore = function getItemFromStore(key, defaultValue) {
   var store = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : localStorage;
-
   try {
     return JSON.parse(store.getItem(key)) || defaultValue;
   } catch (_unused) {
     return store.getItem(key) || defaultValue;
   }
 };
-
 var setItemToStore = function setItemToStore(key, payload) {
   var store = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : localStorage;
   return store.setItem(key, payload);
 };
-
 var getStoreSpace = function getStoreSpace() {
   var store = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : localStorage;
   return parseFloat((escape(encodeURIComponent(JSON.stringify(store))).length / (1024 * 1024)).toFixed(2));
 };
-/* get Dates between */
 
+/* get Dates between */
 
 var getDates = function getDates(startDate, endDate) {
   var interval = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1000 * 60 * 60 * 24;
@@ -231,39 +215,31 @@ var getDates = function getDates(startDate, endDate) {
     return new Date(startDate.valueOf() + interval * i);
   });
 };
-
 var getPastDates = function getPastDates(duration) {
   var days;
-
   switch (duration) {
     case 'week':
       days = 7;
       break;
-
     case 'month':
       days = 30;
       break;
-
     case 'year':
       days = 365;
       break;
-
     default:
       days = duration;
   }
-
   var date = new Date();
   var endDate = date;
   var startDate = new Date(new Date().setDate(date.getDate() - (days - 1)));
   return getDates(startDate, endDate);
 };
+
 /* Get Random Number */
-
-
 var getRandomNumber = function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 };
-
 var utils = {
   docReady: docReady,
   breakpoints: breakpoints,
@@ -292,52 +268,45 @@ var utils = {
   getDates: getDates,
   getPastDates: getPastDates,
   getRandomNumber: getRandomNumber,
-  removeClass: removeClass
+  removeClass: removeClass,
+  getSystemTheme: getSystemTheme,
+  isDark: isDark
 };
-/* eslint-disable */
-
 var getPosition = function getPosition(pos, params, dom, rect, size) {
   return {
     top: pos[1] - size.contentSize[1] - 10,
     left: pos[0] - size.contentSize[0] / 2
   };
 };
-
 var echartSetOption = function echartSetOption(chart, userOptions, getDefaultOptions) {
-  var themeController = document.body; // Merge user options with lodash
-
+  var themeController = document.body;
+  // Merge user options with lodash
   chart.setOption(window._.merge(getDefaultOptions(), userOptions));
   themeController.addEventListener('clickControl', function (_ref) {
     var control = _ref.detail.control;
-
     if (control === 'theme') {
       chart.setOption(window._.merge(getDefaultOptions(), userOptions));
     }
   });
 };
-
 var tooltipFormatter = function tooltipFormatter(params) {
-  var tooltipItem = "";
+  var tooltipItem = '';
   params.forEach(function (el) {
-    tooltipItem = tooltipItem + "<div class='ms-1'>\n        <h6 class=\"text-700\"><span class=\"fas fa-circle me-1 fs--2\" style=\"color:".concat(el.borderColor ? el.borderColor : el.color, "\"></span>\n          ").concat(el.seriesName, " : ").concat(_typeof(el.value) === 'object' ? el.value[1] : el.value, "\n        </h6>\n      </div>");
+    tooltipItem += "<div class='ms-1'>\n        <h6 class=\"text-700\">\n          <span class=\"fas fa-circle me-1 fs-11\" style=\"color:".concat(el.borderColor ? el.borderColor : el.color, "\"></span>\n          ").concat(el.seriesName, " : ").concat(_typeof(el.value) === 'object' ? el.value[1] : el.value, "\n        </h6>\n      </div>");
   });
-  return "<div>\n            <p class='mb-2 text-600'>\n              ".concat(window.dayjs(params[0].axisValue).isValid() ? window.dayjs(params[0].axisValue).format('MMMM DD') : params[0].axisValue, "\n            </p>\n            ").concat(tooltipItem, "\n          </div>");
+  return "\n    <div>\n      <p class='mb-2 text-600'>\n        ".concat(window.dayjs(params[0].axisValue).isValid() ? window.dayjs(params[0].axisValue).format('MMMM DD') : params[0].axisValue, "\n      </p>\n      ").concat(tooltipItem, "\n    </div>");
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                      Echarts Area Pieces Chart                             */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsAreaPiecesChartInit = function echartsAreaPiecesChartInit() {
   var $areaPiecesChartEl = document.querySelector('.echart-area-pieces-chart-example');
-
   if ($areaPiecesChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($areaPiecesChartEl, 'options');
     var chart = window.echarts.init($areaPiecesChartEl);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         tooltip: {
@@ -346,7 +315,7 @@ var echartsAreaPiecesChartInit = function echartsAreaPiecesChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -444,34 +413,30 @@ var echartsAreaPiecesChartInit = function echartsAreaPiecesChartInit() {
           data: [['2019-10-10', 200], ['2019-10-11', 560], ['2019-10-12', 750], ['2019-10-13', 580], ['2019-10-14', 250], ['2019-10-15', 300], ['2019-10-16', 450], ['2019-10-17', 300], ['2019-10-18', 100]]
         }],
         grid: {
-          right: 20,
-          left: 5,
+          right: 0,
+          left: 0,
           bottom: 5,
           top: 8,
-          containLabel: true
+          outerBoundsMode: 'same',
+          outerBoundsContain: 'axisLabel'
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                             Echarts Bar Chart                             */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsBarLineChartInit = function echartsBarLineChartInit() {
   var $barLineChartEl = document.querySelector('.echart-bar-line-chart-example');
-
   if ($barLineChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($barLineChartEl, 'options');
     var chart = window.echarts.init($barLineChartEl);
     var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         tooltip: {
@@ -491,14 +456,16 @@ var echartsBarLineChartInit = function echartsBarLineChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
           formatter: tooltipFormatter
         },
         toolbox: {
-          top: 0,
+          top: -10,
+          right: -10,
+          itemGap: 8,
           feature: {
             dataView: {
               show: false
@@ -529,7 +496,8 @@ var echartsBarLineChartInit = function echartsBarLineChartInit() {
           data: ['Evaporation', 'Precipitation', 'Average temperature'],
           textStyle: {
             color: utils.getGrays()['600']
-          }
+          },
+          itemGap: 10
         },
         xAxis: [{
           type: 'category',
@@ -606,7 +574,7 @@ var echartsBarLineChartInit = function echartsBarLineChartInit() {
             color: utils.getColor('warning')
           },
           itemStyle: {
-            color: utils.getGrays().white,
+            color: utils.getGrays()['100'],
             borderColor: utils.getColor('warning'),
             borderWidth: 2
           },
@@ -617,30 +585,24 @@ var echartsBarLineChartInit = function echartsBarLineChartInit() {
           right: 5,
           left: 5,
           bottom: 5,
-          top: '23%',
-          containLabel: true
+          top: '23%'
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                             Echarts Bar Chart                             */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsBarNegativeChartInit = function echartsBarNegativeChartInit() {
   var $barNegativeChartEl = document.querySelector('.echart-bar-chart-negative-example');
-
   if ($barNegativeChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($barNegativeChartEl, 'options');
     var chart = window.echarts.init($barNegativeChartEl);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         tooltip: {
@@ -652,7 +614,7 @@ var echartsBarNegativeChartInit = function echartsBarNegativeChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -667,6 +629,9 @@ var echartsBarNegativeChartInit = function echartsBarNegativeChartInit() {
         xAxis: {
           type: 'value',
           position: 'top',
+          axisLabel: {
+            show: false
+          },
           splitLine: {
             lineStyle: {
               type: 'dashed',
@@ -706,20 +671,16 @@ var echartsBarNegativeChartInit = function echartsBarNegativeChartInit() {
         }]
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                         Echarts Bar Race Chart                             */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsBarRaceChartInit = function echartsBarRaceChartInit() {
   var $barRaceChartEl = document.querySelector('.echart-bar-race-chart-example');
-
   if ($barRaceChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($barRaceChartEl, 'options');
@@ -727,7 +688,6 @@ var echartsBarRaceChartInit = function echartsBarRaceChartInit() {
     var data = Array.from(Array(7).keys()).map(function () {
       return Math.round(Math.random() * 200);
     });
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         xAxis: {
@@ -760,7 +720,6 @@ var echartsBarRaceChartInit = function echartsBarRaceChartInit() {
           animationDuration: 300,
           animationDurationUpdate: 300,
           max: 4 // only the largest 5 bars will be displayed
-
         },
         series: [{
           realtimeSort: true,
@@ -787,14 +746,11 @@ var echartsBarRaceChartInit = function echartsBarRaceChartInit() {
           right: '10%',
           left: 5,
           bottom: 5,
-          top: 5,
-          containLabel: true
+          top: 5
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
-
     var run = function run() {
       data = data.map(function (item) {
         return Math.random() > 0.9 ? item + Math.round(Math.random() * 2000) : item + Math.round(Math.random() * 200);
@@ -805,7 +761,6 @@ var echartsBarRaceChartInit = function echartsBarRaceChartInit() {
         }]
       });
     };
-
     setTimeout(function () {
       run();
     }, 0);
@@ -814,21 +769,17 @@ var echartsBarRaceChartInit = function echartsBarRaceChartInit() {
     }, 3000);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                             Echarts Bar Chart                             */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsBarSeriesChartInit = function echartsBarSeriesChartInit() {
   var $barSeriesChartEl = document.querySelector('.echart-bar-chart-series-example');
-
   if ($barSeriesChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($barSeriesChartEl, 'options');
     var chart = window.echarts.init($barSeriesChartEl);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         color: [utils.getColor('primary'), utils.getColor('info')],
@@ -841,7 +792,7 @@ var echartsBarSeriesChartInit = function echartsBarSeriesChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -912,20 +863,16 @@ var echartsBarSeriesChartInit = function echartsBarSeriesChartInit() {
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                             Echarts Bar Chart                             */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsBarStackedChartInit = function echartsBarStackedChartInit() {
   var $barStackedChartEl = document.querySelector('.echart-bar-stacked-chart-example');
-
   if ($barStackedChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($barStackedChartEl, 'options');
@@ -935,25 +882,19 @@ var echartsBarStackedChartInit = function echartsBarStackedChartInit() {
     var _data2 = [];
     var data3 = [];
     var data4 = [];
-
     for (var i = 0; i < 10; i += 1) {
       xAxisData.push("Class".concat(i + 1));
-
       _data.push((Math.random() * 2).toFixed(2));
-
       _data2.push((Math.random() * 5).toFixed(2));
-
       data3.push((Math.random() + 0.3).toFixed(2));
       data4.push(-Math.random().toFixed(2));
     }
-
     var emphasisStyle = {
       itemStyle: {
         shadowBlur: 10,
         shadowColor: utils.rgbaColor(utils.getColor('dark'), 0.3)
       }
     };
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         color: [utils.getColor('primary'), utils.getColor('info'), utils.getColor('warning'), utils.getColor('danger')],
@@ -962,7 +903,9 @@ var echartsBarStackedChartInit = function echartsBarStackedChartInit() {
           textStyle: {
             color: utils.getGrays()['700']
           },
-          left: 0
+          left: 0,
+          top: 0,
+          itemGap: 10
         },
         toolbox: {
           feature: {
@@ -973,7 +916,9 @@ var echartsBarStackedChartInit = function echartsBarStackedChartInit() {
           iconStyle: {
             borderColor: utils.getGrays()['700'],
             borderWidth: 1
-          }
+          },
+          top: -10,
+          right: -10
         },
         tooltip: {
           trigger: 'item',
@@ -1040,34 +985,29 @@ var echartsBarStackedChartInit = function echartsBarStackedChartInit() {
         }],
         grid: {
           top: '10%',
-          bottom: 10,
+          bottom: 20,
           left: 5,
           right: 7,
-          containLabel: true
+          outerBoundMode: 'none'
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                         Echarts Bar Timeline Chart                         */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsBarTimelineChartInit = function echartsBarTimelineChartInit() {
   var $barTimelineChartEl = document.querySelector('.echart-bar-timeline-chart-example');
-
   if ($barTimelineChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($barTimelineChartEl, 'options');
     var chart = window.echarts.init($barTimelineChartEl);
     var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     var dataMap = {};
-
     var dataFormatter = function dataFormatter(obj) {
       return Object.keys(obj).reduce(function (acc, val) {
         return _objectSpread(_objectSpread({}, acc), {}, _defineProperty({}, val, obj[val].map(function (value, index) {
@@ -1078,7 +1018,6 @@ var echartsBarTimelineChartInit = function echartsBarTimelineChartInit() {
         })));
       }, {});
     };
-
     dataMap.dataTI = dataFormatter({
       2005: [88.68, 112.38, 1400, 262.42, 589.56, 882.41, 625.61, 684.6, 90.26, 1461.51, 892.83, 966.5],
       2006: [88.8, 103.35, 1461.81, 276.77, 634.94, 939.43, 672.76, 750.14, 93.81, 1545.05, 925.1, 1011.03],
@@ -1106,11 +1045,11 @@ var echartsBarTimelineChartInit = function echartsBarTimelineChartInit() {
       2010: [10600.84, 4238.65, 7123.77, 3412.38, 4209.03, 6849.37, 3111.12, 4040.55, 9833.51, 17131.45, 12063.82, 4193.69],
       2011: [12363.18, 5219.24, 8483.17, 3960.87, 5015.89, 8158.98, 3679.91, 4918.09, 11142.86, 20842.21, 14180.23, 4975.96]
     });
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         baseOption: {
           timeline: {
+            bottom: -10,
             axisType: 'category',
             autoPlay: false,
             playInterval: 1000,
@@ -1139,7 +1078,9 @@ var echartsBarTimelineChartInit = function echartsBarTimelineChartInit() {
           title: {
             textStyle: {
               color: utils.getGrays()['700']
-            }
+            },
+            top: 'top',
+            left: 'left'
           },
           tooltip: {
             trigger: 'axis',
@@ -1150,7 +1091,7 @@ var echartsBarTimelineChartInit = function echartsBarTimelineChartInit() {
             backgroundColor: utils.getGrays()['100'],
             borderColor: utils.getGrays()['300'],
             textStyle: {
-              color: utils.getColors().dark
+              color: utils.getGrays()['1100']
             },
             borderWidth: 1,
             transitionDuration: 0,
@@ -1158,10 +1099,12 @@ var echartsBarTimelineChartInit = function echartsBarTimelineChartInit() {
           },
           legend: {
             left: 'right',
+            top: 'top',
             data: ['Primary industry', 'Secondary industry', 'Tertiary Industry'],
             textStyle: {
               color: utils.getGrays()['700']
-            }
+            },
+            itemGap: 10
           },
           calculable: true,
           xAxis: [{
@@ -1217,10 +1160,9 @@ var echartsBarTimelineChartInit = function echartsBarTimelineChartInit() {
           }],
           grid: {
             top: '10%',
-            bottom: '15%',
+            bottom: '20%',
             left: 5,
-            right: 10,
-            containLabel: true
+            right: 10
           }
         },
         options: [{
@@ -1303,33 +1245,30 @@ var echartsBarTimelineChartInit = function echartsBarTimelineChartInit() {
         }]
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                             Echarts Bar Chart                             */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsWaterFallChartInit = function echartsWaterFallChartInit() {
   var $waterfallChartEl = document.querySelector('.echart-nightfall-chart-example');
-
   if ($waterfallChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($waterfallChartEl, 'options');
     var chart = window.echarts.init($waterfallChartEl);
     var days = ['2021-06-05', '2021-06-06', '2021-06-07', '2021-06-08', '2021-06-09', '2021-06-10', '2021-06-11', '2021-06-12', '2021-06-13', '2021-06-14', '2021-06-15'];
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         legend: {
           data: ['Expenditure', 'Income'],
           textStyle: {
             color: utils.getGrays()['600']
-          }
+          },
+          top: 'top',
+          itemGap: 10
         },
         tooltip: {
           trigger: 'axis',
@@ -1337,21 +1276,12 @@ var echartsWaterFallChartInit = function echartsWaterFallChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
-
-          /* eslint-disable prefer-destructuring */
           formatter: function formatter(params) {
-            var tar;
-
-            if (params[1].value !== '-') {
-              tar = params[1];
-            } else {
-              tar = params[2];
-            }
-
-            return "".concat(window.dayjs(tar.name).format('MMM DD'), "<br/>").concat(tar.seriesName, " : ").concat(tar.value);
+            var tar = params[1].value !== '-' ? params[1] : params[2];
+            return "".concat(window.dayjs(tar.name).format('MMM DD'), "<br/>").concat(tar.seriesName, ": ").concat(tar.value);
           },
           transitionDuration: 0,
           axisPointer: {
@@ -1455,27 +1385,22 @@ var echartsWaterFallChartInit = function echartsWaterFallChartInit() {
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                             Echarts Bar Chart                             */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsBasicBarChartInit = function echartsBasicBarChartInit() {
   var $barChartEl = document.querySelector('.echart-basic-bar-chart-example');
-
   if ($barChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($barChartEl, 'options');
     var chart = window.echarts.init($barChartEl);
     var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     var data = [1272, 1301, 1402, 1216, 1086, 1236, 1219, 1330, 1367, 1416, 1297, 1204];
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         tooltip: {
@@ -1484,7 +1409,7 @@ var echartsBasicBarChartInit = function echartsBasicBarChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           formatter: tooltipFormatter,
@@ -1562,28 +1487,21 @@ var echartsBasicBarChartInit = function echartsBasicBarChartInit() {
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* eslint-disable */
 
 /* -------------------------------------------------------------------------- */
-
 /*                             Echarts Bar Chart                             */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsBasicCandlestickChartInit = function echartsBasicCandlestickChartInit() {
   var $basicCandleStickChartEl = document.querySelector('.echart-candlestick-chart-example');
-
   if ($basicCandleStickChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($basicCandleStickChartEl, 'options');
     var chart = window.echarts.init($basicCandleStickChartEl);
     var data = [['2013/1/24', 2320.26, 2320.26, 2287.3, 2362.94], ['2013/1/25', 2300, 2291.3, 2288.26, 2308.38], ['2013/1/28', 2295.35, 2346.5, 2295.35, 2346.92], ['2013/1/29', 2347.22, 2358.98, 2337.35, 2363.8], ['2013/1/30', 2360.75, 2382.48, 2347.89, 2383.76], ['2013/1/31', 2383.43, 2385.42, 2371.23, 2391.82], ['2013/2/1', 2377.41, 2419.02, 2369.57, 2421.15], ['2013/2/4', 2425.92, 2428.15, 2417.58, 2440.38], ['2013/2/5', 2411, 2433.13, 2403.3, 2437.42], ['2013/2/6', 2432.68, 2434.48, 2427.7, 2441.73], ['2013/2/7', 2430.69, 2418.53, 2394.22, 2433.89], ['2013/2/8', 2416.62, 2432.4, 2414.4, 2443.03], ['2013/2/18', 2441.91, 2421.56, 2415.43, 2444.8], ['2013/2/19', 2420.26, 2382.91, 2373.53, 2427.07], ['2013/2/20', 2383.49, 2397.18, 2370.61, 2397.94], ['2013/2/21', 2378.82, 2325.95, 2309.17, 2378.82], ['2013/2/22', 2322.94, 2314.16, 2308.76, 2330.88], ['2013/2/25', 2320.62, 2325.82, 2315.01, 2338.78], ['2013/2/26', 2313.74, 2293.34, 2289.89, 2340.71], ['2013/2/27', 2297.77, 2313.22, 2292.03, 2324.63], ['2013/2/28', 2322.32, 2365.59, 2308.92, 2366.16], ['2013/3/1', 2364.54, 2359.51, 2330.86, 2369.65], ['2013/3/4', 2332.08, 2273.4, 2259.25, 2333.54], ['2013/3/5', 2274.81, 2326.31, 2270.1, 2328.14], ['2013/3/6', 2333.61, 2347.18, 2321.6, 2351.44], ['2013/3/7', 2340.44, 2324.29, 2304.27, 2352.02], ['2013/3/8', 2326.42, 2318.61, 2314.59, 2333.67], ['2013/3/11', 2314.68, 2310.59, 2296.58, 2320.96], ['2013/3/12', 2309.16, 2286.6, 2264.83, 2333.29], ['2013/3/13', 2282.17, 2263.97, 2253.25, 2286.33], ['2013/3/14', 2255.77, 2270.28, 2253.31, 2276.22], ['2013/3/15', 2269.31, 2278.4, 2250, 2312.08], ['2013/3/18', 2267.29, 2240.02, 2239.21, 2276.05], ['2013/3/19', 2244.26, 2257.43, 2232.02, 2261.31], ['2013/3/20', 2257.74, 2317.37, 2257.42, 2317.86], ['2013/3/21', 2318.21, 2324.24, 2311.6, 2330.81], ['2013/3/22', 2321.4, 2328.28, 2314.97, 2332], ['2013/3/25', 2334.74, 2326.72, 2319.91, 2344.89], ['2013/3/26', 2318.58, 2297.67, 2281.12, 2319.99], ['2013/3/27', 2299.38, 2301.26, 2289, 2323.48], ['2013/3/28', 2273.55, 2236.3, 2232.91, 2273.55], ['2013/3/29', 2238.49, 2236.62, 2228.81, 2246.87], ['2013/4/1', 2229.46, 2234.4, 2227.31, 2243.95], ['2013/4/2', 2234.9, 2227.74, 2220.44, 2253.42], ['2013/4/3', 2232.69, 2225.29, 2217.25, 2241.34], ['2013/4/8', 2196.24, 2211.59, 2180.67, 2212.59], ['2013/4/9', 2215.47, 2225.77, 2215.47, 2234.73], ['2013/4/10', 2224.93, 2226.13, 2212.56, 2233.04], ['2013/4/11', 2236.98, 2219.55, 2217.26, 2242.48], ['2013/4/12', 2218.09, 2206.78, 2204.44, 2226.26]];
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         tooltip: {
@@ -1592,7 +1510,7 @@ var echartsBasicCandlestickChartInit = function echartsBasicCandlestickChartInit
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -1601,7 +1519,9 @@ var echartsBasicCandlestickChartInit = function echartsBasicCandlestickChartInit
           }
         },
         toolbox: {
-          top: 0,
+          top: -10,
+          right: -10,
+          itemGap: 8,
           feature: {
             dataZoom: {
               yAxisIndex: false
@@ -1702,37 +1622,32 @@ var echartsBasicCandlestickChartInit = function echartsBasicCandlestickChartInit
           }
         }],
         grid: {
-          right: 5,
-          left: 5,
+          right: -10,
+          left: 0,
           bottom: 5,
-          top: '15%',
-          containLabel: true
+          top: '13%',
+          outerBoundsMode: 'same',
+          outerBoundsContain: 'all'
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                             Echarts Basic Gauge Chart                      */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsBasicGaugeChartInit = function echartsBasicGaugeChartInit() {
   var $basicGaugeChartEl = document.querySelector('.echart-basic-gauge-chart-example');
-
   if ($basicGaugeChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($basicGaugeChartEl, 'options');
     var chart = window.echarts.init($basicGaugeChartEl);
-
     var _tooltipFormatter = function _tooltipFormatter(params) {
-      return "\n      <div>\n          <h6 class=\"fs--1 text-700 mb-0\">\n            <span class=\"fas fa-circle me-1\" style='color:".concat(params[0].color, "'></span>\n            ").concat(params[0].name, " : ").concat(params[0].value, "\n          </h6>\n      </div>\n      ");
+      return "\n      <div>\n          <h6 class=\"fs-10 text-700 mb-0\">\n            <span class=\"fas fa-circle me-1\" style='color:".concat(params[0].color, "'></span>\n            ").concat(params[0].name, " : ").concat(params[0].value, "\n          </h6>\n      </div>\n      ");
     };
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         tooltip: {
@@ -1741,7 +1656,7 @@ var echartsBasicGaugeChartInit = function echartsBasicGaugeChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           formatter: _tooltipFormatter,
@@ -1778,31 +1693,25 @@ var echartsBasicGaugeChartInit = function echartsBasicGaugeChartInit() {
         }]
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                             Echarts Line Chart                             */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsLineChartInit = function echartsLineChartInit() {
   var $lineChartEl = document.querySelector('.echart-line-chart-example');
-
   if ($lineChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($lineChartEl, 'options');
     var chart = window.echarts.init($lineChartEl);
     var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     var data = [1272, 1301, 1402, 1216, 1086, 1236, 1219, 1330, 1367, 1416, 1297, 1204];
-
     var _tooltipFormatter2 = function _tooltipFormatter2(params) {
-      return "\n      <div>\n          <h6 class=\"fs--1 text-700 mb-0\">\n            <span class=\"fas fa-circle me-1\" style='color:".concat(params[0].borderColor, "'></span>\n            ").concat(params[0].name, " : ").concat(params[0].value, "\n          </h6>\n      </div>\n      ");
+      return "\n      <div>\n          <h6 class=\"fs-10 text-700 mb-0\">\n            <span class=\"fas fa-circle me-1\" style='color:".concat(params[0].borderColor, "'></span>\n            ").concat(params[0].name, " : ").concat(params[0].value, "\n          </h6>\n      </div>\n      ");
     };
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         tooltip: {
@@ -1811,7 +1720,7 @@ var echartsLineChartInit = function echartsLineChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           formatter: _tooltipFormatter2,
@@ -1840,6 +1749,7 @@ var echartsLineChartInit = function echartsLineChartInit() {
             formatter: function formatter(value) {
               return value.substring(0, 3);
             },
+            interval: 0,
             margin: 15
           },
           splitLine: {
@@ -1872,7 +1782,7 @@ var echartsLineChartInit = function echartsLineChartInit() {
           type: 'line',
           data: data,
           itemStyle: {
-            color: utils.getGrays().white,
+            color: utils.getGrays()['100'],
             borderColor: utils.getColor('primary'),
             borderWidth: 2
           },
@@ -1893,26 +1803,21 @@ var echartsLineChartInit = function echartsLineChartInit() {
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                           Echarts Bubble Chart                             */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsBubbleChartInit = function echartsBubbleChartInit() {
   var $bubbleChartEl = document.querySelector('.echart-bubble-chart-example');
-
   if ($bubbleChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($bubbleChartEl, 'options');
     var chart = window.echarts.init($bubbleChartEl);
     var data = [[[28604, 77, 17096869, 'Australia', 1990], [31163, 77.4, 27662440, 'Canada', 1990], [1516, 68, 1154605773, 'China', 1990], [28599, 75, 4986705, 'Finland', 1990], [29476, 77.1, 56943299, 'France', 1990], [31476, 75.4, 78958237, 'Germany', 1990], [1777, 57.7, 870601776, 'India', 1990], [29550, 79.1, 122249285, 'Japan', 1990], [12087, 72, 42972254, 'South Korea', 1990], [24021, 75.4, 3397534, 'New Zealand', 1990], [43296, 76.8, 4240375, 'Norway', 1990], [10088, 70.8, 38195258, 'Poland', 1990], [19349, 69.6, 147568552, 'Russia', 1990], [26424, 75.7, 57110117, 'United Kingdom', 1990], [37062, 75.4, 252847810, 'United States', 1990]], [[44056, 81.8, 23968973, 'Australia', 2015], [43294, 81.7, 35939927, 'Canada', 2015], [13334, 76.9, 1376048943, 'China', 2015], [38923, 80.8, 5503457, 'Finland', 2015], [37599, 81.9, 64395345, 'France', 2015], [44053, 81.1, 80688545, 'Germany', 2015], [5903, 66.8, 1311050527, 'India', 2015], [36162, 83.5, 126573481, 'Japan', 2015], [34644, 80.7, 50293439, 'South Korea', 2015], [34186, 80.6, 4528526, 'New Zealand', 2015], [64304, 81.6, 5210967, 'Norway', 2015], [24787, 77.3, 38611794, 'Poland', 2015], [23038, 73.13, 143456918, 'Russia', 2015], [38225, 81.4, 64715810, 'United Kingdom', 2015], [53354, 79.1, 321773631, 'United States', 2015]]];
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         title: {
@@ -1930,7 +1835,8 @@ var echartsBubbleChartInit = function echartsBubbleChartInit() {
           data: ['1990', '2015'],
           textStyle: {
             color: utils.getGrays()['600']
-          }
+          },
+          itemGap: 10
         },
         xAxis: {
           axisLabel: {
@@ -2014,62 +1920,46 @@ var echartsBubbleChartInit = function echartsBubbleChartInit() {
           }
         }],
         grid: {
-          left: 5,
-          right: 10,
+          left: 0,
+          right: 0,
           bottom: 5,
-          top: '20%',
-          containLabel: true
+          top: '18%',
+          outerBoundsMode: 'same',
+          outerBoundsContain: 'axisLabel'
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                             Echarts Bar Chart                             */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsCandlestickMixedChartInit = function echartsCandlestickMixedChartInit() {
   var $candleStickMixedChartEl = document.querySelector('.echart-candlestick-mixed-chart-example');
-
   if ($candleStickMixedChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($candleStickMixedChartEl, 'options');
     var chart = window.echarts.init($candleStickMixedChartEl);
     var colorList = [utils.getColor('primary'), utils.getColor('info'), utils.getColor('dark'), utils.getColor('warning')];
-    /* eslint-disable no-continue */
-
     var calculateMA = function calculateMA(dayCount, data) {
       var result = [];
-
-      for (var i = 0, len = data.length; i < len; i += 1) {
-        if (i < dayCount) {
-          result.push('-');
-          continue;
-        }
-
+      for (var i = dayCount; i < data.length; i += 1) {
         var sum = 0;
-
         for (var j = 0; j < dayCount; j += 1) {
           sum += data[i - j][1];
         }
-
         result.push((sum / dayCount).toFixed(2));
       }
-
       return result;
     };
-
     var dates = utils.getPastDates(61).map(function (date) {
       return window.dayjs(date).format('MMM DD, YYYY');
     });
     var data = [[17512.58, 17633.11, 17434.27, 17642.81, 86160000], [17652.36, 17716.66, 17652.36, 17790.11, 79330000], [17716.05, 17685.09, 17669.72, 17755.7, 102600000], [17661.74, 17792.75, 17568.02, 17811.48, 104890000], [17799.39, 17737, 17710.67, 17806.38, 85230000], [17718.03, 17603.32, 17579.56, 17718.03, 115230000], [17605.45, 17716.05, 17542.54, 17723.55, 99410000], [17687.28, 17541.96, 17484.23, 17687.28, 90120000], [17555.39, 17576.96, 17528.16, 17694.51, 79990000], [17586.48, 17556.41, 17555.9, 17731.63, 107100000], [17571.34, 17721.25, 17553.57, 17744.43, 81020000], [17741.66, 17908.28, 17741.66, 17918.35, 91710000], [17912.25, 17926.43, 17885.44, 17962.14, 84510000], [17925.95, 17897.46, 17867.41, 17937.65, 118160000], [17890.2, 18004.16, 17848.22, 18009.53, 89390000], [18012.1, 18053.6, 17984.43, 18103.46, 89820000], [18059.49, 18096.27, 18031.21, 18167.63, 100210000], [18092.84, 17982.52, 17963.89, 18107.29, 102720000], [17985.05, 18003.75, 17909.89, 18026.85, 134120000], [17990.94, 17977.24, 17855.55, 17990.94, 83770000], [17987.38, 17990.32, 17934.17, 18043.77, 92570000], [17996.14, 18041.55, 17920.26, 18084.66, 109090000], [18023.88, 17830.76, 17796.55, 18035.73, 100920000], [17813.09, 17773.64, 17651.98, 17814.83, 136670000], [17783.78, 17891.16, 17773.71, 17912.35, 80100000], [17870.75, 17750.91, 17670.88, 17870.75, 97060000], [17735.02, 17651.26, 17609.01, 17738.06, 95020000], [17664.48, 17660.71, 17615.82, 17736.11, 81530000], [17650.3, 17740.63, 17580.38, 17744.54, 80020000], [17743.85, 17705.91, 17668.38, 17783.16, 85590000], [17726.66, 17928.35, 17726.66, 17934.61, 75790000], [17919.03, 17711.12, 17711.05, 17919.03, 87390000], [17711.12, 17720.5, 17625.38, 17798.19, 88560000], [17711.12, 17535.32, 17512.48, 17734.74, 86640000], [17531.76, 17710.71, 17531.76, 17755.8, 88440000], [17701.46, 17529.98, 17469.92, 17701.46, 103260000], [17501.28, 17526.62, 17418.21, 17636.22, 79120000], [17514.16, 17435.4, 17331.07, 17514.16, 95530000], [17437.32, 17500.94, 17437.32, 17571.75, 111990000], [17507.04, 17492.93, 17480.05, 17550.7, 87790000], [17525.19, 17706.05, 17525.19, 17742.59, 86480000], [17735.09, 17851.51, 17735.09, 17891.71, 79180000], [17859.52, 17828.29, 17803.82, 17888.66, 68940000], [17826.85, 17873.22, 17824.73, 17873.22, 73190000], [17891.5, 17787.2, 17724.03, 17899.24, 147390000], [17754.55, 17789.67, 17664.79, 17809.18, 78530000], [17789.05, 17838.56, 17703.55, 17838.56, 75560000], [17799.8, 17807.06, 17689.68, 17833.17, 82270000], [17825.69, 17920.33, 17822.81, 17949.68, 71870000], [17936.22, 17938.28, 17936.22, 18003.23, 78750000], [17931.91, 18005.05, 17931.91, 18016, 71260000], [17969.98, 17985.19, 17915.88, 18005.22, 69690000], [17938.82, 17865.34, 17812.34, 17938.82, 90540000], [17830.5, 17732.48, 17731.35, 17893.28, 101690000], [17710.77, 17674.82, 17595.79, 17733.92, 93740000], [17703.65, 17640.17, 17629.01, 17762.96, 94130000], [17602.23, 17733.1, 17471.29, 17754.91, 91950000], [17733.44, 17675.16, 17602.78, 17733.44, 248680000], [17736.87, 17804.87, 17736.87, 17946.36, 99380000], [17827.33, 17829.73, 17799.8, 17877.84, 85130000], [17832.67, 17780.83, 17770.36, 17920.16, 89440000]];
     var dataMA5 = calculateMA(5, data);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         animation: false,
@@ -2079,7 +1969,8 @@ var echartsCandlestickMixedChartInit = function echartsCandlestickMixedChartInit
           data: ['MA1', 'MA5', 'Volume'],
           textStyle: {
             color: utils.getGrays()['600']
-          }
+          },
+          itemGap: 10
         },
         tooltip: {
           trigger: 'axis',
@@ -2087,7 +1978,7 @@ var echartsCandlestickMixedChartInit = function echartsCandlestickMixedChartInit
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -2208,18 +2099,20 @@ var echartsCandlestickMixedChartInit = function echartsCandlestickMixedChartInit
           }
         }],
         grid: [{
-          left: 5,
+          left: 0,
           right: 12,
           // top: 110,
           bottom: 60,
           height: 160,
-          containLabel: true
+          outerBoundsMode: 'same',
+          outerBoundsContain: 'axisLabel'
         }, {
           left: 50,
           right: 12,
           height: 40,
           top: 260,
-          containLabel: true
+          outerBoundsMode: 'same',
+          outerBoundsContain: 'axisLabel'
         }],
         series: [{
           name: 'Volume',
@@ -2260,32 +2153,29 @@ var echartsCandlestickMixedChartInit = function echartsCandlestickMixedChartInit
         }]
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                             Echarts Doughnut Chart                         */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsDoughnutChartInit = function echartsDoughnutChartInit() {
   var $doughnutChartEl = document.querySelector('.echart-doughnut-chart-example');
-
   if ($doughnutChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($doughnutChartEl, 'options');
     var chart = window.echarts.init($doughnutChartEl);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         legend: {
           left: 'left',
+          top: 'top',
           textStyle: {
             color: utils.getGrays()['600']
-          }
+          },
+          itemGap: 10
         },
         series: [{
           type: 'pie',
@@ -2337,7 +2227,7 @@ var echartsDoughnutChartInit = function echartsDoughnutChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -2347,33 +2237,30 @@ var echartsDoughnutChartInit = function echartsDoughnutChartInit() {
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                             Echarts Doughnut Chart                         */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsDoughnutRoundedChartInit = function echartsDoughnutRoundedChartInit() {
   var $doughnutRoundedChartEl = document.querySelector('.echart-doughnut-rounded-chart');
-
   if ($doughnutRoundedChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($doughnutRoundedChartEl, 'options');
     var chart = window.echarts.init($doughnutRoundedChartEl);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         legend: {
           orient: 'vertical',
           left: 'left',
+          top: 'top',
           textStyle: {
             color: utils.getGrays()['600']
-          }
+          },
+          itemGap: 10
         },
         series: [{
           type: 'pie',
@@ -2430,7 +2317,7 @@ var echartsDoughnutRoundedChartInit = function echartsDoughnutRoundedChartInit()
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -2440,7 +2327,6 @@ var echartsDoughnutRoundedChartInit = function echartsDoughnutRoundedChartInit()
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
     utils.resize(function () {
       if (window.innerWidth < 530) {
@@ -2459,23 +2345,21 @@ var echartsDoughnutRoundedChartInit = function echartsDoughnutRoundedChartInit()
     });
   }
 };
-/* eslint-disable */
 
 /* -------------------------------------------------------------------------- */
-
 /*                           Echarts Dynamic Line Chart                       */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsDynamicLineChartInit = function echartsDynamicLineChartInit() {
   var $dynamicLineChartEl = document.querySelector('.echart-dynamic-line-chart-example');
-
   if ($dynamicLineChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($dynamicLineChartEl, 'options');
     var chart = window.echarts.init($dynamicLineChartEl);
-
+    var data = [];
+    var now = +new Date(1997, 9, 3);
+    var oneDay = 24 * 3600 * 1000;
+    var value = Math.random() * 1000;
     var randomData = function randomData() {
       now = new Date(+now + oneDay);
       value = value + Math.random() * 21 - 10;
@@ -2484,16 +2368,9 @@ var echartsDynamicLineChartInit = function echartsDynamicLineChartInit() {
         value: [[now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/'), Math.round(value)]
       };
     };
-
-    var data = [];
-    var now = +new Date(1997, 9, 3);
-    var oneDay = 24 * 3600 * 1000;
-    var value = Math.random() * 1000;
-
-    for (var i = 0; i < 1000; i++) {
+    for (var i = 0; i < 1000; i += 1) {
       data.push(randomData());
     }
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         tooltip: {
@@ -2505,7 +2382,7 @@ var echartsDynamicLineChartInit = function echartsDynamicLineChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -2550,7 +2427,7 @@ var echartsDynamicLineChartInit = function echartsDynamicLineChartInit() {
             color: utils.getColor('primary')
           },
           itemStyle: {
-            color: utils.getGrays().white,
+            color: utils.getGrays()['100'],
             borderColor: utils.getColor('primary'),
             borderWidth: 2
           },
@@ -2561,18 +2438,17 @@ var echartsDynamicLineChartInit = function echartsDynamicLineChartInit() {
           right: 5,
           left: '7%',
           bottom: '10%',
-          top: '5%'
+          top: '5%',
+          outerBoundsMode: 'none'
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
     setInterval(function () {
-      for (var i = 0; i < 5; i++) {
+      for (var _i = 0; _i < 5; _i += 1) {
         data.shift();
         data.push(randomData());
       }
-
       chart.setOption({
         series: [{
           data: data
@@ -2581,21 +2457,17 @@ var echartsDynamicLineChartInit = function echartsDynamicLineChartInit() {
     }, 1000);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                          Echarts Gauge Progress Chart                      */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsGaugeGradeChartInit = function echartsGaugeGradeChartInit() {
   var $gaugeGradeChartEl = document.querySelector('.echart-gauge-grade-chart-example');
-
   if ($gaugeGradeChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($gaugeGradeChartEl, 'options');
     var chart = window.echarts.init($gaugeGradeChartEl);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         series: [{
@@ -2643,19 +2515,15 @@ var echartsGaugeGradeChartInit = function echartsGaugeGradeChartInit() {
               if (value === 0.875) {
                 return 'Excellent';
               }
-
               if (value === 0.625) {
                 return 'Good';
               }
-
               if (value === 0.375) {
                 return 'Well';
               }
-
               if (value === 0.125) {
                 return 'Bad';
               }
-
               return '';
             }
           },
@@ -2678,25 +2546,20 @@ var echartsGaugeGradeChartInit = function echartsGaugeGradeChartInit() {
         }]
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                          Echarts Gauge Progress Chart                      */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsGaugeMultiRingChartInit = function echartsGaugeMultiRingChartInit() {
   var $gaugeMultiRingChartEl = document.querySelector('.echart-gauge-multi-ring-chart-example');
-
   if ($gaugeMultiRingChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($gaugeMultiRingChartEl, 'options');
     var chart = window.echarts.init($gaugeMultiRingChartEl);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         series: [{
@@ -2816,29 +2679,23 @@ var echartsGaugeMultiRingChartInit = function echartsGaugeMultiRingChartInit() {
         }]
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                          Echarts Gauge Progress Chart                      */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsGaugeMultiTitleChartInit = function echartsGaugeMultiTitleChartInit() {
   var $gaugeMultiTitleChartEl = document.querySelector('.echart-gauge-multi-title-chart-example');
-
   if ($gaugeMultiTitleChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($gaugeMultiTitleChartEl, 'options');
     var chart = window.echarts.init($gaugeMultiTitleChartEl);
-
     var _tooltipFormatter3 = function _tooltipFormatter3(params) {
-      return "\n      <div>\n          <h6 class=\"fs--1 text-700 mb-0\">\n            <span class=\"fas fa-circle me-1\" style='color:".concat(params[0].color, "'></span>\n            ").concat(params[0].name, " : ").concat(params[0].value, "\n          </h6>\n      </div>\n      ");
+      return "\n      <div>\n          <h6 class=\"fs-10 text-700 mb-0\">\n            <span class=\"fas fa-circle me-1\" style='color:".concat(params[0].color, "'></span>\n            ").concat(params[0].name, " : ").concat(params[0].value, "\n          </h6>\n      </div>\n      ");
     };
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         tooltip: {
@@ -2847,7 +2704,7 @@ var echartsGaugeMultiTitleChartInit = function echartsGaugeMultiTitleChartInit()
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           formatter: _tooltipFormatter3,
@@ -2941,29 +2798,23 @@ var echartsGaugeMultiTitleChartInit = function echartsGaugeMultiTitleChartInit()
         }]
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                          Echarts Gauge Progress Chart                      */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsGaugeProgressChartInit = function echartsGaugeProgressChartInit() {
   var $gaugeProgressChartEl = document.querySelector('.echart-gauge-progress-chart-example');
-
   if ($gaugeProgressChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($gaugeProgressChartEl, 'options');
     var chart = window.echarts.init($gaugeProgressChartEl);
-
     var _tooltipFormatter4 = function _tooltipFormatter4(params) {
-      return "\n      <div>\n          <h6 class=\"fs--1 text-700 mb-0\">\n            <span class=\"fas fa-circle me-1\" style='color:".concat(params[0].color, "'></span>\n            ").concat(params[0].name, " : ").concat(params[0].value, "\n          </h6>\n      </div>\n      ");
+      return "\n      <div>\n          <h6 class=\"fs-10 text-700 mb-0\">\n            <span class=\"fas fa-circle me-1\" style='color:".concat(params[0].color, "'></span>\n            ").concat(params[0].name, " : ").concat(params[0].value, "\n          </h6>\n      </div>\n      ");
     };
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         tooltip: {
@@ -2972,7 +2823,7 @@ var echartsGaugeProgressChartInit = function echartsGaugeProgressChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           formatter: _tooltipFormatter4,
@@ -3046,29 +2897,23 @@ var echartsGaugeProgressChartInit = function echartsGaugeProgressChartInit() {
         }]
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                          Echarts Gauge Progress Chart                      */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsGaugeRingChartInit = function echartsGaugeRingChartInit() {
   var $gaugeRingChartEl = document.querySelector('.echart-gauge-ring-chart-example');
-
   if ($gaugeRingChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($gaugeRingChartEl, 'options');
     var chart = window.echarts.init($gaugeRingChartEl);
-
     var _tooltipFormatter5 = function _tooltipFormatter5(params) {
-      return "\n      <div>\n          <h6 class=\"fs--1 text-700 mb-0\">\n            <span class=\"fas fa-circle me-1\" style='color:".concat(params[0].color, "'></span>\n            ").concat(params[0].name, " : ").concat(params[0].value, "\n          </h6>\n      </div>\n      ");
+      return "\n      <div>\n          <h6 class=\"fs-10 text-700 mb-0\">\n            <span class=\"fas fa-circle me-1\" style='color:".concat(params[0].color, "'></span>\n            ").concat(params[0].name, " : ").concat(params[0].value, "\n          </h6>\n      </div>\n      ");
     };
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         tooltip: {
@@ -3077,7 +2922,7 @@ var echartsGaugeRingChartInit = function echartsGaugeRingChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           formatter: _tooltipFormatter5,
@@ -3146,32 +2991,25 @@ var echartsGaugeRingChartInit = function echartsGaugeRingChartInit() {
         }]
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                       Echarts Gradient Bar Chart                           */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsGradientBarChartInit = function echartsGradientBarChartInit() {
   var $gradientBarChartEl = document.querySelector('.echart-gradient-bar-chart-example');
-
   if ($gradientBarChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($gradientBarChartEl, 'options');
     var chart = window.echarts.init($gradientBarChartEl);
-
     var _tooltipFormatter6 = function _tooltipFormatter6(params) {
-      return "<div> \n          <h6 class=\"fs--1 text-700 mb-0\">\n          <span class=\"dot me-1 fs--2  bg-primary\" ></span> ".concat(params[0].name, " : ").concat(params[0].value, " \n           </h6>\n        </div> ");
+      return "<div> \n          <h6 class=\"fs-10 text-700 mb-0\">\n          <span class=\"dot me-1 fs-11  bg-primary\" ></span> ".concat(params[0].name, " : ").concat(params[0].value, " \n           </h6>\n        </div> ");
     };
-
     var dataAxis = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T'];
     var data = [220, 182, 191, 234, 290, 330, 310, 123, 442, 321, 90, 149, 210, 122, 133, 334, 198, 123, 125, 220];
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         tooltip: {
@@ -3180,7 +3018,7 @@ var echartsGradientBarChartInit = function echartsGradientBarChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -3194,7 +3032,8 @@ var echartsGradientBarChartInit = function echartsGradientBarChartInit() {
           textStyle: {
             color: utils.getGrays()['600']
           },
-          left: 'center'
+          left: 'center',
+          top: 'top'
         },
         xAxis: {
           data: dataAxis,
@@ -3268,15 +3107,15 @@ var echartsGradientBarChartInit = function echartsGradientBarChartInit() {
           data: data
         }],
         grid: {
-          right: 5,
-          left: 5,
-          bottom: 5,
-          top: '10%',
-          containLabel: true
+          right: 0,
+          left: 0,
+          bottom: 0,
+          top: '8%',
+          outerBoundsMode: 'same',
+          outerBoundsContain: 'axisLabel'
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
     var zoomSize = 6;
     chart.on('click', function (params) {
@@ -3288,12 +3127,10 @@ var echartsGradientBarChartInit = function echartsGradientBarChartInit() {
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                Market Share                                */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsHeatMapChartInit = function echartsHeatMapChartInit() {
   var ECHART_HEATMAP_CHART = '.echart-heatmap-chart-example';
@@ -3301,17 +3138,14 @@ var echartsHeatMapChartInit = function echartsHeatMapChartInit() {
   var hours = ['12a', '2a', '4a', '6a', '8a', '10a', '12p', '2p', '4p', '6p', '8p', '10p'];
   var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   var data = [];
-
   for (var i = 0; i < 7; i += 1) {
     for (var j = 0; j < 12; j += 1) {
       data.push([j, i, utils.getRandomNumber(5, 12)]);
     }
   }
-
   if ($echartHeatmapChart) {
     var userOptions = utils.getData($echartHeatmapChart, 'options');
     var chart = window.echarts.init($echartHeatmapChart);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         tooltip: {
@@ -3320,16 +3154,17 @@ var echartsHeatMapChartInit = function echartsHeatMapChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1
         },
         grid: {
-          right: 5,
-          left: 5,
+          right: 0,
+          left: 0,
           top: 5,
           bottom: '15%',
-          containLabel: true
+          outerBoundsMode: 'same',
+          outerBoundsContain: 'axisLabel'
         },
         xAxis: {
           type: 'category',
@@ -3364,6 +3199,12 @@ var echartsHeatMapChartInit = function echartsHeatMapChartInit() {
             lineStyle: {
               color: utils.getGrays()['400']
             }
+          },
+          axisTick: {
+            show: true,
+            lineStyle: {
+              color: utils.getGrays()['400']
+            }
           }
         },
         visualMap: {
@@ -3372,13 +3213,14 @@ var echartsHeatMapChartInit = function echartsHeatMapChartInit() {
           calculable: true,
           orient: 'horizontal',
           left: 'center',
-          bottom: '0%',
+          bottom: -10,
           textStyle: {
             color: utils.getGrays()['600'],
             fontWeight: 500
           },
           inRange: {
-            color: [utils.rgbaColor(utils.getColors().primary, 1), utils.rgbaColor(utils.getColors().info, 1), utils.rgbaColor(utils.getColors().success, 1) // utils.rgbaColor(utils.getColors()['warning'], 1),
+            color: [utils.rgbaColor(utils.getColors().primary, 1), utils.rgbaColor(utils.getColors().info, 1), utils.rgbaColor(utils.getColors().success, 1)
+            // utils.rgbaColor(utils.getColors()['warning'], 1),
             // utils.rgbaColor(utils.getColors()['danger'], 1)
             ]
           }
@@ -3392,22 +3234,19 @@ var echartsHeatMapChartInit = function echartsHeatMapChartInit() {
           emphasis: {
             itemStyle: {
               shadowBlur: 10,
-              shadowColor: utils.rgbaColor(utils.getColors().black, 0.5)
+              shadowColor: utils.rgbaColor(utils.getColors().emphasis, 0.5)
             }
           }
         }]
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                Market Share                                */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsHeatMapSingleSeriesChartInit = function echartsHeatMapSingleSeriesChartInit() {
   var ECHART_HEATMAP_CHART = '.echart-heatmap-single-series-chart';
@@ -3415,17 +3254,14 @@ var echartsHeatMapSingleSeriesChartInit = function echartsHeatMapSingleSeriesCha
   var hours = ['12a', '2a', '4a', '6a', '8a', '10a', '12p', '2p', '4p', '6p', '8p', '10p'];
   var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   var data = [];
-
   for (var i = 0; i < 7; i += 1) {
     for (var j = 0; j < 12; j += 1) {
       data.push([j, i, utils.getRandomNumber(1, 12)]);
     }
   }
-
   if ($echartHeatmapChart) {
     var userOptions = utils.getData($echartHeatmapChart, 'options');
     var chart = window.echarts.init($echartHeatmapChart);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         gradientColor: [utils.rgbaColor(utils.getColors().info, 1), utils.rgbaColor(utils.getColors().primary, 1)],
@@ -3435,16 +3271,17 @@ var echartsHeatMapSingleSeriesChartInit = function echartsHeatMapSingleSeriesCha
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1
         },
         grid: {
-          right: 5,
-          left: 5,
+          right: 0,
+          left: 0,
           top: 5,
           bottom: 5,
-          containLabel: true
+          outerBoundsMode: 'same',
+          outerBoundsContain: 'axisLabel'
         },
         xAxis: {
           axisTick: {
@@ -3507,39 +3344,34 @@ var echartsHeatMapSingleSeriesChartInit = function echartsHeatMapSingleSeriesCha
             show: true
           },
           itemStyle: {
-            borderColor: utils.getColor('white'),
+            borderColor: utils.getGrays()['100'],
             borderWidth: 3
           },
           emphasis: {
             itemStyle: {
               shadowBlur: 10,
-              shadowColor: utils.rgbaColor(utils.getColors().black, 0.5)
+              shadowColor: utils.rgbaColor(utils.getColors().emphasis, 0.5)
             }
           }
         }]
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                       Echarts Horizontal Bar Chart                         */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsHorizontalBarChartInit = function echartsHorizontalBarChartInit() {
   var $horizontalBarChartEl = document.querySelector('.echart-horizontal-bar-chart-example');
-
   if ($horizontalBarChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($horizontalBarChartEl, 'options');
     var chart = window.echarts.init($horizontalBarChartEl);
     var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     var data = [1272, 1301, 1402, 1216, 1086, 1236, 1219, 1330, 1367, 1416, 1297, 1204];
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         tooltip: {
@@ -3548,7 +3380,7 @@ var echartsHorizontalBarChartInit = function echartsHorizontalBarChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           formatter: tooltipFormatter,
@@ -3628,31 +3460,25 @@ var echartsHorizontalBarChartInit = function echartsHorizontalBarChartInit() {
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                             Echarts Line Chart                             */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsLineAreaChartInit = function echartsLineAreaChartInit() {
   var $lineAreaChartEl = document.querySelector('.echart-line-area-chart-example');
-
   if ($lineAreaChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($lineAreaChartEl, 'options');
     var chart = window.echarts.init($lineAreaChartEl);
     var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     var data = [1142, 1160, 1179, 946, 1420, 1434, 986, 1247, 1051, 1297, 927, 1282];
-
     var _tooltipFormatter7 = function _tooltipFormatter7(params) {
-      return "\n      <div>\n          <h6 class=\"fs--1 text-700 mb-0\">\n            <span class=\"fas fa-circle me-1\" style='color:".concat(params[0].borderColor, "'></span>\n            ").concat(params[0].name, " : ").concat(params[0].value, "\n          </h6>\n      </div>\n      ");
+      return "\n      <div>\n          <h6 class=\"fs-10 text-700 mb-0\">\n            <span class=\"fas fa-circle me-1\" style='color:".concat(params[0].borderColor, "'></span>\n            ").concat(params[0].name, " : ").concat(params[0].value, "\n          </h6>\n      </div>\n      ");
     };
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         tooltip: {
@@ -3661,7 +3487,7 @@ var echartsLineAreaChartInit = function echartsLineAreaChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           formatter: _tooltipFormatter7,
@@ -3688,7 +3514,8 @@ var echartsLineAreaChartInit = function echartsLineAreaChartInit() {
             formatter: function formatter(value) {
               return value.substring(0, 3);
             },
-            margin: 15
+            margin: 15,
+            interval: 0
           },
           splitLine: {
             show: false
@@ -3719,7 +3546,7 @@ var echartsLineAreaChartInit = function echartsLineAreaChartInit() {
           type: 'line',
           data: data,
           itemStyle: {
-            color: utils.getGrays().white,
+            color: utils.getGrays()['100'],
             borderColor: utils.getColor('primary'),
             borderWidth: 2
           },
@@ -3756,20 +3583,16 @@ var echartsLineAreaChartInit = function echartsLineAreaChartInit() {
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                             Echarts Line Gradient Chart                    */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsLineGradientChartInit = function echartsLineGradientChartInit() {
   var $lineGradientChartEl = document.querySelector('.echart-line-gradient-chart-example');
-
   if ($lineGradientChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($lineGradientChartEl, 'options');
@@ -3781,7 +3604,6 @@ var echartsLineGradientChartInit = function echartsLineGradientChartInit() {
     var valueList = data.map(function (item) {
       return item[1];
     });
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         visualMap: {
@@ -3798,7 +3620,7 @@ var echartsLineGradientChartInit = function echartsLineGradientChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -3857,31 +3679,26 @@ var echartsLineGradientChartInit = function echartsLineGradientChartInit() {
           symbol: 'circle',
           data: valueList,
           itemStyle: {
-            color: utils.getGrays().white,
+            color: utils.getGrays()['100'],
             borderWidth: 2
           }
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                           Echarts Line Log Chart                           */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsLineLogChartInit = function echartsLineLogChartInit() {
   var $lineLogChartEl = document.querySelector('.echart-line-log-chart-example');
-
   if ($lineLogChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($lineLogChartEl, 'options');
     var chart = window.echarts.init($lineLogChartEl);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         tooltip: {
@@ -3930,7 +3747,7 @@ var echartsLineLogChartInit = function echartsLineLogChartInit() {
           data: [1, 3, 9, 27, 81, 247, 741, 2223, 6669],
           symbolSize: 7,
           itemStyle: {
-            color: utils.getGrays().white,
+            color: utils.getGrays()['100'],
             borderColor: utils.getColor('danger'),
             borderWidth: 2
           },
@@ -3944,7 +3761,7 @@ var echartsLineLogChartInit = function echartsLineLogChartInit() {
           data: [1, 2, 4, 8, 16, 32, 64, 128, 256],
           symbolSize: 7,
           itemStyle: {
-            color: utils.getGrays().white,
+            color: utils.getGrays()['100'],
             borderColor: utils.getColor('success'),
             borderWidth: 2
           },
@@ -3958,7 +3775,7 @@ var echartsLineLogChartInit = function echartsLineLogChartInit() {
           data: [1 / 2, 1 / 4, 1 / 8, 1 / 16, 1 / 32, 1 / 64, 1 / 128, 1 / 256, 1 / 512],
           symbolSize: 7,
           itemStyle: {
-            color: utils.getGrays().white,
+            color: utils.getGrays()['100'],
             borderColor: utils.getColor('info'),
             borderWidth: 2
           },
@@ -3968,37 +3785,34 @@ var echartsLineLogChartInit = function echartsLineLogChartInit() {
           symbol: 'circle'
         }],
         grid: {
-          right: 10,
-          left: 5,
+          right: 5,
+          left: 0,
           bottom: 5,
-          top: 10,
-          containLabel: true
+          top: 8,
+          outerBoundsMode: 'same',
+          outerBoundsContain: 'axisLabel'
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                        Echarts Line Marker Chart                           */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsLineMarkerChartInit = function echartsLineMarkerChartInit() {
   var $lineMarkerChartEl = document.querySelector('.echart-line-marker-chart-example');
-
   if ($lineMarkerChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($lineMarkerChartEl, 'options');
     var chart = window.echarts.init($lineMarkerChartEl);
     var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
-        color: [utils.getColor('primary'), utils.getColor('warning') // utils.getColor('danger')
+        color: [utils.getColor('primary'), utils.getColor('warning')
+        // utils.getColor('danger')
         ],
         legend: {
           data: [{
@@ -4011,7 +3825,8 @@ var echartsLineMarkerChartInit = function echartsLineMarkerChartInit() {
             textStyle: {
               color: utils.getGrays()['600']
             }
-          }]
+          }],
+          top: 0
         },
         tooltip: {
           trigger: 'axis',
@@ -4019,7 +3834,7 @@ var echartsLineMarkerChartInit = function echartsLineMarkerChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -4081,7 +3896,7 @@ var echartsLineMarkerChartInit = function echartsLineMarkerChartInit() {
           data: [10, 11, 13, 11, 12, 9, 12],
           symbolSize: 10,
           itemStyle: {
-            color: utils.getGrays().white,
+            color: utils.getGrays()['100'],
             borderColor: utils.getColor('primary'),
             borderWidth: 2
           },
@@ -4119,7 +3934,7 @@ var echartsLineMarkerChartInit = function echartsLineMarkerChartInit() {
           data: [1, -2, 2, 5, 3, 2, 0],
           symbolSize: 10,
           itemStyle: {
-            color: utils.getGrays().white,
+            color: utils.getGrays()['100'],
             borderColor: utils.getColor('danger'),
             borderWidth: 2
           },
@@ -4167,33 +3982,30 @@ var echartsLineMarkerChartInit = function echartsLineMarkerChartInit() {
           }
         }],
         grid: {
-          right: '8%',
-          left: '5%',
-          bottom: '10%',
-          top: '15%'
+          right: '5%',
+          left: 0,
+          bottom: 0,
+          top: '15%',
+          outerBoundsMode: 'same',
+          outerBOundsContain: 'axisLabel'
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                             Echarts Line Race Chart                        */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsLineRaceChartInit = function echartsLineRaceChartInit() {
   var $lineRaceChartEl = document.querySelector('.echart-line-race-chart-example');
-
   if ($lineRaceChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($lineRaceChartEl, 'options');
     var chart = window.echarts.init($lineRaceChartEl);
     var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         color: [utils.getColor('primary'), utils.getColor('warning')],
@@ -4216,7 +4028,7 @@ var echartsLineRaceChartInit = function echartsLineRaceChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           // formatter: tooltipFormatter,
@@ -4339,33 +4151,29 @@ var echartsLineRaceChartInit = function echartsLineRaceChartInit() {
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                    Echarts Line Share Dataset Chart                        */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsLineShareDatasetChartInit = function echartsLineShareDatasetChartInit() {
   var $lineShareChartEl = document.querySelector('.echart-line-share-dataset-chart-example');
-
   if ($lineShareChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($lineShareChartEl, 'options');
     var chart = window.echarts.init($lineShareChartEl);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         color: [utils.getColor('danger'), utils.getColor('warning'), utils.getColor('info'), utils.getColor('primary')],
         legend: {
-          top: 0,
+          top: 'top',
           textStyle: {
             color: utils.getGrays()['700']
-          }
+          },
+          itemGap: 10
         },
         tooltip: {
           trigger: 'axis',
@@ -4388,6 +4196,10 @@ var echartsLineShareDatasetChartInit = function echartsLineShareDatasetChartInit
             lineStyle: {
               color: utils.getGrays()['300']
             }
+          },
+          axisTick: {
+            show: true,
+            color: utils.getGrays()['300']
           }
         },
         yAxis: {
@@ -4410,7 +4222,7 @@ var echartsLineShareDatasetChartInit = function echartsLineShareDatasetChartInit
           },
           symbolSize: 10,
           itemStyle: {
-            color: utils.getGrays().white,
+            color: utils.getGrays()['100'],
             borderColor: utils.getColor('danger'),
             borderWidth: 2
           },
@@ -4427,7 +4239,7 @@ var echartsLineShareDatasetChartInit = function echartsLineShareDatasetChartInit
           },
           symbolSize: 10,
           itemStyle: {
-            color: utils.getGrays().white,
+            color: utils.getGrays()['100'],
             borderColor: utils.getColor('info'),
             borderWidth: 2
           },
@@ -4444,7 +4256,7 @@ var echartsLineShareDatasetChartInit = function echartsLineShareDatasetChartInit
           },
           symbolSize: 10,
           itemStyle: {
-            color: utils.getGrays().white,
+            color: utils.getGrays()['100'],
             borderColor: utils.getColor('warning'),
             borderWidth: 2
           },
@@ -4461,7 +4273,7 @@ var echartsLineShareDatasetChartInit = function echartsLineShareDatasetChartInit
           },
           symbolSize: 10,
           itemStyle: {
-            color: utils.getGrays().white,
+            color: utils.getGrays()['100'],
             borderColor: utils.getColor('primary'),
             borderWidth: 2
           },
@@ -4481,6 +4293,9 @@ var echartsLineShareDatasetChartInit = function echartsLineShareDatasetChartInit
             formatter: '{b}: {@2012} ({d}%)',
             color: utils.getGrays()['600']
           },
+          labelLine: {
+            length2: 15
+          },
           encode: {
             itemName: 'product',
             value: '2012',
@@ -4489,18 +4304,17 @@ var echartsLineShareDatasetChartInit = function echartsLineShareDatasetChartInit
         }],
         grid: {
           right: 10,
-          left: 5,
+          left: 3,
           bottom: 5,
-          top: '55%',
-          containLabel: true
+          top: '54%',
+          outerBoundsMode: 'same',
+          outerBoundsContain: 'all'
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
     chart.on('updateAxisPointer', function (event) {
       var xAxisInfo = event.axesInfo[0];
-
       if (xAxisInfo) {
         var dimension = xAxisInfo.value + 1;
         chart.setOption({
@@ -4519,12 +4333,10 @@ var echartsLineShareDatasetChartInit = function echartsLineShareDatasetChartInit
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                                Session By Country Map                      */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsUsaMapInit = function echartsUsaMapInit() {
   var $usaMapEl = document.querySelector('.echart-map-usa-example');
@@ -4685,11 +4497,9 @@ var echartsUsaMapInit = function echartsUsaMapInit() {
     name: 'Puerto Rico',
     value: 3667084
   }];
-
   if ($usaMapEl) {
     var userOptions = utils.getData($usaMapEl, 'options');
     var chart = window.echarts.init($usaMapEl);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         tooltip: {
@@ -4698,7 +4508,7 @@ var echartsUsaMapInit = function echartsUsaMapInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -4713,7 +4523,8 @@ var echartsUsaMapInit = function echartsUsaMapInit() {
           }
         },
         visualMap: {
-          left: 'right',
+          right: -10,
+          bottom: -10,
           min: 500000,
           max: 38000000,
           inRange: {
@@ -4758,7 +4569,6 @@ var echartsUsaMapInit = function echartsUsaMapInit() {
         }]
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
     document.querySelector('.usa-map-reset').addEventListener('click', function () {
       chart.dispatchAction({
@@ -4767,16 +4577,13 @@ var echartsUsaMapInit = function echartsUsaMapInit() {
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                            Bandwidth Saved                                 */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsNestedPiesChartInit = function echartsNestedPiesChartInit() {
   var $echartsNestedPies = document.querySelector('.echarts-nested-pies-chart-example');
-
   if ($echartsNestedPies) {
     var userOptions = utils.getData($echartsNestedPies, 'options');
     var chart = window.echarts.init($echartsNestedPies);
@@ -4856,14 +4663,13 @@ var echartsNestedPiesChartInit = function echartsNestedPiesChartInit() {
         color: utils.rgbaColor(utils.getColor('info'), 0.8)
       }
     }];
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         tooltip: {
           trigger: 'item',
           backgroundColor: utils.getGrays()['100'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           formatter: '{b}<br/> {c} ({d}%)'
         },
@@ -4894,11 +4700,12 @@ var echartsNestedPiesChartInit = function echartsNestedPiesChartInit() {
           },
           label: {
             formatter: '{per|{d}%}',
+            distanceToLabelLine: -10,
             rich: {
               per: {
                 fontSize: 14,
                 fontWeight: 'bold',
-                lineHeight: 33
+                lineHeight: 0
               }
             }
           },
@@ -4906,45 +4713,44 @@ var echartsNestedPiesChartInit = function echartsNestedPiesChartInit() {
         }]
       };
     };
-
-    var initChart = function initChart() {
+    var _initChart = function initChart() {
       if (utils.isScrolledIntoView($echartsNestedPies)) {
         echartSetOption(chart, userOptions, getDefaultOptions);
-        window.removeEventListener('scroll', initChart);
+        window.removeEventListener('scroll', _initChart);
       }
     };
-
-    window.addEventListener('scroll', initChart);
+    window.addEventListener('scroll', _initChart);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                             Echarts Pie Chart                              */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsPieChartInit = function echartsPieChartInit() {
   var $pieChartEl = document.querySelector('.echart-pie-chart-example');
-
   if ($pieChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($pieChartEl, 'options');
     var chart = window.echarts.init($pieChartEl);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         legend: {
           left: 'left',
+          top: 'top',
           textStyle: {
             color: utils.getGrays()['600']
-          }
+          },
+          itemGap: 10
         },
         series: [{
           type: 'pie',
           radius: window.innerWidth < 530 ? '45%' : '60%',
           label: {
             color: utils.getGrays()['700']
+          },
+          labelLine: {
+            length2: 15
           },
           center: ['50%', '55%'],
           data: [{
@@ -4992,7 +4798,7 @@ var echartsPieChartInit = function echartsPieChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -5002,9 +4808,9 @@ var echartsPieChartInit = function echartsPieChartInit() {
         }
       };
     };
+    echartSetOption(chart, userOptions, getDefaultOptions);
 
-    echartSetOption(chart, userOptions, getDefaultOptions); //- set chart radius on window resize
-
+    //- set chart radius on window resize
     utils.resize(function () {
       if (window.innerWidth < 530) {
         chart.setOption({
@@ -5022,12 +4828,10 @@ var echartsPieChartInit = function echartsPieChartInit() {
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                             Echarts Doughnut Chart                         */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsPieEdgeAlignChartInit = function echartsPieEdgeAlignChartInit() {
   var $echartPieAEdgeAlignChartEl = document.querySelector('.echart-pie-edge-align-chart');
@@ -5086,12 +4890,10 @@ var echartsPieEdgeAlignChartInit = function echartsPieEdgeAlignChartInit() {
       color: utils.rgbaColor(utils.getColors().primary, 0.5)
     }
   }];
-
   if ($echartPieAEdgeAlignChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($echartPieAEdgeAlignChartEl, 'options');
     var chart = window.echarts.init($echartPieAEdgeAlignChartEl);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         title: [{
@@ -5099,7 +4901,8 @@ var echartsPieEdgeAlignChartInit = function echartsPieEdgeAlignChartInit() {
           left: 'center',
           textStyle: {
             color: utils.getGrays()['600']
-          }
+          },
+          top: 'top'
         }, {
           subtext: 'alignTo: "edge"',
           left: '50%',
@@ -5115,7 +4918,7 @@ var echartsPieEdgeAlignChartInit = function echartsPieEdgeAlignChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -5141,9 +4944,9 @@ var echartsPieEdgeAlignChartInit = function echartsPieEdgeAlignChartInit() {
         }]
       };
     };
+    echartSetOption(chart, userOptions, getDefaultOptions);
 
-    echartSetOption(chart, userOptions, getDefaultOptions); //- set chart radius on window resize
-
+    //- set chart radius on window resize
     utils.resize(function () {
       if (window.innerWidth < 530) {
         chart.setOption({
@@ -5161,16 +4964,13 @@ var echartsPieEdgeAlignChartInit = function echartsPieEdgeAlignChartInit() {
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                             Echarts Doughnut Chart                         */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsPieLabelAlignChartInit = function echartsPieLabelAlignChartInit() {
   var $echartPieLabelAlignChartEl = document.querySelector('.echart-pie-label-align-chart');
-
   if ($echartPieLabelAlignChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($echartPieLabelAlignChartEl, 'options');
@@ -5230,7 +5030,6 @@ var echartsPieLabelAlignChartInit = function echartsPieLabelAlignChartInit() {
         color: utils.rgbaColor(utils.getColors().primary, 0.5)
       }
     }];
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         title: [{
@@ -5238,7 +5037,8 @@ var echartsPieLabelAlignChartInit = function echartsPieLabelAlignChartInit() {
           left: 'center',
           textStyle: {
             color: utils.getGrays()['600']
-          }
+          },
+          top: 'top'
         }, {
           subtext: 'alignTo: "labelLine"',
           left: '50%',
@@ -5254,7 +5054,7 @@ var echartsPieLabelAlignChartInit = function echartsPieLabelAlignChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -5273,6 +5073,9 @@ var echartsPieLabelAlignChartInit = function echartsPieLabelAlignChartInit() {
             bleedMargin: 5,
             color: utils.getGrays()['700']
           },
+          labelLine: {
+            length2: 15
+          },
           left: '5%',
           right: '5%',
           top: 0,
@@ -5280,9 +5083,9 @@ var echartsPieLabelAlignChartInit = function echartsPieLabelAlignChartInit() {
         }]
       };
     };
+    echartSetOption(chart, userOptions, getDefaultOptions);
 
-    echartSetOption(chart, userOptions, getDefaultOptions); //- set chart radius on window resize
-
+    //- set chart radius on window resize
     utils.resize(function () {
       if (window.innerWidth < 530) {
         chart.setOption({
@@ -5300,13 +5103,10 @@ var echartsPieLabelAlignChartInit = function echartsPieLabelAlignChartInit() {
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                             Echarts Doughnut Chart                         */
-
 /* -------------------------------------------------------------------------- */
-
-
 var data1 = [{
   value: 1048,
   name: 'Starter',
@@ -5381,15 +5181,12 @@ var defaultRadius = {
 var smallRadius = {
   radius: '48%'
 };
-
 var echartsPieMultipleChartInit = function echartsPieMultipleChartInit() {
   var $echartPieMultipleChartEl = document.querySelector('.echart-pie-multiple-chart');
-
   if ($echartPieMultipleChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($echartPieMultipleChartEl, 'options');
     var chart = window.echarts.init($echartPieMultipleChartEl);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         title: [{
@@ -5397,7 +5194,8 @@ var echartsPieMultipleChartInit = function echartsPieMultipleChartInit() {
           left: 'center',
           textStyle: {
             color: utils.getGrays()['600']
-          }
+          },
+          top: 'top'
         }],
         tooltip: {
           trigger: 'item',
@@ -5405,7 +5203,7 @@ var echartsPieMultipleChartInit = function echartsPieMultipleChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -5433,9 +5231,9 @@ var echartsPieMultipleChartInit = function echartsPieMultipleChartInit() {
         }]
       };
     };
+    echartSetOption(chart, userOptions, getDefaultOptions);
 
-    echartSetOption(chart, userOptions, getDefaultOptions); //- set chart radius on window resize
-
+    //- set chart radius on window resize
     utils.resize(function () {
       if (window.innerWidth < 450) {
         chart.setOption({
@@ -5449,21 +5247,17 @@ var echartsPieMultipleChartInit = function echartsPieMultipleChartInit() {
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                             Echarts Pie Chart                              */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsRadarChartInit = function echartsRadarChartInit() {
   var $radarChartEl = document.querySelector('.echart-radar-chart-example');
-
   if ($radarChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($radarChartEl, 'options');
     var chart = window.echarts.init($radarChartEl);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         legend: {
@@ -5471,7 +5265,9 @@ var echartsRadarChartInit = function echartsRadarChartInit() {
           left: 'left',
           textStyle: {
             color: utils.getGrays()['600']
-          }
+          },
+          top: 'top',
+          itemGap: 10
         },
         tooltip: {
           trigger: 'item',
@@ -5479,7 +5275,7 @@ var echartsRadarChartInit = function echartsRadarChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -5532,31 +5328,25 @@ var echartsRadarChartInit = function echartsRadarChartInit() {
         }]
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                             Echarts Pie Chart                              */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsRadarCustomizedChartInit = function echartsRadarCustomizedChartInit() {
   var $radarChartEl = document.querySelector('.echart-radar-customized-chart');
-
   function getFormatter(params) {
     var indicators = [['Marketing', 'Sales', 'Dev', 'Support', 'Tech', 'Admin'], ['Language', 'Math', 'English', 'Physics', 'Chemistry', 'Biology']];
     var num = params.seriesIndex;
-    return "<strong > ".concat(params.name, " </strong>\n    <div class=\"fs--1 text-600\">\n      <strong >").concat(indicators[params.seriesIndex][0], "</strong>: ").concat(params.value[0], "  <br>\n      <strong>").concat(indicators[num][1], "</strong>: ").concat(params.value[1], "  <br>\n      <strong>").concat(indicators[num][2], "</strong>: ").concat(params.value[2], "  <br>\n      <strong>").concat(indicators[num][3], "</strong>: ").concat(params.value[3], "  <br>\n      <strong>").concat(indicators[num][4], "</strong>: ").concat(params.value[4], "  <br>\n      <strong>").concat(indicators[num][5], "</strong>: ").concat(params.value[5], "  <br>\n    </div>");
+    return "<strong > ".concat(params.name, " </strong>\n    <div class=\"fs-10 text-600\">\n      <strong >").concat(indicators[params.seriesIndex][0], "</strong>: ").concat(params.value[0], "  <br>\n      <strong>").concat(indicators[num][1], "</strong>: ").concat(params.value[1], "  <br>\n      <strong>").concat(indicators[num][2], "</strong>: ").concat(params.value[2], "  <br>\n      <strong>").concat(indicators[num][3], "</strong>: ").concat(params.value[3], "  <br>\n      <strong>").concat(indicators[num][4], "</strong>: ").concat(params.value[4], "  <br>\n      <strong>").concat(indicators[num][5], "</strong>: ").concat(params.value[5], "  <br>\n    </div>");
   }
-
   if ($radarChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($radarChartEl, 'options');
     var chart = window.echarts.init($radarChartEl);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         legend: {
@@ -5564,7 +5354,9 @@ var echartsRadarCustomizedChartInit = function echartsRadarCustomizedChartInit()
           left: 'left',
           textStyle: {
             color: utils.getGrays()['600']
-          }
+          },
+          top: 'top',
+          itemGap: 10
         },
         tooltip: {
           trigger: 'item',
@@ -5572,7 +5364,7 @@ var echartsRadarCustomizedChartInit = function echartsRadarCustomizedChartInit()
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -5711,9 +5503,8 @@ var echartsRadarCustomizedChartInit = function echartsRadarCustomizedChartInit()
         }]
       };
     };
-
-    echartSetOption(chart, userOptions, getDefaultOptions); //- set chart position on Window resize
-
+    echartSetOption(chart, userOptions, getDefaultOptions);
+    //- set chart position on Window resize
     utils.resize(function () {
       if (window.innerWidth < 992) {
         chart.setOption({
@@ -5732,7 +5523,6 @@ var echartsRadarCustomizedChartInit = function echartsRadarCustomizedChartInit()
           }]
         });
       }
-
       if (window.innerWidth < 576) {
         chart.setOption({
           radar: [{
@@ -5753,41 +5543,36 @@ var echartsRadarCustomizedChartInit = function echartsRadarCustomizedChartInit()
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                      Echarts Radar Multiple Chart                          */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsRadarMultipleChartInit = function echartsRadarMultipleChartInit() {
   var $radarChartEl = document.querySelector('.echart-radar-multiple-chart');
-
   if ($radarChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($radarChartEl, 'options');
     var chart = window.echarts.init($radarChartEl);
     var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
     var getCenter = function getCenter() {
       if (window.innerWidth < 1540 && window.innerWidth > 992) {
         return [['25%', '40%'], ['50%', '75%'], ['75%', '40%']];
       }
-
       if (window.innerWidth < 992) {
         return [['50%', '20%'], ['50%', '50%'], ['50%', '80%']];
       }
-
       return [['15%', '50%'], ['50%', '50%'], ['85%', '50%']];
     };
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         legend: {
           left: 'left',
           textStyle: {
             color: utils.getGrays()['600']
-          }
+          },
+          top: 'top',
+          itemGap: 10
         },
         tooltip: {
           trigger: 'item',
@@ -5795,7 +5580,7 @@ var echartsRadarMultipleChartInit = function echartsRadarMultipleChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -5929,9 +5714,9 @@ var echartsRadarMultipleChartInit = function echartsRadarMultipleChartInit() {
         }]
       };
     };
+    echartSetOption(chart, userOptions, getDefaultOptions);
 
-    echartSetOption(chart, userOptions, getDefaultOptions); // - set chart position on Window resize
-
+    // - set chart position on Window resize
     utils.resize(function () {
       chart.setOption({
         radar: getCenter().map(function (item) {
@@ -5943,21 +5728,17 @@ var echartsRadarMultipleChartInit = function echartsRadarMultipleChartInit() {
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                        Echarts Scatter Basic Chart                         */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsScatterBasicChartInit = function echartsScatterBasicChartInit() {
   var $basicScatterChartEl = document.querySelector('.echart-basic-scatter-chart-example');
-
   if ($basicScatterChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($basicScatterChartEl, 'options');
     var chart = window.echarts.init($basicScatterChartEl);
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         tooltip: {
@@ -5969,7 +5750,7 @@ var echartsScatterBasicChartInit = function echartsScatterBasicChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0
@@ -6017,34 +5798,30 @@ var echartsScatterBasicChartInit = function echartsScatterBasicChartInit() {
           }
         }],
         grid: {
-          right: 8,
-          left: 5,
+          right: 5,
+          left: 0,
           bottom: 5,
-          top: 8,
-          containLabel: true
+          top: 5,
+          outerBoundsMode: 'same',
+          outerBoundsContain: 'axisLabel'
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                      Echarts Scatter Quartet Chart                         */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsScatterQuartetChartInit = function echartsScatterQuartetChartInit() {
   var $scatterQuartetChartEl = document.querySelector('.echart-scatter-quartet-chart-example');
-
   if ($scatterQuartetChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($scatterQuartetChartEl, 'options');
     var chart = window.echarts.init($scatterQuartetChartEl);
     var dataAll = [[[10.0, 8.04], [8.0, 6.95], [13.0, 7.58], [9.0, 8.81], [11.0, 8.33], [14.0, 9.96], [6.0, 7.24], [4.0, 4.26], [12.0, 10.84], [7.0, 4.82], [5.0, 5.68]], [[10.0, 9.14], [8.0, 8.14], [13.0, 8.74], [9.0, 8.77], [11.0, 9.26], [14.0, 8.1], [6.0, 6.13], [4.0, 3.1], [12.0, 9.13], [7.0, 7.26], [5.0, 4.74]], [[10.0, 7.46], [8.0, 6.77], [13.0, 12.74], [9.0, 7.11], [11.0, 7.81], [14.0, 8.84], [6.0, 6.08], [4.0, 5.39], [12.0, 8.15], [7.0, 6.42], [5.0, 5.73]], [[8.0, 6.58], [8.0, 5.76], [8.0, 7.71], [8.0, 8.84], [8.0, 8.47], [8.0, 7.04], [8.0, 5.25], [19.0, 12.5], [8.0, 5.56], [8.0, 7.91], [8.0, 6.89]]];
-
     var xAxis = function xAxis() {
       return {
         axisLabel: {
@@ -6064,7 +5841,6 @@ var echartsScatterQuartetChartInit = function echartsScatterQuartetChartInit() {
         }
       };
     };
-
     var yAxis = function yAxis() {
       return {
         axisLabel: {
@@ -6084,7 +5860,6 @@ var echartsScatterQuartetChartInit = function echartsScatterQuartetChartInit() {
         }
       };
     };
-
     var markLineOpt = {
       animation: false,
       label: {
@@ -6149,7 +5924,6 @@ var echartsScatterQuartetChartInit = function echartsScatterQuartetChartInit() {
       bottom: 25,
       height: '20%'
     }];
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         color: [utils.getColor('primary'), utils.getColor('success'), utils.getColor('warning'), utils.getColor('danger')],
@@ -6162,7 +5936,7 @@ var echartsScatterQuartetChartInit = function echartsScatterQuartetChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -6242,7 +6016,6 @@ var echartsScatterQuartetChartInit = function echartsScatterQuartetChartInit() {
         }]
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
     utils.resize(function () {
       if (window.innerWidth < 768) {
@@ -6257,16 +6030,13 @@ var echartsScatterQuartetChartInit = function echartsScatterQuartetChartInit() {
     });
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                   Echarts Scatter singlr Axis Chart                        */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsScatterSingleAxisChartInit = function echartsScatterSingleAxisChartInit() {
   var $scatterSingleAxisChartEl = document.querySelector('.echart-scatter-single-axis-chart-example');
-
   if ($scatterSingleAxisChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($scatterSingleAxisChartEl, 'options');
@@ -6274,13 +6044,11 @@ var echartsScatterSingleAxisChartInit = function echartsScatterSingleAxisChartIn
     var hours = ['12am', '1am', '2am', '3am', '4am', '5am', '6am', '7am', '8am', '9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm', '8pm', '9pm', '10pm', '11pm'];
     var days = ['Saturday', 'Friday', 'Thursday', 'Wednesday', 'Tuesday', 'Monday', 'Sunday'];
     var data = [];
-
     for (var i = 0; i < 7; i += 1) {
       for (var j = 0; j < 24; j += 1) {
         data.push([j, i, utils.getRandomNumber(0, 10)]);
       }
     }
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         tooltip: {
@@ -6292,7 +6060,7 @@ var echartsScatterSingleAxisChartInit = function echartsScatterSingleAxisChartIn
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -6315,6 +6083,7 @@ var echartsScatterSingleAxisChartInit = function echartsScatterSingleAxisChartIn
             show: false
           },
           axisTick: {
+            show: true,
             lineStyle: {
               color: utils.getGrays()['600']
             }
@@ -6327,6 +6096,7 @@ var echartsScatterSingleAxisChartInit = function echartsScatterSingleAxisChartIn
             show: false
           },
           axisTick: {
+            show: true,
             lineStyle: {
               color: utils.getGrays()['600']
             }
@@ -6350,34 +6120,30 @@ var echartsScatterSingleAxisChartInit = function echartsScatterSingleAxisChartIn
           }
         }],
         grid: {
-          right: 12,
-          left: 5,
+          right: 7,
+          left: 0,
           bottom: 5,
           top: 5,
-          containLabel: true
+          outerBoundsMode: 'same',
+          outerBoundsContain: 'axisLabel'
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                    Echarts Stacked Area  Chart                             */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsStackedAreaChartInit = function echartsStackedAreaChartInit() {
   var $stackedAreaChartEl = document.querySelector('.echart-stacked-area-chart-example');
-
   if ($stackedAreaChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($stackedAreaChartEl, 'options');
     var chart = window.echarts.init($stackedAreaChartEl);
     var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         tooltip: {
@@ -6386,7 +6152,7 @@ var echartsStackedAreaChartInit = function echartsStackedAreaChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -6452,7 +6218,7 @@ var echartsStackedAreaChartInit = function echartsStackedAreaChartInit() {
             color: utils.rgbaColor(utils.getColor('info'), 0.3)
           },
           itemStyle: {
-            color: utils.getGrays().white,
+            color: utils.getGrays()['100'],
             borderColor: utils.getColor('info'),
             borderWidth: 2
           },
@@ -6470,7 +6236,7 @@ var echartsStackedAreaChartInit = function echartsStackedAreaChartInit() {
             color: utils.rgbaColor(utils.getColor('success'), 0.3)
           },
           itemStyle: {
-            color: utils.getGrays().white,
+            color: utils.getGrays()['100'],
             borderColor: utils.getColor('success'),
             borderWidth: 2
           },
@@ -6488,7 +6254,7 @@ var echartsStackedAreaChartInit = function echartsStackedAreaChartInit() {
             color: utils.rgbaColor(utils.getColor('danger'), 0.3)
           },
           itemStyle: {
-            color: utils.getGrays().white,
+            color: utils.getGrays()['100'],
             borderColor: utils.getColor('danger'),
             borderWidth: 2
           },
@@ -6506,7 +6272,7 @@ var echartsStackedAreaChartInit = function echartsStackedAreaChartInit() {
             color: utils.rgbaColor(utils.getColor('warning'), 0.3)
           },
           itemStyle: {
-            color: utils.getGrays().white,
+            color: utils.getGrays()['100'],
             borderColor: utils.getColor('warning'),
             borderWidth: 2
           },
@@ -6524,7 +6290,7 @@ var echartsStackedAreaChartInit = function echartsStackedAreaChartInit() {
             color: utils.rgbaColor(utils.getColor('primary'), 0.3)
           },
           itemStyle: {
-            color: utils.getGrays().white,
+            color: utils.getGrays()['100'],
             borderColor: utils.getColor('primary'),
             borderWidth: 2
           },
@@ -6534,34 +6300,30 @@ var echartsStackedAreaChartInit = function echartsStackedAreaChartInit() {
           symbol: 'circle'
         }],
         grid: {
-          right: 10,
-          left: 5,
+          right: 5,
+          left: 0,
           bottom: 5,
           top: 8,
-          containLabel: true
+          outerBoundsMode: 'same',
+          outerBoundsContain: 'axisLabel'
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                             Echarts Bar Chart                             */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsHorizontalStackedChartInit = function echartsHorizontalStackedChartInit() {
   var $horizontalStackChartEl = document.querySelector('.echart-horizontal-stacked-chart-example');
-
   if ($horizontalStackChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($horizontalStackChartEl, 'options');
     var chart = window.echarts.init($horizontalStackChartEl);
     var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         color: [utils.getColor('info'), utils.getColor('danger'), utils.getColor('warning'), utils.getColor('success'), utils.getColor('primary')],
@@ -6574,7 +6336,7 @@ var echartsHorizontalStackedChartInit = function echartsHorizontalStackedChartIn
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -6586,14 +6348,17 @@ var echartsHorizontalStackedChartInit = function echartsHorizontalStackedChartIn
               type: ['stack', 'tiled']
             }
           },
-          right: 0
+          right: -10,
+          top: -10
         },
         legend: {
           data: ['Direct', 'Mail Ad', 'Affiliate Ad', 'Video Ad', 'Search Engine'],
           textStyle: {
             color: utils.getGrays()['600']
           },
-          left: 0
+          left: 0,
+          top: 0,
+          itemGap: 10
         },
         xAxis: {
           type: 'value',
@@ -6701,34 +6466,30 @@ var echartsHorizontalStackedChartInit = function echartsHorizontalStackedChartIn
           data: [820, 832, 901, 934, 1290, 1330, 1320]
         }],
         grid: {
-          right: 15,
-          left: 5,
+          right: 0,
+          left: 0,
           bottom: 5,
           top: '15%',
-          containLabel: true
+          outerBoundsMode: 'same',
+          outerBoundsContain: 'axisLabel'
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                     Echarts Stacked Line Chart                             */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsStackedLineChartInit = function echartsStackedLineChartInit() {
   var $stackedLineChartEl = document.querySelector('.echart-stacked-line-chart-example');
-
   if ($stackedLineChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($stackedLineChartEl, 'options');
     var chart = window.echarts.init($stackedLineChartEl);
     var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         tooltip: {
@@ -6737,7 +6498,7 @@ var echartsStackedLineChartInit = function echartsStackedLineChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -6799,7 +6560,7 @@ var echartsStackedLineChartInit = function echartsStackedLineChartInit() {
           type: 'line',
           symbolSize: 6,
           itemStyle: {
-            color: utils.getGrays().white,
+            color: utils.getGrays()['100'],
             borderColor: utils.getColor('info'),
             borderWidth: 2
           },
@@ -6814,7 +6575,7 @@ var echartsStackedLineChartInit = function echartsStackedLineChartInit() {
           type: 'line',
           symbolSize: 10,
           itemStyle: {
-            color: utils.getGrays().white,
+            color: utils.getGrays()['100'],
             borderColor: utils.getColor('success'),
             borderWidth: 2
           },
@@ -6829,7 +6590,7 @@ var echartsStackedLineChartInit = function echartsStackedLineChartInit() {
           type: 'line',
           symbolSize: 10,
           itemStyle: {
-            color: utils.getGrays().white,
+            color: utils.getGrays()['100'],
             borderColor: utils.getColor('danger'),
             borderWidth: 2
           },
@@ -6844,7 +6605,7 @@ var echartsStackedLineChartInit = function echartsStackedLineChartInit() {
           type: 'line',
           symbolSize: 10,
           itemStyle: {
-            color: utils.getGrays().white,
+            color: utils.getGrays()['100'],
             borderColor: utils.getColor('warning'),
             borderWidth: 2
           },
@@ -6859,7 +6620,7 @@ var echartsStackedLineChartInit = function echartsStackedLineChartInit() {
           type: 'line',
           symbolSize: 10,
           itemStyle: {
-            color: utils.getGrays().white,
+            color: utils.getGrays()['100'],
             borderColor: utils.getColor('primary'),
             borderWidth: 2
           },
@@ -6871,22 +6632,20 @@ var echartsStackedLineChartInit = function echartsStackedLineChartInit() {
           data: [820, 932, 901, 934, 1290, 1330, 1320]
         }],
         grid: {
-          right: 10,
-          left: 5,
+          right: 5,
+          left: 0,
           bottom: 5,
           top: 8,
-          containLabel: true
+          outerBoundsMode: 'same',
+          outerBoundsContain: 'axisLabel'
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-
 var echartsStackedVerticalChartInit = function echartsStackedVerticalChartInit() {
   var $stackedVerticalChart = document.querySelector('.echart-stacked-vertival-chart-example');
-
   if ($stackedVerticalChart) {
     var userOptions = utils.getData($stackedVerticalChart, 'options');
     var chart = window.echarts.init($stackedVerticalChart);
@@ -6900,10 +6659,9 @@ var echartsStackedVerticalChartInit = function echartsStackedVerticalChartInit()
         shadowColor: utils.rgbaColor(utils.getColor('dark'), 0.3)
       }
     };
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
-        color: [utils.getColor('primary'), utils.getColor('info'), localStorage.getItem('theme') === 'dark' ? '#229BD2' : '#73D3FE', localStorage.getItem('theme') === 'dark' ? '#195979' : '#A9E4FF'],
+        color: [utils.getColor('primary'), utils.getColor('info'), utils.isDark() === 'dark' ? '#229BD2' : '#73D3FE', utils.isDark() === 'dark' ? '#195979' : '#A9E4FF'],
         tooltip: {
           trigger: 'item',
           padding: [7, 10],
@@ -6922,7 +6680,9 @@ var echartsStackedVerticalChartInit = function echartsStackedVerticalChartInit()
           data: ['Urgent', 'High', 'Medium', 'Low'],
           textStyle: {
             color: utils.getGrays()['700']
-          }
+          },
+          top: 'top',
+          itemGap: 10
         },
         xAxis: {
           data: xAxisData,
@@ -6992,30 +6752,26 @@ var echartsStackedVerticalChartInit = function echartsStackedVerticalChartInit()
           bottom: 10,
           left: 0,
           right: 2,
-          containLabel: true
+          outerBoundsMode: 'same',
+          outerBoundsContain: 'axisLabel'
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                             Echarts Step Line Chart                        */
-
 /* -------------------------------------------------------------------------- */
-
 
 var echartsStepLineChartInit = function echartsStepLineChartInit() {
   var $stepLineChartEl = document.querySelector('.echart-step-line-chart-example');
-
   if ($stepLineChartEl) {
     // Get options from data attribute
     var userOptions = utils.getData($stepLineChartEl, 'options');
     var chart = window.echarts.init($stepLineChartEl);
     var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
     var getDefaultOptions = function getDefaultOptions() {
       return {
         color: [utils.getColor('danger'), utils.getColor('warning'), utils.getColor('primary')],
@@ -7025,7 +6781,7 @@ var echartsStepLineChartInit = function echartsStepLineChartInit() {
           backgroundColor: utils.getGrays()['100'],
           borderColor: utils.getGrays()['300'],
           textStyle: {
-            color: utils.getColors().dark
+            color: utils.getGrays()['1100']
           },
           borderWidth: 1,
           transitionDuration: 0,
@@ -7089,7 +6845,7 @@ var echartsStepLineChartInit = function echartsStepLineChartInit() {
           step: 'start',
           symbolSize: 10,
           itemStyle: {
-            color: utils.getGrays().white,
+            color: utils.getGrays()['100'],
             borderColor: utils.getColor('primary'),
             borderWidth: 2
           },
@@ -7104,7 +6860,7 @@ var echartsStepLineChartInit = function echartsStepLineChartInit() {
           step: 'middle',
           symbolSize: 10,
           itemStyle: {
-            color: utils.getGrays().white,
+            color: utils.getGrays()['100'],
             borderColor: utils.getColor('warning'),
             borderWidth: 2
           },
@@ -7119,7 +6875,7 @@ var echartsStepLineChartInit = function echartsStepLineChartInit() {
           step: 'end',
           symbolSize: 10,
           itemStyle: {
-            color: utils.getGrays().white,
+            color: utils.getGrays()['100'],
             borderColor: utils.getColor('danger'),
             borderWidth: 2
           },
@@ -7137,17 +6893,13 @@ var echartsStepLineChartInit = function echartsStepLineChartInit() {
         }
       };
     };
-
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
-/* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
 /*                            Theme Initialization                            */
-
 /* -------------------------------------------------------------------------- */
-
-
 docReady(echartsLineChartInit);
 docReady(echartsLineAreaChartInit);
 docReady(echartsPieChartInit);

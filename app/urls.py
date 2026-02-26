@@ -1,6 +1,14 @@
 from django.urls import path
-from app import views
+from . import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
-    path('scan-qr/', views.scan_qr, name='scan_qr'),
+    path("", views.home, name="home"),
+    path("login/", views.login, name="login"),
+    path("dashboard/", views.dashboard, name="dashboard"),
 ]
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

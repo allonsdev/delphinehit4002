@@ -1,0 +1,129 @@
+/*** 
+=============================================
+    Breadcrumb style1
+=============================================
+***/
+.breadcrumb-style1 {
+    position: relative;
+    display: block;
+}
+
+.breadcrumb-style1--style2::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 50%;
+    width: 100%;
+    background-color: var(--thm-gray-bg);
+}
+
+.breadcrumb-style1__inner {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    border-radius: var(--thm-border-radius);
+    clip-path: polygon(100% 0, 100% 85%, 96% 100%, 0 100%, 0 0);
+    margin: 0px 80px 0px;
+    z-index: 10;
+}
+
+.breadcrumb-style1-bg {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+    background-attachment: scroll;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    z-index: -1;
+}
+
+.breadcrumb-style1-bg::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgb(78, 52, 46);
+    background: linear-gradient(180deg, rgba(78, 52, 46, 1) 0%, rgba(78, 52, 46, 0) 95%);
+}
+
+.breadcrumb-style1 .inner-content {
+    position: relative;
+    display: block;
+    padding: 284px 0px 191px;
+}
+
+.breadcrumb-style1 .title {
+    position: relative;
+    display: block;
+    text-align: center;
+    margin-bottom: 0px;
+    z-index: 1;
+}
+
+.breadcrumb-style1 .title h2 {
+    color: var(--thm-white);
+    font-size: 55px;
+    line-height: 1.0em;
+    text-transform: capitalize;
+    margin-bottom: 15px;
+}
+
+.breadcrumb-style1 .title p {
+    font-size: 16px;
+    color: var(--thm-primary-color);
+    font-family: var(--thm-font-3);
+    line-height: 26px;
+}
+
+.breadcrumb-menu {
+    position: absolute;
+    left: 0;
+    bottom: 32px;
+    z-index: 5;
+}
+
+.breadcrumb-menu ul {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.breadcrumb-menu ul li {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    color: var(--thm-white);
+    font-size: 16px;
+    line-height: 26px;
+    font-family: var(--thm-font-2);
+    font-weight: 400;
+    text-transform: capitalize;
+}
+
+.breadcrumb-menu ul li+li {
+    margin-left: 11px;
+}
+
+.breadcrumb-menu ul li a {
+    color: var(--thm-white);
+    transition: all 200ms linear;
+    transition-delay: 0.1s;
+}
+
+.breadcrumb-menu ul li a:hover,
+.breadcrumb-menu ul li.active {
+    color: var(--thm-primary-color);
+}
+
+.breadcrumb-menu ul li span {
+    color: var(--thm-white);
+    font-size: 16px;
+    margin-top: 0px;
+}

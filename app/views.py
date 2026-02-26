@@ -1,6 +1,16 @@
 from django.shortcuts import render, get_object_or_404
 from app.models import Animal, ReproductiveStatus, LactationRecord, BreedingEvent, TreatmentRecord, VaccinationRecord
 
+def home(request):
+    return render(request, "landing/index.html")
+
+def login(request):
+    return render(request, "dashboard/login.html")
+
+
+def dashboard(request):
+    return render(request, "dashboard/index.html")
+
 def scan_qr(request):
     qr_code = request.GET.get('qr')  # QR code sent as GET parameter
     if not qr_code:
