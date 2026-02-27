@@ -3,7 +3,12 @@ from .models import *
 from import_export.admin import ExportMixin
 
 
+# ==============================
 
+from django.contrib import admin
+from django.db.models import Count, Sum
+from django.utils.html import format_html
+from import_export.admin import ExportMixin
 from django.contrib import admin
 from django.db.models import Count, Sum
 from django.utils.html import format_html
@@ -63,26 +68,52 @@ class ProductionInline(admin.TabularInline):
 
 # ==============================
 # ANIMAL ADMIN
-# ==============================
+
+
 
 @admin.register(Animal)
-class AnimalAdmin(ExportMixin,admin.ModelAdmin):
+class AnimalAdmin(ExportMixin, admin.ModelAdmin):
 
-    # ---------- LIST VIEW ----------
+    # =====================================================
+    # LIST VIEW
+    # =====================================================
     list_display = (
         "tag_number",
-        "status",
+        "colored_status",
+        "farm",
         "disease_count",
         "breeding_count",
         "milk_total",
         "expense_total",
     )
 
-    search_fields = ("tag_number", "qr_code", "electronic_id")
+    list_filter = (
+        "status",
+        "species",
+        "breed",
+        "purpose",
+        "farm",
+        "sex",
+    )
 
-    readonly_fields = ("summary_dashboard", "qr_preview")
+    search_fields = (
+        "tag_number",
+        "qr_code",
+        "electronic_id",
+        "registration_number",
+    )
 
-    # ---------- INLINES ----------
+    readonly_fields = (
+        "summary_dashboard",
+        "qr_preview",
+        "qr_code",
+    )
+
+    list_per_page = 25
+
+    # =====================================================
+    # INLINES
+    # =====================================================
     inlines = [
         DiseaseInline,
         VaccinationInline,
@@ -93,10 +124,11 @@ class AnimalAdmin(ExportMixin,admin.ModelAdmin):
         ProductionInline,
     ]
 
-    # ---------- OPTIMIZED QUERY ----------
+    # =====================================================
+    # OPTIMIZED QUERY
+    # =====================================================
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
-
         return queryset.annotate(
             total_diseases=Count("diseaserecord"),
             total_breedings=Count("female_events"),
@@ -104,7 +136,32 @@ class AnimalAdmin(ExportMixin,admin.ModelAdmin):
             total_expenses=Sum("expenserecord__amount"),
         )
 
-    # ---------- LIST AGGREGATES ----------
+    # =====================================================
+    # COLORED STATUS BADGE
+    # =====================================================
+    def colored_status(self, obj):
+
+        colors = {
+            "ACTIVE": "#28a745",
+            "SOLD": "#17a2b8",
+            "DECEASED": "#dc3545",
+            "QUARANTINED": "#ffc107",
+            "CULLED": "#6c757d",
+            "MISSING": "#343a40",
+        }
+
+        return format_html(
+            '<span style="padding:4px 10px; border-radius:8px; '
+            'background:{}; color:white; font-weight:600;">{}</span>',
+            colors.get(obj.status, "#6c757d"),
+            obj.get_status_display(),
+        )
+
+    colored_status.short_description = "Status"
+
+    # =====================================================
+    # LIST AGGREGATES
+    # =====================================================
     def disease_count(self, obj):
         return obj.total_diseases or 0
 
@@ -117,7 +174,9 @@ class AnimalAdmin(ExportMixin,admin.ModelAdmin):
     def expense_total(self, obj):
         return obj.total_expenses or 0
 
-    # ---------- DETAIL DASHBOARD ----------
+    # =====================================================
+    # DASHBOARD
+    # =====================================================
     def summary_dashboard(self, obj):
 
         active_diseases = obj.diseaserecord_set.filter(
@@ -148,20 +207,27 @@ class AnimalAdmin(ExportMixin,admin.ModelAdmin):
         return format_html(
             """
             <div style="padding:20px;
-                        background:#f8f9fa;
-                        border-radius:10px;
-                        margin-bottom:20px;">
-                <h2>📊 Animal Aggregated Overview</h2>
-                <ul style="list-style:none; padding-left:0;">
-                    <li><strong>Total Diseases:</strong> {}</li>
-                    <li><strong>Active Diseases:</strong> {}</li>
-                    <li><strong>Total Vaccinations:</strong> {}</li>
-                    <li><strong>Total Breedings:</strong> {}</li>
-                    <li><strong>Total Calvings:</strong> {}</li>
-                    <li><strong>Total Milk Produced:</strong> {} L</li>
-                    <li><strong>Total Expenses:</strong> R {}</li>
-                    <li><strong>Current Weight:</strong> {} kg</li>
-                </ul>
+                        background:#f4f6f9;
+                        border-radius:12px;
+                        margin-bottom:20px;
+                        box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+
+                <h2 style="margin-bottom:15px;">📊 Animal Overview</h2>
+
+                <div style="display:grid;
+                            grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+                            gap:10px;">
+
+                    <div><strong>🐄 Total Diseases:</strong> {}</div>
+                    <div><strong>⚠ Active Diseases:</strong> {}</div>
+                    <div><strong>💉 Vaccinations:</strong> {}</div>
+                    <div><strong>🤰 Breedings:</strong> {}</div>
+                    <div><strong>🐮 Calvings:</strong> {}</div>
+                    <div><strong>🥛 Milk Produced:</strong> {} L</div>
+                    <div><strong>💰 Total Expenses:</strong> R {}</div>
+                    <div><strong>⚖ Current Weight:</strong> {} kg</div>
+
+                </div>
             </div>
             """,
             obj.diseaserecord_set.count(),
@@ -176,36 +242,115 @@ class AnimalAdmin(ExportMixin,admin.ModelAdmin):
 
     summary_dashboard.short_description = "Aggregated Overview"
 
-    # ---------- QR PREVIEW ----------
+    # =====================================================
+    # QR PREVIEW
+    # =====================================================
     def qr_preview(self, obj):
         if obj.qr_image:
             return format_html(
-                '<img src="{}" width="150" height="150" />',
+                '<img src="{}" width="150" style="border-radius:10px;" />',
                 obj.qr_image.url
             )
         return "No QR Code"
 
     qr_preview.short_description = "QR Code"
 
-    # ---------- LAYOUT ----------
+    # =====================================================
+    # FIELDSETS (COLLAPSIBLE)
+    # =====================================================
     fieldsets = (
-        ("Basic Information", {
+
+        ("📌 Identity", {
             "fields": (
                 "tag_number",
-                "species",
-                "breed",
-                "status",
-                "farm",
+                "qr_preview",
+                "qr_code",
+                "electronic_id",
+                "registration_number",
             )
         }),
-        ("📊 Aggregated Dashboard", {
+
+        ("🐄 Classification", {
+            "fields": (
+                "species",
+                "breed",
+                "strain",
+                "color",
+                "horn_status",
+                "purpose",
+            ),
+            "classes": ("collapse",),
+        }),
+
+        ("📅 Sex & Lifecycle", {
+            "fields": (
+                "sex",
+                "date_of_birth",
+                "birth_type",
+                "birth_weight_kg",
+                "weaning_date",
+                "weaning_weight_kg",
+            ),
+            "classes": ("collapse",),
+        }),
+
+        ("🧬 Lineage", {
+            "fields": (
+                "sire_tag",
+                "dam_tag",
+                "genetic_merit_index",
+            ),
+            "classes": ("collapse",),
+        }),
+
+        ("📦 Status & Acquisition", {
+            "fields": (
+                "status",
+                "acquisition_date",
+                "acquisition_method",
+                "purchase_price",
+                "insurance_policy_number",
+            ),
+            "classes": ("collapse",),
+        }),
+
+        ("📍 Location", {
+            "fields": (
+                "farm",
+                "current_paddock",
+            ),
+        }),
+
+        ("📏 Physical Metrics", {
+            "fields": (
+                "current_weight_kg",
+                "height_cm",
+                "body_length_cm",
+            ),
+            "classes": ("collapse",),
+        }),
+
+        ("🩺 Welfare", {
+            "fields": (
+                "temperament_score",
+                "lameness_score",
+            ),
+            "classes": ("collapse",),
+        }),
+
+        ("⚰ Lifecycle End", {
+            "fields": (
+                "date_of_death",
+                "cause_of_death",
+                "culling_reason",
+            ),
+            "classes": ("collapse",),
+        }),
+
+        ("📊 Dashboard", {
             "fields": ("summary_dashboard",),
         }),
-        ("QR Code", {
-            "fields": ("qr_preview",),
-        }),
     )
-
 # --------------------------
 # Farm & Paddock
 # --------------------------
