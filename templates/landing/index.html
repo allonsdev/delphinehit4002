@@ -66,144 +66,75 @@
     <div class="page-wrapper boxed_wrapper">
 
 
-        <header class="main-header main-header-style1">
+ <header class="main-header main-header-style1">
+    <div class="main-header-style1__content">
+        <div class="container">
+            <div class="main-header-style1__content-inner">
 
-            <div class="main-header-style1__content">
-                <div class="container">
-                    <div class="main-header-style1__content-inner">
+                <div class="main-header-style1__content-bottom">
+                    <div class="main-header-style1__content-bottom-left">
 
-                        
-{% load static %}
+                        <!-- Logo (if needed) -->
+                        <div class="header-logo-box-style1">
+                        </div>
 
-<div class="main-header-style1__content-bottom">
-    <div class="main-header-style1__content-bottom-left">
-        <div class="header-logo-box-style1">
-           
-        </div>
+                        <!-- Main Menu -->
+                        <nav class="main-menu main-menu-style1">
+                            <div class="main-menu__wrapper clearfix">
+                                <div class="main-menu__wrapper-inner">
 
-        <!--Start Main Menu Style1-->
-        <nav class="main-menu main-menu-style1">
-            <div class="main-menu__wrapper clearfix">
-                <div class="main-menu__wrapper-inner">
-                    <div class="sticky-logo-box-style1">
-                        <a href="index.html">
-                            <img src="{% static 'landing/assets/images/resources/stricky-v1-1.png' %}"
-                                 alt="Awesome Logo" title="">
-                        </a>
-                    </div>
-                    <div class="main-menu-style1__left">
-                        <div class="main-menu-box">
-                            <a href="#" class="mobile-nav__toggler">
-                                <i class="fa fa-bars"></i>
+                                    <div class="sticky-logo-box-style1">
+                                        <a href="index.html">
+                                            <img src="{% static 'landing/assets/images/resources/stricky-v1-1.png' %}"
+                                                 alt="Logo">
+                                        </a>
+                                    </div>
+
+                                    <div class="main-menu-style1__left">
+                                        <div class="main-menu-box">
+
+                                            <a href="#" class="mobile-nav__toggler">
+                                                <i class="fa fa-bars"></i>
+                                            </a>
+
+                                            <ul class="main-menu__list">
+                                    
+                        <div class="header-btn-style1">
+                            <a class="btn-one" href="/admin">
+                    
+                                <span class="txt">Admin</span>
                             </a>
-
-                            <ul class="main-menu__list">
-                                <li class="dropdown">
-                                    <a href="#">Home</a>
-                                    <ul>
-                                        <li><a href="index.html">Home Page 01</a></li>
-                                        <li><a href="index-3.html">Home Page 02</a></li>
-                                        <li><a href="index-4.html">Home Page 03</a></li>
-                                        <li><a href="index-5.html">Home Page 04</a></li>
-                                    </ul>
-                                </li>
-                                <li class="dropdown">
-                                    <a href="#">About</a>
-                                    <ul>
-                                        <li><a href="about.html">About Us</a></li>
-                                        <li><a href="history.html">Our History</a></li>
-                                        <li><a href="team.html">Team</a></li>
-                                        <li class="dropdown">
-                                            <a href="#">Projects</a>
-                                            <ul>
-                                                <li><a href="project-1.html">Projects 2 column</a></li>
-                                                <li><a href="project-2.html">Projects 3 column</a></li>
-                                                <li><a href="project-3.html">Projects Masonry</a></li>
-                                                <li><a href="project-4.html">Projects Maso Fullwidth</a></li>
-                                                <li><a href="project-details.html">Projects Details</a></li>
+                        </div>
                                             </ul>
-                                        </li>
-                                        <li><a href="pricing.html">Pricing Table</a></li>
-                                        <li><a href="faq.html">Faq’s</a></li>
-                                        <li><a href="404.html">404</a></li>
-                                        <li><a href="coming-soon.html">Coming Soon</a></li>
-                                    </ul>
-                                </li>
-                                <li class="dropdown">
-                                    <a href="#">Services</a>
-                                    <ul>
-                                        <li><a href="services.html">View all Services</a></li>
-                                        <li><a href="service-single-1-fresh-produce.html">Fresh Produce</a></li>
-                                        <li><a href="service-single-2-dairy-products.html">Dairy Products</a></li>
-                                        <li><a href="service-single-3-livestock.html">Livestock</a></li>
-                                        <li><a href="service-single-4-poultry-eggs.html">Poultry & Eggs</a></li>
-                                        <li><a href="service-single-5-grains-cereals.html">Grains & Cereals</a></li>
-                                        <li><a href="service-single-6-herbs-spices.html">Herbs & Spices</a></li>
-                                        <li><a href="service-single-7-natural-carrots.html">Natural Carrots</a></li>
-                                    </ul>
-                                </li>
-                                <li class="dropdown">
-                                    <a href="#">Blog</a>
-                                    <ul>
-                                        <li><a href="blog-1.html">Blog Style 01</a></li>
-                                        <li><a href="blog-2.html">Blog Style 02</a></li>
-                                        <li><a href="blog-3.html">Blog Style 03</a></li>
-                                        <li><a href="blog-4.html">Blog Style 04</a></li>
-                                        <li><a href="blog-single.html">Single Post</a></li>
-                                    </ul>
-                                </li>
-                                <li class="dropdown">
-                                    <a href="#">Shop</a>
-                                    <ul>
-                                        <li><a href="shop.html">Products</a></li>
-                                        <li><a href="shop-details.html">Product Details</a></li>
-                                        <li><a href="cart.html">Shopping Cart</a></li>
-                                        <li><a href="checkout.html">Checkout</a></li>
-                                        <li><a href="account.html">Account</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="contact.html">Contact</a></li>
-                            </ul>
-                        </div>
 
-                        <div class="header-btn-style1 header-sticky-btn-one">
-                            <a class="btn-one" href="contact.html">
-                                <i class="icon-arrow"></i>
-                                <span class="txt">Book a Tour</span>
+                                        </div>
+
+                                
+                                    </div>
+                                </div>
+                            </div>
+                        </nav>
+                        <!-- End Main Menu -->
+
+                    </div>
+
+                    <div class="main-header-style1__content-bottom-right">
+
+
+                        <div class="header-address-style1">
+                            <a class="btn-one" href="/dashboard">
+                          
+                                <span class="txt">Dashboard</span>
                             </a>
                         </div>
+
                     </div>
                 </div>
+
             </div>
-        </nav>
-        <!--End Main Menu Style1-->
-    </div>
-
-    <div class="main-header-style1__content-bottom-right">
-      
-        <div class="header-btn-style1">
-            <a class="btn-one" href="/admin">
-                <i class="icon-arrow"></i>
-                <span class="txt">Admin</span>
-            </a>
-        </div>
-
-        <div class="header-address-style1">
-           <a class="btn-one" href="/dashboard">
-                <i class="icon-arrow"></i>
-                <span class="txt">Dashboard</span>
-            </a>
-        </div>
         </div>
     </div>
-</div>
-                    </div>
-                </div>
-            </div>
-
-        </header>
-
-
+</header>
 
         <!-- Main Slider Style1 -->
       {% load static %}
@@ -422,222 +353,7 @@
        {% load static %}
 
 <!--Start footer Style1 -->
-<footer class="footer-style1">
 
-    <!--Start Footer Main-->
-    <div class="footer-main">
-        <div class="container">
-            <div class="row">
-
-                <!--Start Single Footer Widget-->
-                <div class="col-xl-3 col-lg-6 col-md-6 single-widget">
-                    <div class="single-footer-widget">
-                        <div class="single-footer-widget-about">
-                            <div class="footer-logo-style1">
-                                <a href="index.html">
-                                    <img src="{% static 'landing/assets/images/resources/footer-1-logo-1.png' %}" alt="Irvine's Zimbabwe Logo">
-                                </a>
-                            </div>
-                            <div class="single-footer-widget-about-text">
-                                <p>
-                                    Irvine’s Zimbabwe is a leading integrated poultry and agribusiness,
-                                    committed to producing high-quality, affordable protein while supporting
-                                    sustainable farming and local communities across Zimbabwe.
-                                </p>
-                            </div>
-                            <div class="single-footer-widget-about-certification">
-                                <div class="footer-widget-about-certification-logo">
-                                    <a href="index.html">
-                                        <img src="{% static 'landing/assets/images/footer/footer-v1-certification-logo.png' %}" alt="Certification Logo">
-                                    </a>
-                                </div>
-                                <div class="footer-widget-about-certification-title">
-                                    <h4>Quality, Biosecurity & Sustainability Focused.</h4>
-                                    <p>Serving Zimbabwe Since 1957</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--End Single Footer Widget-->
-
-                <!--Start Single Footer Widget-->
-                <div class="col-xl-3 col-lg-6 col-md-6 single-widget">
-                    <div class="single-footer-widget">
-                        <div class="title">
-                            <h3>Our Products</h3>
-                            <div class="border-dot"></div>
-                        </div>
-                        <div class="footer-widget-useful-links">
-                            <ul>
-                                <li>
-                                    <a href="service-single-1-fresh-produce.html">
-                                        <i class="icon-corn"></i>
-                                        Poultry Products
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="service-single-2-dairy-products.html">
-                                        <i class="icon-corn"></i>
-                                        Day-Old Chicks
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="service-single-3-livestock.html">
-                                        <i class="icon-corn"></i>
-                                        Animal Feeds
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="service-single-4-poultry-eggs.html">
-                                        <i class="icon-corn"></i>
-                                        Table Eggs
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="service-single-5-grains-cereals.html">
-                                        <i class="icon-corn"></i>
-                                        Grain & Feed Milling
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="service-single-4-poultry-eggs.html">
-                                        <i class="icon-corn"></i>
-                                        Contract Growing
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <!--End Single Footer Widget-->
-
-                <!--Start Single Footer Widget-->
-                <div class="col-xl-3 col-lg-6 col-md-6 single-widget">
-                    <div class="single-footer-widget">
-                        <div class="title">
-                            <h3>Digital Platforms</h3>
-                            <div class="border-dot"></div>
-                        </div>
-                        <div class="footer-widget-mobile-app">
-                            <div class="footer-widget-mobile-app-text">
-                                <p>
-                                    Access farm services, product information, and updates from Irvine’s Zimbabwe
-                                    through our digital platforms.
-                                </p>
-                            </div>
-                            <div class="footer-widget-mobile-app-bottom">
-                                <p>Trusted by farmers nationwide.</p>
-                                <ul>
-                                    <li>
-                                        <div class="icon">
-                                            <img src="{% static 'landing/assets/images/icon/icon-app-store.png' %}" alt="App Store">
-                                        </div>
-                                        <div class="text">
-                                            <h4><a href="contact.html">App Store</a></h4>
-                                            <p>iOS</p>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="icon">
-                                            <img src="{% static 'landing/assets/images/icon/icon-play-store.png' %}" alt="Play Store">
-                                        </div>
-                                        <div class="text">
-                                            <h4><a href="contact.html">Play Store</a></h4>
-                                            <p>Android</p>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--End Single Footer Widget-->
-
-                <!--Start Single Footer Widget-->
-                <div class="col-xl-3 col-lg-6 col-md-6 single-widget">
-                    <div class="single-footer-widget">
-                        <div class="title">
-                            <h3>Latest News</h3>
-                            <div class="border-dot"></div>
-                        </div>
-                        <div class="footer-widget-blog-post">
-                            <ul class="footer-widget-blog-post-list">
-                                <li class="footer-widget-blog-post-single">
-                                    <div class="footer-widget-blog-post-img">
-                                        <img src="{% static 'landing/assets/images/footer/footer-v1-blog-post-1.jpg' %}" alt="News">
-                                    </div>
-                                    <div class="footer-widget-blog-post-content">
-                                        <div class="date">
-                                            <i class="fa fa-solid fa-calendar-day"></i>
-                                            <p>15 Jan - 2026</p>
-                                        </div>
-                                        <div class="title">
-                                            <h4>
-                                                <a href="blog-single.html">
-                                                    Strengthening Poultry Value Chains in Zimbabwe
-                                                </a>
-                                            </h4>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="footer-widget-blog-post-single">
-                                    <div class="footer-widget-blog-post-img">
-                                        <img src="{% static 'landing/assets/images/footer/footer-v1-blog-post-2.jpg' %}" alt="News">
-                                    </div>
-                                    <div class="footer-widget-blog-post-content">
-                                        <div class="date">
-                                            <i class="fa fa-solid fa-calendar-day"></i>
-                                            <p>03 Dec - 2025</p>
-                                        </div>
-                                        <div class="title">
-                                            <h4>
-                                                <a href="blog-single.html">
-                                                    Supporting Local Farmers Through Contract Growing
-                                                </a>
-                                            </h4>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <!--End Single Footer Widget-->
-
-            </div>
-        </div>
-    </div>
-    <!--End Footer Main-->
-
-    <!--Start Footer Bottom-->
-    <div class="footer-bottom">
-        <div class="container">
-            <div class="footer-bottom-inner">
-                <div class="copyright-text">
-                    <p>
-                        © 2026 <a href="index.html">Irvine’s Zimbabwe</a>. All Rights Reserved.
-                    </p>
-                </div>
-                <div class="footer-menu">
-                    <ul class="clearfix">
-                        <li>
-                            <a href="about.html">Privacy Policy</a>
-                        </li>
-                        <li>
-                            <a href="about.html">Terms & Conditions</a>
-                        </li>
-                        <li>
-                            <a href="about.html">Sustainability & Ethics</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--End Footer Bottom-->
-
-</footer>
 <!--End footer Style1-->
         <!--End footer Style1-->
 
