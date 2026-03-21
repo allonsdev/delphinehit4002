@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'app',
     'import_export',
     'admin_tools_stats',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [
@@ -145,3 +146,8 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'your-email@gmail.com'
 EMAIL_HOST_PASSWORD = 'your-app-password'
+
+
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/dashboard/'
+LOGOUT_REDIRECT_URL = '/login/'
