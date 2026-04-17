@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Farms — Smart Farm{% endblock %}
+{% block page_title %}Farms{% endblock %}
+{% block page_subtitle %}Active farm locations and details{% endblock %}
+
+{% block content %}
+
+<!-- Stat Cards -->
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;">
+  <div class="sf-stat-card">
+    <div>
+      <div class="sf-stat-label">Total Farms</div>
+      <div class="sf-stat-val">{{ total_farms }}</div>
+      <div class="sf-stat-sub">Registered locations</div>
+    </div>
+    <div class="sf-stat-icon" style="background:#dcfce7;color:#16a34a;"><i class="fa-solid fa-tractor"></i></div>
+  </div>
+  <div class="sf-stat-card">
+    <div>
+      <div class="sf-stat-label">Total Area</div>
+      <div class="sf-stat-val">
+        {% with total=0 %}
+          {{ data|length }}
+        {% endwith %}
+      </div>
+      <div class="sf-stat-sub">Farm records</div>
+    </div>
+    <div class="sf-stat-icon" style="background:#dbeafe;color:#2563eb;"><i class="fa-solid fa-map"></i></div>
+  </div>
+  <div class="sf-stat-card">
+    <div>
+      <div class="sf-stat-label">Search</div>
+      <form method="get" style="margin-top:4px;">
+        <div style="display:flex;gap:8px;">
+          <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Search farms…"
+            style="flex:1;border:1px solid var(--sf-border);border-radius:7px;padding:6px 10px;font-size:13px;outline:none;">
+          <button type="submit"
+            style="background:var(--sf-green);color:#fff;border:none;border-radius:7px;padding:6px 14px;font-size:13px;cursor:pointer;">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+    <div class="sf-stat-icon" style="background:#fef3c7;color:#d97706;"><i class="fa-solid fa-magnifying-glass"></i></div>
+  </div>
+</div>
+
+<!-- Farm Cards Grid -->
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;margin-bottom:24px;">
+  {% for f in data %}
+  <div class="sf-card" style="margin-bottom:0;">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;">
+      <div>
+        <div style="font-size:16px;font-weight:700;color:var(--sf-text);">{{ f.name }}</div>
+        <div style="font-size:12px;color:var(--sf-muted);margin-top:2px;">
+          <i class="fa-solid fa-location-dot" style="color:#dc2626;margin-right:4px;"></i>{{ f.location_name|default:"No location" }}
+        </div>
+      </div>
+      <span class="sf-badge sf-badge-green"><i class="fa-solid fa-circle" style="font-size:7px;"></i> Active</span>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+      <div style="background:#f8fafc;border-radius:8px;padding:10px;">
+        <div style="font-size:11px;color:var(--sf-muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Owner</div>
+        <div style="font-size:13px;font-weight:600;color:var(--sf-text);margin-top:3px;">{{ f.owner|default:"—" }}</div>
+      </div>
+      <div style="background:#f8fafc;border-radius:8px;padding:10px;">
+        <div style="font-size:11px;color:var(--sf-muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Size</div>
+        <div style="font-size:13px;font-weight:600;color:var(--sf-text);margin-top:3px;">{{ f.size_hectares|default:"—" }} ha</div>
+      </div>
+      <div style="background:#f8fafc;border-radius:8px;padding:10px;">
+        <div style="font-size:11px;color:var(--sf-muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Latitude</div>
+        <div style="font-size:13px;font-weight:600;color:var(--sf-text);margin-top:3px;">{{ f.latitude|default:"—" }}</div>
+      </div>
+      <div style="background:#f8fafc;border-radius:8px;padding:10px;">
+        <div style="font-size:11px;color:var(--sf-muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Longitude</div>
+        <div style="font-size:13px;font-weight:600;color:var(--sf-text);margin-top:3px;">{{ f.longitude|default:"—" }}</div>
+      </div>
+    </div>
+
+    {% if f.contact_phone or f.contact_email %}
+    <div style="border-top:1px solid var(--sf-border);padding-top:10px;font-size:12px;color:var(--sf-muted);display:flex;gap:12px;flex-wrap:wrap;">
+      {% if f.contact_phone %}
+      <span><i class="fa-solid fa-phone" style="margin-right:4px;"></i>{{ f.contact_phone }}</span>
+      {% endif %}
+      {% if f.contact_email %}
+      <span><i class="fa-solid fa-envelope" style="margin-right:4px;"></i>{{ f.contact_email }}</span>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+  {% empty %}
+  <div class="sf-card" style="text-align:center;color:var(--sf-muted);padding:40px;">
+    <i class="fa-solid fa-tractor" style="font-size:40px;opacity:.3;margin-bottom:12px;display:block;"></i>
+    No farms found{% if request.GET.q %} for "{{ request.GET.q }}"{% endif %}.
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Table -->
+<div class="sf-card">
+  <div class="sf-card-title">All Farms</div>
+  <div class="sf-card-sub">Full farm registry</div>
+  <div class="table-responsive">
+    <table id="farmTable" class="table sf-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Owner</th>
+          <th>Location</th>
+          <th>Size (ha)</th>
+          <th>Latitude</th>
+          <th>Longitude</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for f in data %}
+        <tr>
+          <td><span style="font-weight:600;">{{ f.name }}</span></td>
+          <td>{{ f.owner|default:"—" }}</td>
+          <td>{{ f.location_name|default:"—" }}</td>
+          <td>{{ f.size_hectares|default:"—" }}</td>
+          <td>{{ f.latitude|default:"—" }}</td>
+          <td>{{ f.longitude|default:"—" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+$(document).ready(function(){
+  $('#farmTable').DataTable({
+    pageLength: 10,
+    dom: 'Bfrtip',
+    buttons: ['copy','csv','excel','pdf','print']
+  });
+});
+</script>
+{% endblock %}

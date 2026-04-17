@@ -1,285 +1,611 @@
+{% extends "base.html" %}
 {% load static %}
-{% load humanize %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Smart Farm Enterprise Dashboard</title>
+{% block title %}Animal — {{ animal.tag_number }}{% endblock %}
+{% block page_title %}Animal Profile{% endblock %}
+{% block page_subtitle %}{{ animal.tag_number }} · {{ animal.breed }} · {{ animal.species }}{% endblock %}
 
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+{% block extra_head %}
+{# Leaflet CSS loaded in head so map renders correctly #}
+{% if last_location %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+{% endif %}
 
-    <!-- DataTables -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
-
-    <!-- FullCalendar -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.css">
-
-    <!-- Material Icons -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <style>
-        body { font-family: 'Segoe UI', sans-serif; background:#f4f6f9; margin:0; }
-        .sidebar { width:230px; height:100vh; background:#1b5e20; color:white; position:fixed; padding:20px; }
-        .sidebar h4 { margin-bottom:20px; }
-        .sidebar a { color:white; display:block; padding:10px; border-radius:6px; text-decoration:none; margin-bottom:6px; transition:0.2s; }
-        .sidebar a:hover { background:rgba(255,255,255,0.15); }
-        .header { margin-left:230px; background:white; padding:12px 25px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 10px rgba(0,0,0,0.08); position:sticky; top:0; z-index:100; }
-        .header-icons i { font-size:24px; margin-left:15px; cursor:pointer; }
-        .content { margin-left:230px; padding:25px; }
-        .card-counter { border:none; border-radius:12px; color:white; padding:20px; box-shadow:0 6px 15px rgba(0,0,0,0.1); }
-        .card-counter i { font-size:35px; }
-        .card-animals{background:#4CAF50;} .card-alerts{background:#F44336;} .card-farms{background:#2196F3;}
-        .card-revenue{background:#009688;} .card-milk{background:#FF9800;} .card-devices{background:#9C27B0;}
-        .chart-box { background:white; padding:20px; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.08); margin-bottom:25px; }
-        canvas { max-height:300px !important; }
-        #calendar { max-width:900px; margin:auto; }
-        table.dataTable { width:100% !important; }
-        .badge-active{background:#4CAF50;} .badge-sold{background:#2196F3;} .badge-deceased{background:#F44336;} .badge-quarantine{background:#FFC107;color:black;}
-        .badge-overdue{background:#F44336;} .badge-due{background:#4CAF50;} .badge-about{background:#FF9800;}
-
-        /* Fix pagination container */
-.dataTables_wrapper .dataTables_paginate {
-    margin-top: 15px !important;
+<style>
+/* ── HERO ─────────────────────────────────────────── */
+.profile-hero {
+  background: linear-gradient(135deg,#1b5e20 0%,#2e7d32 60%,#43a047 100%);
+  border-radius: 14px; padding: 28px 32px; color: #fff;
+  margin-bottom: 24px; display: flex; align-items: center; gap: 24px;
 }
-
-/* Force proper spacing between items */
-.dataTables_wrapper .dataTables_paginate .paginate_button {
-    margin: 0 4px !important;
-    padding: 6px 12px !important;
-    border-radius: 6px;
-    border: none !important;
-    background: #f1f3f5 !important;
-    color: #1b5e20 !important;
+.profile-avatar {
+  width: 84px; height: 84px; border-radius: 50%;
+  background: rgba(255,255,255,0.15); display: flex;
+  align-items: center; justify-content: center;
+  font-size: 38px; border: 3px solid rgba(255,255,255,0.3); flex-shrink: 0;
 }
-
-/* Hover */
-.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-    background: #4CAF50 !important;
-    color: #fff !important;
+.profile-hero h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+.profile-hero p  { font-size: 13px; opacity: .85; margin: 0; }
+.hero-meta       { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.hero-badge {
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 20px; padding: 4px 12px;
+  font-size: 12px; font-weight: 600;
 }
-
-/* Active page */
-.dataTables_wrapper .dataTables_paginate .current {
-    background: #1b5e20 !important;
-    color: #fff !important;
-    font-weight: bold;
+.qr-box {
+  margin-left: auto; background: rgba(255,255,255,0.95);
+  border-radius: 12px; padding: 10px; text-align: center; flex-shrink: 0;
 }
+.qr-box img { width: 90px; height: 90px; display: block; }
+.qr-box p   { font-size: 10px; color: #555; margin-top: 4px; }
 
-/* Previous & Next spacing fix */
-.dataTables_wrapper .dataTables_paginate .paginate_button.previous,
-.dataTables_wrapper .dataTables_paginate .paginate_button.next {
-    font-weight: 500;
+/* ── KPI CARDS ────────────────────────────────────── */
+.kpi-grid {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  gap: 14px; margin-bottom: 24px;
 }
-    </style>
-</head>
+.kpi-card {
+  background: #fff; border-radius: 12px; padding: 18px 20px;
+  border: 1px solid var(--sf-border);
+  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  display: flex; align-items: center; gap: 14px;
+}
+.kpi-icon {
+  width: 46px; height: 46px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.kpi-label { font-size: 11px; font-weight: 700; color: var(--sf-muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 3px; }
+.kpi-val   { font-size: 22px; font-weight: 700; }
 
-<body>
+/* ── TABS ─────────────────────────────────────────── */
+.sf-tabs {
+  display: flex; gap: 4px; background: #f0f2f5;
+  border-radius: 10px; padding: 4px; margin-bottom: 22px;
+}
+.sf-tab {
+  flex: 1; text-align: center; padding: 9px 0;
+  border-radius: 8px; font-size: 13px; font-weight: 600;
+  cursor: pointer; color: var(--sf-muted); border: none;
+  background: transparent; transition: all .15s;
+}
+.sf-tab.active {
+  background: #fff; color: var(--sf-green);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+.sf-tab-panel          { display: none; }
+.sf-tab-panel.active   { display: block; }
 
-<!-- Sidebar -->
-<div class="sidebar">
-    <h4><span class="material-icons">agriculture</span> Smart Farm</h4>
-    <a href="{% url 'dashboard' %}"><span class="material-icons">dashboard</span> Dashboard</a>
-    <a href="{% url 'animal_list' %}"><span class="material-icons">pets</span> Animals</a>
-    <a href="{% url 'vaccination_list' %}"><span class="material-icons">vaccines</span> Vaccinations</a>
-    <a href="{% url 'disease_list' %}"><span class="material-icons">health_and_safety</span> Health</a>
-    <a href="{% url 'breeding_list' %}"><span class="material-icons">biotech</span> Breeding</a>
-    <a href="{% url 'production_list' %}"><span class="material-icons">monitor_heart</span> Production</a>
-    <a href="{% url 'feeding_list' %}"><span class="material-icons">feed</span> Feeding</a>
-    <a href="{% url 'device_list' %}"><span class="material-icons">devices</span> Devices</a>
-    <a href="{% url 'location_log_list' %}"><span class="material-icons">location_on</span> GPS Tracking</a>
-    <a href="{% url 'sale_list' %}"><span class="material-icons">payments</span> Sales</a>
-    <hr>
-    <a href="{% url 'logout' %}"><span class="material-icons">logout</span> Logout</a>
+/* ── CONTENT GRIDS ────────────────────────────────── */
+.info-grid  { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.chart-row  { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.chart-wrap {
+  background: #fff; border-radius: 12px; padding: 20px;
+  border: 1px solid var(--sf-border);
+  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+}
+.chart-wrap h4 {
+  font-size: 12px; font-weight: 700; color: var(--sf-muted);
+  margin-bottom: 14px; text-transform: uppercase; letter-spacing: .5px;
+  display: flex; align-items: center; gap: 6px;
+}
+.info-section {
+  background: #fff; border-radius: 12px; padding: 20px;
+  border: 1px solid var(--sf-border);
+  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+}
+.info-section h4 {
+  font-size: 12px; font-weight: 700; color: var(--sf-muted);
+  text-transform: uppercase; letter-spacing: .5px;
+  margin-bottom: 14px; display: flex; align-items: center; gap: 6px;
+}
+.info-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 0; border-bottom: 1px solid #f3f4f6; font-size: 13.5px;
+}
+.info-row:last-child { border: none; }
+.info-label { color: var(--sf-muted); font-weight: 500; }
+.info-val   { font-weight: 600; color: var(--sf-text); }
+
+/* ── MAP ──────────────────────────────────────────── */
+#animalMap {
+  height: 360px; border-radius: 10px;
+  margin-top: 16px; border: 1px solid var(--sf-border);
+  overflow: hidden;
+}
+.empty-state { text-align: center; padding: 40px; color: var(--sf-muted); }
+.empty-state i { font-size: 36px; margin-bottom: 10px; opacity: .4; display: block; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- BACK -->
+<div style="margin-bottom:16px;">
+  <a href="{% url 'animal_list' %}" style="font-size:13px;color:var(--sf-muted);text-decoration:none;display:inline-flex;align-items:center;gap:6px;">
+    <i class="fa-solid fa-arrow-left"></i> Back to Animals
+  </a>
 </div>
 
-<!-- Header -->
-<div class="header">
-    <h5>Farm Analytics Dashboard</h5>
-    <div class="header-icons">
-        <span>{{ request.user.username }}</span>
-        <i class="material-icons">notifications</i>
-        <i class="material-icons">account_circle</i>
+<!-- HERO -->
+<div class="profile-hero">
+  <div class="profile-avatar">🐄</div>
+  <div>
+    <h1>{{ animal.tag_number }}</h1>
+    <p>{{ animal.breed }}{% if animal.strain %} · {{ animal.strain }}{% endif %} · {{ animal.species }}</p>
+    <div class="hero-meta">
+      <span class="hero-badge"><i class="fa-solid fa-circle-dot"></i> {{ animal.get_status_display }}</span>
+      <span class="hero-badge"><i class="fa-solid fa-venus-mars"></i> {{ animal.sex }}</span>
+      <span class="hero-badge"><i class="fa-solid fa-bullseye"></i> {{ animal.get_purpose_display }}</span>
+      <span class="hero-badge"><i class="fa-solid fa-tractor"></i> {{ animal.farm }}</span>
+      {% if animal.current_paddock %}
+      <span class="hero-badge"><i class="fa-solid fa-map-pin"></i> {{ animal.current_paddock }}</span>
+      {% endif %}
     </div>
+  </div>
+  {% if animal.qr_image %}
+  <div class="qr-box">
+    <img src="{{ animal.qr_image.url }}" alt="QR Code">
+    <p>Scan to view</p>
+  </div>
+  {% endif %}
 </div>
 
-<div class="content">
-
-<!-- Counters -->
-<div class="row g-3 mb-4">
-    <div class="col-md-2"><div class="card-counter card-animals d-flex justify-content-between align-items-center"><div><h6>Animals</h6><h3>{{total_animals|intcomma}}</h3></div><i class="material-icons">pets</i></div></div>
-    <div class="col-md-2"><div class="card-counter card-farms d-flex justify-content-between align-items-center"><div><h6>Farms</h6><h3>{{total_farms}}</h3></div><i class="material-icons">location_city</i></div></div>
-    <div class="col-md-2"><div class="card-counter card-alerts d-flex justify-content-between align-items-center"><div><h6>Alerts</h6><h3>{{total_alerts}}</h3></div><i class="material-icons">warning</i></div></div>
-    <div class="col-md-2"><div class="card-counter card-devices d-flex justify-content-between align-items-center"><div><h6>Devices</h6><h3>{{total_devices}}</h3></div><i class="material-icons">memory</i></div></div>
-    <div class="col-md-2"><div class="card-counter card-milk d-flex justify-content-between align-items-center"><div><h6>Milk</h6><h3>{{milk_total|floatformat:0}} L</h3></div><i class="material-icons">water_drop</i></div></div>
-    <div class="col-md-2"><div class="card-counter card-revenue d-flex justify-content-between align-items-center"><div><h6>Revenue</h6><h3>${{revenue|floatformat:0}}</h3></div><i class="material-icons">payments</i></div></div>
+<!-- KPI CARDS -->
+<div class="kpi-grid">
+  <div class="kpi-card">
+    <div class="kpi-icon" style="background:#dcfce7;"><i class="fa-solid fa-weight-scale" style="color:#15803d;"></i></div>
+    <div>
+      <div class="kpi-label">Current Weight</div>
+      <div class="kpi-val">{{ animal.current_weight_kg|default:"—" }}<small style="font-size:14px;font-weight:500;"> kg</small></div>
+    </div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-icon" style="background:#dbeafe;"><i class="fa-solid fa-droplet" style="color:#1d4ed8;"></i></div>
+    <div>
+      <div class="kpi-label">Milk Produced</div>
+      <div class="kpi-val">{{ milk_total|floatformat:1 }}<small style="font-size:14px;font-weight:500;"> L</small></div>
+    </div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-icon" style="background:#fee2e2;"><i class="fa-solid fa-virus" style="color:#dc2626;"></i></div>
+    <div>
+      <div class="kpi-label">Active Diseases</div>
+      <div class="kpi-val">{{ active_diseases }}</div>
+    </div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-icon" style="background:#fef3c7;"><i class="fa-solid fa-sack-dollar" style="color:#d97706;"></i></div>
+    <div>
+      <div class="kpi-label">Total Expenses</div>
+      <div class="kpi-val" style="font-size:18px;">R {{ total_expenses|floatformat:2 }}</div>
+    </div>
+  </div>
 </div>
 
-<!-- Charts -->
-<div class="row g-4">
-    <div class="col-md-6"><div class="chart-box"><h5>Animals by Status</h5><canvas id="statusChart"></canvas></div></div>
-    <div class="col-md-6"><div class="chart-box"><h5>Animals by Breed</h5><canvas id="breedChart"></canvas></div></div>
-    <div class="col-md-6"><div class="chart-box"><h5>Milk Production Trend</h5><canvas id="milkChart"></canvas></div></div>
-    <div class="col-md-6"><div class="chart-box"><h5>Weight Gain Trend</h5><canvas id="weightChart"></canvas></div></div>
+<!-- TABS -->
+<div class="sf-tabs">
+  <button class="sf-tab active" onclick="showTab('overview',this)"><i class="fa-solid fa-id-card"></i> Overview</button>
+  <button class="sf-tab" onclick="showTab('health',this)"><i class="fa-solid fa-heart-pulse"></i> Health</button>
+  <button class="sf-tab" onclick="showTab('production',this)"><i class="fa-solid fa-chart-line"></i> Production</button>
+  <button class="sf-tab" onclick="showTab('breeding',this)"><i class="fa-solid fa-dna"></i> Breeding</button>
+  <button class="sf-tab" onclick="showTab('finance',this)"><i class="fa-solid fa-coins"></i> Finance</button>
+  <button class="sf-tab" onclick="showTab('location',this)" id="locationTabBtn"><i class="fa-solid fa-map-location-dot"></i> Location</button>
 </div>
 
-<!-- Scheduler -->
-<div class="chart-box mb-4">
-    <h5>Farm Scheduler</h5>
-    <div id="calendar"></div>
+<!-- ════ TAB: OVERVIEW ════════════════════════════════ -->
+<div id="tab-overview" class="sf-tab-panel active">
+  <div class="info-grid">
+    <div class="info-section">
+      <h4><i class="fa-solid fa-tag"></i> Identity</h4>
+      <div class="info-row"><span class="info-label">Tag Number</span><span class="info-val">{{ animal.tag_number }}</span></div>
+      <div class="info-row"><span class="info-label">Electronic ID</span><span class="info-val">{{ animal.electronic_id|default:"—" }}</span></div>
+      <div class="info-row"><span class="info-label">Registration</span><span class="info-val">{{ animal.registration_number|default:"—" }}</span></div>
+      <div class="info-row"><span class="info-label">Insurance Policy</span><span class="info-val">{{ animal.insurance_policy_number|default:"—" }}</span></div>
+    </div>
+    <div class="info-section">
+      <h4><i class="fa-solid fa-paw"></i> Classification</h4>
+      <div class="info-row"><span class="info-label">Species</span><span class="info-val">{{ animal.species }}</span></div>
+      <div class="info-row"><span class="info-label">Breed</span><span class="info-val">{{ animal.breed }}</span></div>
+      <div class="info-row"><span class="info-label">Color</span><span class="info-val">{{ animal.color|default:"—" }}</span></div>
+      <div class="info-row"><span class="info-label">Horn Status</span><span class="info-val">{{ animal.horn_status|default:"—" }}</span></div>
+      <div class="info-row"><span class="info-label">Purpose</span><span class="info-val">{{ animal.get_purpose_display }}</span></div>
+    </div>
+    <div class="info-section">
+      <h4><i class="fa-solid fa-calendar-days"></i> Lifecycle</h4>
+      <div class="info-row"><span class="info-label">Date of Birth</span><span class="info-val">{{ animal.date_of_birth }}</span></div>
+      <div class="info-row"><span class="info-label">Birth Weight</span><span class="info-val">{{ animal.birth_weight_kg|default:"—" }} kg</span></div>
+      <div class="info-row"><span class="info-label">Birth Type</span><span class="info-val">{{ animal.birth_type|default:"—" }}</span></div>
+      <div class="info-row"><span class="info-label">Weaning Date</span><span class="info-val">{{ animal.weaning_date|default:"—" }}</span></div>
+      <div class="info-row"><span class="info-label">Weaning Weight</span><span class="info-val">{{ animal.weaning_weight_kg|default:"—" }} kg</span></div>
+    </div>
+    <div class="info-section">
+      <h4><i class="fa-solid fa-dna"></i> Lineage</h4>
+      <div class="info-row"><span class="info-label">Sire (Father)</span><span class="info-val">{{ animal.sire_tag|default:"—" }}</span></div>
+      <div class="info-row"><span class="info-label">Dam (Mother)</span><span class="info-val">{{ animal.dam_tag|default:"—" }}</span></div>
+      <div class="info-row"><span class="info-label">Genetic Merit Index</span><span class="info-val">{{ animal.genetic_merit_index|default:"—" }}</span></div>
+    </div>
+    <div class="info-section">
+      <h4><i class="fa-solid fa-ruler"></i> Physical Metrics</h4>
+      <div class="info-row"><span class="info-label">Current Weight</span><span class="info-val">{{ animal.current_weight_kg|default:"—" }} kg</span></div>
+      <div class="info-row"><span class="info-label">Height</span><span class="info-val">{{ animal.height_cm|default:"—" }} cm</span></div>
+      <div class="info-row"><span class="info-label">Body Length</span><span class="info-val">{{ animal.body_length_cm|default:"—" }} cm</span></div>
+      <div class="info-row"><span class="info-label">Temperament Score</span><span class="info-val">{{ animal.temperament_score|default:"—" }}</span></div>
+      <div class="info-row"><span class="info-label">Lameness Score</span><span class="info-val">{{ animal.lameness_score|default:"—" }}</span></div>
+    </div>
+    <div class="info-section">
+      <h4><i class="fa-solid fa-truck-ramp-box"></i> Acquisition</h4>
+      <div class="info-row"><span class="info-label">Acquisition Date</span><span class="info-val">{{ animal.acquisition_date|default:"—" }}</span></div>
+      <div class="info-row"><span class="info-label">Method</span><span class="info-val">{{ animal.acquisition_method|default:"—" }}</span></div>
+      <div class="info-row"><span class="info-label">Purchase Price</span>
+        <span class="info-val">{% if animal.purchase_price %}R {{ animal.purchase_price|floatformat:2 }}{% else %}—{% endif %}</span>
+      </div>
+    </div>
+  </div>
 </div>
 
-<!-- Example DataTable (Animals) -->
-<div class="chart-box mb-4">
-    <h5>Animals</h5>
-    <table id="animalsTable" class="table table-striped">
-        <thead>
-            <tr>
-                <th>Tag</th><th>Breed</th><th>Sex</th><th>Status</th><th>Weight</th><th>Paddock</th>
-            </tr>
-        </thead>
+<!-- ════ TAB: HEALTH ═════════════════════════════════ -->
+<div id="tab-health" class="sf-tab-panel">
+  <div class="chart-row">
+    <div class="chart-wrap">
+      <h4><i class="fa-solid fa-weight-scale"></i> Weight History</h4>
+      {% if weight_data != "[]" %}
+        <canvas id="weightChart" height="130"></canvas>
+      {% else %}
+        <div class="empty-state"><i class="fa-solid fa-chart-line"></i><p>No weight data recorded</p></div>
+      {% endif %}
+    </div>
+    <div class="chart-wrap">
+      <h4><i class="fa-solid fa-syringe"></i> Vaccinations ({{ vaccinations|length }})</h4>
+      <div class="table-responsive">
+        <table class="table sf-table">
+          <thead><tr><th>Vaccine</th><th>Date</th><th>Next Due</th></tr></thead>
+          <tbody>
+            {% for v in vaccinations %}
+            <tr><td>{{ v.vaccine_name }}</td><td>{{ v.date_administered }}</td><td>{{ v.next_due_date|default:"—" }}</td></tr>
+            {% empty %}<tr><td colspan="3" class="text-center" style="color:var(--sf-muted);">No records</td></tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="sf-card">
+    <div class="sf-card-title"><i class="fa-solid fa-virus"></i> Disease Records</div>
+    <div class="table-responsive">
+      <table class="table sf-table">
+        <thead><tr><th>Disease</th><th>Severity</th><th>Onset</th><th>Recovery</th><th>Chronic</th></tr></thead>
         <tbody>
-            {% for a in animals %}
-            <tr>
-                <td>{{a.tag_number}}</td>
-                <td>{{a.breed}}</td>
-                <td>{{a.sex}}</td>
-                <td>
-                    {% if a.status == "ACTIVE" %}<span class="badge badge-active">Active</span>
-                    {% elif a.status == "SOLD" %}<span class="badge badge-sold">Sold</span>
-                    {% elif a.status == "DECEASED" %}<span class="badge badge-deceased">Deceased</span>
-                    {% else %}<span class="badge badge-quarantine">Quarantine</span>
-                    {% endif %}
-                </td>
-                <td>{{a.current_weight_kg}}</td>
-                <td>{{a.current_paddock}}</td>
-            </tr>
-            {% endfor %}
+          {% for d in diseases %}
+          <tr>
+            <td>{{ d.disease_name }}</td>
+            <td>
+              <span class="sf-badge {% if d.severity == 'HIGH' %}sf-badge-red{% elif d.severity == 'MEDIUM' %}sf-badge-amber{% else %}sf-badge-green{% endif %}">
+                {{ d.severity }}
+              </span>
+            </td>
+            <td>{{ d.onset_date }}</td>
+            <td>{{ d.recovery_date|default:"Active" }}</td>
+            <td>
+              {% if d.chronic %}<span class="sf-badge sf-badge-red">Yes</span>
+              {% else %}<span class="sf-badge sf-badge-green">No</span>{% endif %}
+            </td>
+          </tr>
+          {% empty %}<tr><td colspan="5" class="text-center" style="color:var(--sf-muted);">No disease records</td></tr>{% endfor %}
         </tbody>
-    </table>
-</div>
-
-<!-- Example DataTable (Alerts) -->
-<div class="chart-box mb-4">
-    <h5>Alerts</h5>
-    <table id="alertsTable" class="table table-striped">
-        <thead>
-            <tr><th>Animal</th><th>Type</th><th>Status</th><th>Due</th></tr>
-        </thead>
+      </table>
+    </div>
+  </div>
+  <div class="sf-card">
+    <div class="sf-card-title"><i class="fa-solid fa-pills"></i> Treatments</div>
+    <div class="table-responsive">
+      <table class="table sf-table">
+        <thead><tr><th>Diagnosis</th><th>Medication</th><th>Dosage</th><th>Date</th></tr></thead>
         <tbody>
-            {% for a in alerts %}
-            <tr>
-                <td>{{a.animal.tag_number}}</td>
-                <td>{{a.alert_type}}</td>
-                <td>
-                    {% if a.status == "OVERDUE" %}<span class="badge badge-overdue">Overdue</span>
-                    {% elif a.status == "ABOUT_TO_DUE" %}<span class="badge badge-about">Due Soon</span>
-                    {% else %}<span class="badge badge-due">Due</span>{% endif %}
-                </td>
-                <td>{{a.due_date}}</td>
-            </tr>
-            {% endfor %}
+          {% for t in treatments %}
+          <tr><td>{{ t.diagnosis }}</td><td>{{ t.medication }}</td><td>{{ t.dosage }}</td><td>{{ t.treatment_date }}</td></tr>
+          {% empty %}<tr><td colspan="4" class="text-center" style="color:var(--sf-muted);">No treatments</td></tr>{% endfor %}
         </tbody>
-    </table>
+      </table>
+    </div>
+  </div>
 </div>
 
+<!-- ════ TAB: PRODUCTION ══════════════════════════════ -->
+<div id="tab-production" class="sf-tab-panel">
+  <div class="chart-row">
+    <div class="chart-wrap">
+      <h4><i class="fa-solid fa-droplet"></i> Milk Yield (L)</h4>
+      {% if milk_data != "[]" %}
+        <canvas id="milkChart" height="130"></canvas>
+      {% else %}
+        <div class="empty-state"><i class="fa-solid fa-droplet"></i><p>No milk data recorded</p></div>
+      {% endif %}
+    </div>
+    <div class="chart-wrap">
+      <h4><i class="fa-solid fa-wheat-awn"></i> Recent Feeding</h4>
+      <div class="table-responsive">
+        <table class="table sf-table">
+          <thead><tr><th>Feed Type</th><th>Qty (kg)</th><th>Time</th></tr></thead>
+          <tbody>
+            {% for f in animal.feedingrecord_set.all|slice:":8" %}
+            <tr><td>{{ f.feed_type }}</td><td>{{ f.quantity_kg }}</td><td>{{ f.feeding_time|date:"d M, H:i" }}</td></tr>
+            {% empty %}<tr><td colspan="3" class="text-center" style="color:var(--sf-muted);">No records</td></tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="sf-card">
+    <div class="sf-card-title"><i class="fa-solid fa-chart-bar"></i> Production Records</div>
+    <div class="table-responsive">
+      <table class="table sf-table">
+        <thead><tr><th>Date</th><th>Milk (L)</th><th>Weight Gain (kg)</th><th>Feed Consumed (kg)</th></tr></thead>
+        <tbody>
+          {% for p in production %}
+          <tr><td>{{ p.record_date }}</td><td>{{ p.milk_yield_liters|default:"—" }}</td><td>{{ p.weight_gain_kg|default:"—" }}</td><td>{{ p.feed_consumption_kg|default:"—" }}</td></tr>
+          {% empty %}<tr><td colspan="4" class="text-center" style="color:var(--sf-muted);">No production records</td></tr>{% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
-<!-- Scripts -->
-<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<!-- ════ TAB: BREEDING ═══════════════════════════════ -->
+<div id="tab-breeding" class="sf-tab-panel">
+  <div class="sf-card">
+    <div class="sf-card-title"><i class="fa-solid fa-dna"></i> Breeding Events</div>
+    <div class="table-responsive">
+      <table class="table sf-table">
+        <thead><tr><th>Sire</th><th>Method</th><th>Date</th><th>Expected Calving</th><th>Pregnant</th></tr></thead>
+        <tbody>
+          {% for b in breeding %}
+          <tr>
+            <td>{{ b.male.tag_number|default:"—" }}</td>
+            <td>{{ b.method }}</td>
+            <td>{{ b.breeding_date }}</td>
+            <td>{{ b.expected_calving_date|default:"—" }}</td>
+            <td>
+              {% if b.confirmed_pregnant %}<span class="sf-badge sf-badge-green">Yes</span>
+              {% elif b.confirmed_pregnant == False %}<span class="sf-badge sf-badge-red">No</span>
+              {% else %}<span class="sf-badge sf-badge-amber">Pending</span>{% endif %}
+            </td>
+          </tr>
+          {% empty %}<tr><td colspan="5" class="text-center" style="color:var(--sf-muted);">No breeding events</td></tr>{% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="sf-card">
+    <div class="sf-card-title"><i class="fa-solid fa-baby"></i> Calving Records</div>
+    <div class="table-responsive">
+      <table class="table sf-table">
+        <thead><tr><th>Calf Tag</th><th>Date</th><th>Birth Weight</th><th>Complications</th></tr></thead>
+        <tbody>
+          {% for c in calving %}
+          <tr><td>{{ c.calf.tag_number|default:"—" }}</td><td>{{ c.calving_date }}</td><td>{{ c.birth_weight_kg|default:"—" }} kg</td><td>{{ c.complications|default:"None" }}</td></tr>
+          {% empty %}<tr><td colspan="4" class="text-center" style="color:var(--sf-muted);">No calving records</td></tr>{% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
-<!-- 🔥 FIX: Required for buttons -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<!-- ════ TAB: FINANCE ════════════════════════════════ -->
+<div id="tab-finance" class="sf-tab-panel">
+  <div class="sf-card">
+    <div class="sf-card-title"><i class="fa-solid fa-receipt"></i> Expense Records</div>
+    <div class="table-responsive">
+      <table class="table sf-table">
+        <thead><tr><th>Category</th><th>Amount</th><th>Date</th><th>Description</th></tr></thead>
+        <tbody>
+          {% for e in expenses %}
+          <tr>
+            <td><span class="sf-badge sf-badge-amber">{{ e.category }}</span></td>
+            <td style="font-weight:600;color:#dc2626;">R {{ e.amount|floatformat:2 }}</td>
+            <td>{{ e.expense_date }}</td>
+            <td>{{ e.description|default:"—" }}</td>
+          </tr>
+          {% empty %}<tr><td colspan="4" class="text-center" style="color:var(--sf-muted);">No expense records</td></tr>{% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
-<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
+<!-- ════ TAB: LOCATION ═══════════════════════════════ -->
+<div id="tab-location" class="sf-tab-panel">
+  <div class="info-grid" style="margin-bottom:16px;">
+    <div class="info-section">
+      <h4><i class="fa-solid fa-map-pin"></i> Current Assignment</h4>
+      <div class="info-row"><span class="info-label">Farm</span><span class="info-val">{{ animal.farm }}</span></div>
+      <div class="info-row"><span class="info-label">Paddock</span><span class="info-val">{{ animal.current_paddock|default:"Unassigned" }}</span></div>
+      {% if last_location %}
+      <div class="info-row"><span class="info-label">Last GPS Fix</span><span class="info-val">{{ last_location.timestamp|date:"d M Y, H:i" }}</span></div>
+      <div class="info-row"><span class="info-label">Latitude</span><span class="info-val">{{ last_location.latitude }}</span></div>
+      <div class="info-row"><span class="info-label">Longitude</span><span class="info-val">{{ last_location.longitude }}</span></div>
+      <div class="info-row"><span class="info-label">Speed</span><span class="info-val">{{ last_location.speed|default:"0" }} km/h</span></div>
+      {% else %}
+      <div class="info-row"><span class="info-label">GPS Status</span><span class="info-val" style="color:var(--sf-muted);">No data</span></div>
+      {% endif %}
+    </div>
 
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js"></script>
+    {% if last_location %}
+    <div class="info-section">
+      <h4><i class="fa-solid fa-satellite-dish"></i> GPS Signal Info</h4>
+      <div class="info-row"><span class="info-label">Coordinates</span>
+        <span class="info-val" style="font-family:monospace;font-size:12px;">
+          {{ last_location.latitude }}, {{ last_location.longitude }}
+        </span>
+      </div>
+      <div class="info-row"><span class="info-label">Accuracy</span><span class="info-val">{{ last_location.accuracy|default:"—" }} m</span></div>
+      <div class="info-row"><span class="info-label">Altitude</span><span class="info-val">{{ last_location.altitude|default:"—" }} m</span></div>
+      <div class="info-row"><span class="info-label">Device</span><span class="info-val">{{ last_location.device|default:"—" }}</span></div>
+      <div style="margin-top:12px;">
+        <a href="https://maps.google.com/?q={{ last_location.latitude }},{{ last_location.longitude }}"
+           target="_blank"
+           style="display:inline-flex;align-items:center;gap:6px;background:var(--sf-green);color:#fff;padding:8px 16px;border-radius:7px;font-size:13px;font-weight:600;text-decoration:none;">
+          <i class="fa-solid fa-up-right-from-square"></i> Open in Google Maps
+        </a>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  {% if last_location %}
+  <div class="sf-card" style="padding:0;overflow:hidden;">
+    <div style="padding:16px 20px 0;display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <div class="sf-card-title"><i class="fa-solid fa-map-location-dot"></i> Live Position</div>
+        <div class="sf-card-sub">Last recorded GPS location for {{ animal.tag_number }}</div>
+      </div>
+      <span class="sf-badge sf-badge-green">
+        <i class="fa-solid fa-circle" style="font-size:7px;"></i> GPS Active
+      </span>
+    </div>
+    {# The map div needs a fixed height — Leaflet will fill it #}
+    <div id="animalMap"></div>
+  </div>
+  {% else %}
+  <div class="sf-card">
+    <div class="empty-state">
+      <i class="fa-solid fa-location-xmark"></i>
+      <p style="font-size:14px;font-weight:600;">No GPS Data Available</p>
+      <p style="font-size:13px;margin-top:4px;">This animal has no recorded location logs yet.</p>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+{# Leaflet JS — only when we have location data #}
+{% if last_location %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+{% endif %}
 
 <script>
-$(document).ready(function(){
+// ── TAB SWITCHER ────────────────────────────────────────
+var mapInitialised = false;
 
-    // ✅ DataTables FIXED
-    $('#animalsTable, #alertsTable').DataTable({
-        pageLength:10,
-        dom:'Bfrtip',
-        buttons:['copy','csv','excel','pdf','print'],
-        pagingType: 'full_numbers'
-    });
+function showTab(id, btn) {
+  document.querySelectorAll('.sf-tab-panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.sf-tab').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
 
-    // ✅ Charts FIXED (JSON + timing)
-    new Chart(document.getElementById('statusChart'), {
-        type:'pie',
-        data:{
-            labels: {{status_labels|safe}},
-            datasets:[{
-                data: {{status_data|safe}},
-                backgroundColor:['#4CAF50','#2196F3','#F44336','#FFC107']
-            }]
-        }
-    });
+  // Initialise map lazily when location tab is first shown
+  // (Leaflet needs the div to be visible to calculate dimensions)
+  if (id === 'location' && !mapInitialised) {
+    initMap();
+  }
+}
 
-    new Chart(document.getElementById('breedChart'), {
-        type:'bar',
-        data:{
-            labels: {{breed_labels|safe}},
-            datasets:[{
-                data: {{breed_counts|safe}},
-                backgroundColor:'#4CAF50'
-            }]
-        }
-    });
-
-    new Chart(document.getElementById('milkChart'), {
-        type:'line',
-        data:{
-            labels: {{milk_labels|safe}},
-            datasets:[{
-                label:'Milk Yield',
-                data: {{milk_data|safe}},
-                borderColor:'#FF9800',
-                backgroundColor:'rgba(255,152,0,0.2)',
-                tension:0.3
-            }]
-        }
-    });
-
-    new Chart(document.getElementById('weightChart'), {
-        type:'line',
-        data:{
-            labels: {{weight_labels|safe}},
-            datasets:[{
-                label:'Weight Gain',
-                data: {{weight_data|safe}},
-                borderColor:'#009688',
-                backgroundColor:'rgba(0,150,136,0.2)',
-                tension:0.3
-            }]
-        }
-    });
-
-    // ✅ Calendar FIXED
-    var calendarEl = document.getElementById('calendar');
-    if(calendarEl){
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView:'dayGridMonth',
-            height:500,
-            events: {{events|safe}}
-        });
-        calendar.render();
+// ── WEIGHT CHART ────────────────────────────────────────
+{% if weight_data != "[]" %}
+new Chart(document.getElementById('weightChart'), {
+  type: 'line',
+  data: {
+    labels: {{ weight_labels|safe }},
+    datasets: [{
+      label: 'Weight (kg)',
+      data: {{ weight_data|safe }},
+      borderColor: '#2e7d32',
+      backgroundColor: 'rgba(46,125,50,0.08)',
+      tension: 0.4, pointBackgroundColor: '#2e7d32',
+      pointRadius: 4, fill: true
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { beginAtZero: false, grid: { color: 'rgba(0,0,0,0.04)' } },
+      x: { grid: { display: false } }
     }
-
+  }
 });
-</script>
+{% endif %}
 
-</body>
-</html>
+// ── MILK CHART ──────────────────────────────────────────
+{% if milk_data != "[]" %}
+new Chart(document.getElementById('milkChart'), {
+  type: 'bar',
+  data: {
+    labels: {{ milk_labels|safe }},
+    datasets: [{
+      label: 'Milk (L)',
+      data: {{ milk_data|safe }},
+      backgroundColor: '#1e88e5',
+      borderRadius: 6
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.04)' } },
+      x: { grid: { display: false } }
+    }
+  }
+});
+{% endif %}
+
+// ── LEAFLET MAP ─────────────────────────────────────────
+{% if last_location %}
+function initMap() {
+  if (mapInitialised) return;
+  mapInitialised = true;
+
+  var lat = {{ last_location.latitude }};
+  var lng = {{ last_location.longitude }};
+  var tag = "{{ animal.tag_number|escapejs }}";
+  var ts  = "{{ last_location.timestamp|date:'d M Y, H:i' }}";
+
+  var map = L.map('animalMap', { zoomControl: true, scrollWheelZoom: false }).setView([lat, lng], 16);
+
+  // Tile layer (OpenStreetMap)
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  attribution: '© OpenStreetMap contributors © CARTO',
+  subdomains: 'abcd', maxZoom: 100,
+}).addTo(map);
+
+  // Custom green cow marker
+  var cowIcon = L.divIcon({
+    className: '',
+    html: '<div style="width:36px;height:36px;border-radius:50%;background:#1b5e20;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.35);display:flex;align-items:center;justify-content:center;font-size:18px;">🐄</div>',
+    iconSize: [36, 36],
+    iconAnchor: [18, 18],
+    popupAnchor: [0, -20]
+  });
+
+  L.marker([lat, lng], { icon: cowIcon })
+    .addTo(map)
+    .bindPopup(
+      '<div style="font-family:Inter,sans-serif;min-width:150px;">' +
+        '<div style="font-weight:700;font-size:14px;margin-bottom:4px;">🐄 ' + tag + '</div>' +
+        '<div style="font-size:12px;color:#555;">Last fix: ' + ts + '</div>' +
+        '<div style="font-size:11px;color:#888;margin-top:4px;">' + lat.toFixed(6) + ', ' + lng.toFixed(6) + '</div>' +
+      '</div>',
+      { maxWidth: 220 }
+    )
+    .openPopup();
+
+  // Accuracy circle if available
+  {% if last_location.accuracy %}
+  L.circle([lat, lng], {
+    radius: {{ last_location.accuracy }},
+    color: '#1b5e20', fillColor: '#4caf50', fillOpacity: 0.12, weight: 1.5
+  }).addTo(map);
+  {% endif %}
+}
+
+// Auto-init if the location tab is already active on page load
+if (document.getElementById('tab-location').classList.contains('active')) {
+  initMap();
+}
+{% else %}
+function initMap() {}
+{% endif %}
+</script>
+{% endblock %}

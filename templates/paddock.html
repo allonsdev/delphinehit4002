@@ -1,69 +1,79 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Paddock Mapping - Smart Farm</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<style>
-body{margin:0; font-family:'Segoe UI'; background:#f4f6f9;}
-.sidebar{width:230px;height:100vh;background:#1b5e20;color:white;position:fixed;padding:20px;}
-.sidebar a{color:white;display:block;padding:10px;border-radius:6px;text-decoration:none;margin-bottom:6px;}
-.sidebar a:hover{background:rgba(255,255,255,0.15);}
-.header{margin-left:230px;background:white;padding:12px 25px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,0.08);}
-.header-icons i{font-size:24px;margin-left:15px;cursor:pointer;}
-.content{margin-left:230px;padding:25px;}
-#map{height:600px;width:100%;border-radius:12px;}
-</style>
-</head>
-<body>
-<div class="sidebar">
-    <h4><span class="material-icons">agriculture</span> Smart Farm</h4>
-    <a href="{% url 'dashboard' %}"><span class="material-icons">dashboard</span> Dashboard</a>
-    <a href="{% url 'animal_list' %}"><span class="material-icons">pets</span> Animals</a>
-    <a href="{% url 'vaccination_list' %}"><span class="material-icons">vaccines</span> Vaccinations</a>
-    <a href="{% url 'disease_list' %}"><span class="material-icons">health_and_safety</span> Health</a>
-    <a href="{% url 'breeding_list' %}"><span class="material-icons">biotech</span> Breeding</a>
-    <a href="{% url 'production_list' %}"><span class="material-icons">monitor_heart</span> Production</a>
-    <a href="{% url 'feeding_list' %}"><span class="material-icons">feed</span> Feeding</a>
-    <a href="{% url 'device_list' %}"><span class="material-icons">devices</span> Devices</a>
-    <a href="{% url 'location_log_list' %}"><span class="material-icons">location_on</span> GPS Tracking</a>
-    <a href="{% url 'sale_list' %}"><span class="material-icons">payments</span> Sales</a>
-    <hr>
-    <a href="{% url 'logout' %}"><span class="material-icons">logout</span> Logout</a>
+{% block title %}Paddocks — Smart Farm{% endblock %}
+{% block page_title %}Paddocks{% endblock %}
+{% block page_subtitle %}Paddock capacity and farm allocation{% endblock %}
+
+{% block content %}
+
+<!-- Stat Cards -->
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;">
+  <div class="sf-stat-card">
+    <div>
+      <div class="sf-stat-label">Total Paddocks</div>
+      <div class="sf-stat-val">{{ total_paddocks }}</div>
+      <div class="sf-stat-sub">Registered paddocks</div>
+    </div>
+    <div class="sf-stat-icon" style="background:#dcfce7;color:#16a34a;"><i class="fa-solid fa-map"></i></div>
+  </div>
+  <div class="sf-stat-card">
+    <div>
+      <div class="sf-stat-label">Total Capacity</div>
+      <div class="sf-stat-val">{{ total_capacity }}</div>
+      <div class="sf-stat-sub">Combined animal capacity</div>
+    </div>
+    <div class="sf-stat-icon" style="background:#dbeafe;color:#2563eb;"><i class="fa-solid fa-users"></i></div>
+  </div>
+  <div class="sf-stat-card">
+    <div>
+      <div class="sf-stat-label">Total Farms</div>
+      <div class="sf-stat-val">{{ farm_count }}</div>
+      <div class="sf-stat-sub">Active farm locations</div>
+    </div>
+    <div class="sf-stat-icon" style="background:#fef3c7;color:#d97706;"><i class="fa-solid fa-tractor"></i></div>
+  </div>
 </div>
 
-<div class="header">
-<h5>Paddock Mapping</h5>
-<div class="header-icons">
-<span>{{ request.user.username }}</span>
-<i class="material-icons">notifications</i>
-<i class="material-icons">account_circle</i>
-</div>
+<!-- Table -->
+<div class="sf-card">
+  <div class="sf-card-title">All Paddocks</div>
+  <div class="sf-card-sub">Paddock inventory across all farms</div>
+  <div class="table-responsive">
+    <table id="paddockTable" class="table sf-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Farm</th>
+          <th>Capacity</th>
+          <th>Latitude</th>
+          <th>Longitude</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in data %}
+        <tr>
+          <td><span style="font-weight:600;">{{ p.name }}</span></td>
+          <td>{{ p.farm.name }}</td>
+          <td>{{ p.capacity }}</td>
+          <td>{{ p.latitude }}</td>
+          <td>{{ p.longitude }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
 
-<div class="content">
-<div id="map"></div>
-</div>
+{% endblock %}
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+{% block extra_scripts %}
 <script>
-var map = L.map('map').setView([{{ paddocks.0.center_lat }}, {{ paddocks.0.center_lon }}], 15);
-
-// OSM Layer
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-maxZoom: 19
-}).addTo(map);
-
-// Draw Paddocks
-{% for p in paddocks %}
-L.polygon([
-{% for point in p.boundary_points %}[{{ point.lat }}, {{ point.lon }}],{% endfor %}
-], {color:'green'}).addTo(map).bindPopup("{{ p.name }}");
-{% endfor %}
-
-// Plot Movements
-{% for m in movements %}
-L.polyline([[{{ m.from_lat }}, {{ m
+$(document).ready(function(){
+  $('#paddockTable').DataTable({
+    pageLength: 10,
+    dom: 'Bfrtip',
+    buttons: ['copy','csv','excel','pdf','print']
+  });
+});
+</script>
+{% endblock %}

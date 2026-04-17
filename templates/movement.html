@@ -1,112 +1,140 @@
+{% extends "base.html" %}
 {% load static %}
 {% load humanize %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Animal Movements - Smart Farm</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
-<style>
-body{font-family:'Segoe UI';background:#f4f6f9;margin:0;}
-.sidebar{width:230px;height:100vh;background:#1b5e20;color:white;position:fixed;padding:20px;}
-.sidebar a{color:white;display:block;padding:10px;border-radius:6px;text-decoration:none;margin-bottom:6px;}
-.sidebar a:hover{background:rgba(255,255,255,0.15);}
-.header{margin-left:230px;background:white;padding:12px 25px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,0.08);position:sticky;top:0;z-index:100;}
-.header-icons i{font-size:24px;margin-left:15px;cursor:pointer;}
-.content{margin-left:230px;padding:25px;}
-.card-counter{border:none;border-radius:12px;color:white;padding:20px;box-shadow:0 6px 15px rgba(0,0,0,0.1);}
-.card-counter i{font-size:35px;}
-.card-movement{background:#9C27B0;}
-table.dataTable{width:100%!important;}
-.dataTables_wrapper .dataTables_paginate .paginate_button{margin:0 4px;padding:6px 12px;border-radius:6px;border:none;background:#f1f3f5;color:#1b5e20;}
-.dataTables_wrapper .dataTables_paginate .paginate_button:hover{background:#9C27B0;color:#fff;}
-.dataTables_wrapper .dataTables_paginate .current{background:#1b5e20;color:#fff;font-weight:bold;}
-</style>
-</head>
-<body>
+{% block title %}Animal Movements — Smart Farm{% endblock %}
+{% block page_title %}Animal Movements{% endblock %}
+{% block page_subtitle %}Paddock-to-paddock movement tracking{% endblock %}
 
-<div class="sidebar">
-    <h4><span class="material-icons">agriculture</span> Smart Farm</h4>
-    <a href="{% url 'dashboard' %}"><span class="material-icons">dashboard</span> Dashboard</a>
-    <a href="{% url 'animal_list' %}"><span class="material-icons">pets</span> Animals</a>
-    <a href="{% url 'vaccination_list' %}"><span class="material-icons">vaccines</span> Vaccinations</a>
-    <a href="{% url 'disease_list' %}"><span class="material-icons">health_and_safety</span> Health</a>
-    <a href="{% url 'breeding_list' %}"><span class="material-icons">biotech</span> Breeding</a>
-    <a href="{% url 'production_list' %}"><span class="material-icons">monitor_heart</span> Production</a>
-    <a href="{% url 'feeding_list' %}"><span class="material-icons">feed</span> Feeding</a>
-    <a href="{% url 'device_list' %}"><span class="material-icons">devices</span> Devices</a>
-    <a href="{% url 'location_log_list' %}"><span class="material-icons">location_on</span> GPS Tracking</a>
-    <a href="{% url 'sale_list' %}"><span class="material-icons">payments</span> Sales</a>
-    <hr>
-    <a href="{% url 'logout' %}"><span class="material-icons">logout</span> Logout</a>
+{% block content %}
+
+<!-- Stat Cards -->
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;">
+  <div class="sf-stat-card">
+    <div>
+      <div class="sf-stat-label">Total Movements</div>
+      <div class="sf-stat-val">{{ total_movements|intcomma }}</div>
+      <div class="sf-stat-sub">All recorded events</div>
+    </div>
+    <div class="sf-stat-icon" style="background:#ede9fe;color:#7c3aed;"><i class="fa-solid fa-route"></i></div>
+  </div>
+  <div class="sf-stat-card">
+    <div>
+      <div class="sf-stat-label">Destination Paddocks</div>
+      <div class="sf-stat-val">{{ move_labels|length }}</div>
+      <div class="sf-stat-sub">Unique destinations</div>
+    </div>
+    <div class="sf-stat-icon" style="background:#dcfce7;color:#16a34a;"><i class="fa-solid fa-map-pin"></i></div>
+  </div>
+  <div class="sf-stat-card">
+    <div>
+      <div class="sf-stat-label">Periods Tracked</div>
+      <div class="sf-stat-val">{{ move_month_labels|length }}</div>
+      <div class="sf-stat-sub">Monthly periods</div>
+    </div>
+    <div class="sf-stat-icon" style="background:#dbeafe;color:#2563eb;"><i class="fa-solid fa-calendar"></i></div>
+  </div>
 </div>
 
-<div class="header">
-<h5>Animal Movements</h5>
-<div class="header-icons">
-<span>{{ request.user.username }}</span>
-<i class="material-icons">notifications</i>
-<i class="material-icons">account_circle</i>
-</div>
-</div>
-
-<div class="content">
-<div class="row g-3 mb-4">
-<div class="col-md-3">
-<div class="card-counter card-movement d-flex justify-content-between align-items-center">
-<div>
-<h6>Total Movements</h6>
-<h3>{{ total_movements }}</h3>
-</div>
-<i class="material-icons">directions_run</i>
-</div>
-</div>
+<!-- Charts -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;">
+  <div class="sf-card">
+    <div class="sf-card-title">Top Destination Paddocks</div>
+    <div class="sf-card-sub">Paddocks receiving most movements</div>
+    <div style="position:relative;height:220px;">
+      <canvas id="paddockChart"></canvas>
+    </div>
+  </div>
+  <div class="sf-card">
+    <div class="sf-card-title">Monthly Movement Trend</div>
+    <div class="sf-card-sub">Number of movements per month</div>
+    <div style="position:relative;height:220px;">
+      <canvas id="movementTrendChart"></canvas>
+    </div>
+  </div>
 </div>
 
-<div class="chart-box mb-4">
-<h5>Movement Records</h5>
-<div class="table-responsive">
-<table id="movementTable" class="table table-striped table-bordered">
-<thead>
-<tr>
-<th>Animal</th>
-<th>From Latitude</th>
-<th>From Longitude</th>
-<th>To Latitude</th>
-<th>To Longitude</th>
-<th>Movement Date</th>
-</tr>
-</thead>
-<tbody>
-{% for m in data %}
-<tr>
-<td>{{ m.animal.tag_number }}</td>
-<td>{{ m.from_lat }}</td>
-<td>{{ m.from_lon }}</td>
-<td>{{ m.to_lat }}</td>
-<td>{{ m.to_lon }}</td>
-<td>{{ m.movement_date }}</td>
-</tr>
-{% endfor %}
-</tbody>
-</table>
-</div>
-</div>
+<!-- Table -->
+<div class="sf-card">
+  <div class="sf-card-title">Movement Records</div>
+  <div class="sf-card-sub">Full history of animal relocations</div>
+  <div class="table-responsive">
+    <table id="movementTable" class="table sf-table">
+      <thead>
+        <tr>
+          <th>Animal</th>
+          <th>From Paddock</th>
+          <th>To Paddock</th>
+          <th>Movement Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for m in data %}
+        <tr>
+          <td><span style="font-weight:600;">{{ m.animal.tag_number }}</span></td>
+          <td>{{ m.from_paddock.name|default:"—" }}</td>
+          <td>{{ m.to_paddock.name|default:"—" }}</td>
+          <td>{{ m.movement_date }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
+{% endblock %}
+
+{% block extra_scripts %}
 <script>
 $(document).ready(function(){
-$('#movementTable').DataTable({ pageLength:10, dom:'Bfrtip', buttons:['copy','csv','excel','pdf','print'] });
+  $('#movementTable').DataTable({
+    pageLength: 10,
+    dom: 'Bfrtip',
+    buttons: ['copy','csv','excel','pdf','print']
+  });
+});
+
+new Chart(document.getElementById('paddockChart'), {
+  type: 'bar',
+  data: {
+    labels: {{ move_labels|safe }},
+    datasets: [{
+      label: 'Movements',
+      data: {{ move_counts|safe }},
+      backgroundColor: '#7c3aed',
+      borderRadius: 6
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.04)' } },
+      y: { grid: { display: false } }
+    }
+  }
+});
+
+new Chart(document.getElementById('movementTrendChart'), {
+  type: 'line',
+  data: {
+    labels: {{ move_month_labels|safe }},
+    datasets: [{
+      label: 'Movements',
+      data: {{ move_month_data|safe }},
+      borderColor: '#7c3aed',
+      backgroundColor: 'rgba(124,58,237,0.08)',
+      tension: 0.4, fill: true, pointRadius: 4
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.04)' } },
+      x: { grid: { display: false } }
+    }
+  }
 });
 </script>
-</body>
-</html>
+{% endblock %}

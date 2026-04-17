@@ -1,128 +1,61 @@
+{% extends "base.html" %}
 {% load static %}
-{% load humanize %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Calving Records - Smart Farm</title>
+{% block title %}Calving — Smart Farm{% endblock %}
+{% block page_title %}Calving Records{% endblock %}
+{% block content %}
 
-    <!-- Bootstrap & Material Icons -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-    <!-- DataTables -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
-
-    <style>
-        body { font-family: 'Segoe UI', sans-serif; background:#f4f6f9; margin:0; }
-        .sidebar { width:230px; height:100vh; background:#1b5e20; color:white; position:fixed; padding:20px; }
-        .sidebar h4 { margin-bottom:20px; }
-        .sidebar a { color:white; display:block; padding:10px; border-radius:6px; text-decoration:none; margin-bottom:6px; transition:0.2s; }
-        .sidebar a:hover { background:rgba(255,255,255,0.15); }
-        .header { margin-left:230px; background:white; padding:12px 25px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 10px rgba(0,0,0,0.08); position:sticky; top:0; z-index:100; }
-        .header-icons i { font-size:24px; margin-left:15px; cursor:pointer; }
-        .content { margin-left:230px; padding:25px; }
-        .card-counter { border:none; border-radius:12px; color:white; padding:20px; box-shadow:0 6px 15px rgba(0,0,0,0.1); }
-        .card-counter i { font-size:35px; }
-        .card-calving{background:#FF9800;}
-        table.dataTable { width:100% !important; }
-        .dataTables_wrapper .dataTables_paginate { margin-top: 15px !important; }
-        .dataTables_wrapper .dataTables_paginate .paginate_button { margin: 0 4px !important; padding: 6px 12px !important; border-radius: 6px; border: none !important; background: #f1f3f5 !important; color: #1b5e20 !important; }
-        .dataTables_wrapper .dataTables_paginate .paginate_button:hover { background: #4CAF50 !important; color: #fff !important; }
-        .dataTables_wrapper .dataTables_paginate .current { background: #1b5e20 !important; color: #fff !important; font-weight: bold; }
-    </style>
-</head>
-<body>
-
-<!-- Sidebar -->
-<div class="sidebar">
-    <h4><span class="material-icons">agriculture</span> Smart Farm</h4>
-    <a href="{% url 'dashboard' %}"><span class="material-icons">dashboard</span> Dashboard</a>
-    <a href="{% url 'animal_list' %}"><span class="material-icons">pets</span> Animals</a>
-    <a href="{% url 'vaccination_list' %}"><span class="material-icons">vaccines</span> Vaccinations</a>
-    <a href="{% url 'disease_list' %}"><span class="material-icons">health_and_safety</span> Health</a>
-    <a href="{% url 'breeding_list' %}"><span class="material-icons">biotech</span> Breeding</a>
-    <a href="{% url 'production_list' %}"><span class="material-icons">monitor_heart</span> Production</a>
-    <a href="{% url 'feeding_list' %}"><span class="material-icons">feed</span> Feeding</a>
-    <a href="{% url 'device_list' %}"><span class="material-icons">devices</span> Devices</a>
-    <a href="{% url 'location_log_list' %}"><span class="material-icons">location_on</span> GPS Tracking</a>
-    <a href="{% url 'sale_list' %}"><span class="material-icons">payments</span> Sales</a>
-    <hr>
-    <a href="{% url 'logout' %}"><span class="material-icons">logout</span> Logout</a>
+<div class="sf-section-header">
+  <div><h2>Calving Records</h2><p>Birth events, complications and calf registry</p></div>
 </div>
-
-<!-- Header -->
-<div class="header">
-    <h5>Calving Records</h5>
-    <div class="header-icons">
-        <span>{{ request.user.username }}</span>
-        <i class="material-icons">notifications</i>
-        <i class="material-icons">account_circle</i>
-    </div>
-</div>
-
-<!-- Content -->
-<div class="content">
 
 <div class="row g-3 mb-4">
-    <div class="col-md-3">
-        <div class="card-counter card-calving d-flex justify-content-between align-items-center">
-            <div>
-                <h6>Total Calvings</h6>
-                <h3>{{ total_calvings }}</h3>
-            </div>
-            <i class="material-icons">child_friendly</i>
-        </div>
+  <div class="col-md-4">
+    <div class="sf-stat-card">
+      <div><div class="sf-stat-label">Total Calvings</div><div class="sf-stat-val">{{ total_calvings }}</div><div class="sf-stat-sub">Recorded births</div></div>
+      <div class="sf-stat-icon" style="background:#fef3c7;color:#d97706;"><i class="fa-solid fa-baby"></i></div>
     </div>
-</div>
-
-<div class="chart-box mb-4">
-    <h5>Calving Records</h5>
-    <div class="table-responsive">
-        <table id="calvingTable" class="table table-striped table-bordered">
-            <thead>
-                <tr>
-                    <th>Mother</th>
-                    <th>Calf</th>
-                    <th>Calving Date</th>
-                    <th>Birth Weight (kg)</th>
-                    <th>Complications</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for c in data %}
-                <tr>
-                    <td>{{ c.mother.tag_number }}</td>
-                    <td>{% if c.calf %}{{ c.calf.tag_number }}{% else %}N/A{% endif %}</td>
-                    <td>{{ c.calving_date }}</td>
-                    <td>{{ c.birth_weight_kg }}</td>
-                    <td>{{ c.complications }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+  </div>
+  <div class="col-md-4">
+    <div class="sf-stat-card">
+      <div><div class="sf-stat-label">With Complications</div><div class="sf-stat-val">—</div><div class="sf-stat-sub">Difficult births</div></div>
+      <div class="sf-stat-icon" style="background:#fee2e2;color:#dc2626;"><i class="fa-solid fa-triangle-exclamation"></i></div>
     </div>
+  </div>
+  <div class="col-md-4">
+    <div class="sf-stat-card">
+      <div><div class="sf-stat-label">Avg Birth Weight</div><div class="sf-stat-val">—</div><div class="sf-stat-sub">Kilograms</div></div>
+      <div class="sf-stat-icon" style="background:#dcfce7;color:#16a34a;"><i class="fa-solid fa-weight-scale"></i></div>
+    </div>
+  </div>
 </div>
 
+<div class="sf-card">
+  <div class="sf-card-title">Calving Records</div>
+  <div class="sf-card-sub">Complete birth and calving event history</div>
+  <div class="table-responsive">
+    <table id="calvingTable" class="table sf-table">
+      <thead><tr><th>Mother</th><th>Calf</th><th>Calving Date</th><th>Birth Weight (kg)</th><th>Complications</th></tr></thead>
+      <tbody>
+        {% for c in data %}
+        <tr>
+          <td><span style="font-weight:600;">{{ c.mother.tag_number }}</span></td>
+          <td>{% if c.calf %}<span style="font-weight:600;">{{ c.calf.tag_number }}</span>{% else %}<span style="color:var(--sf-muted);">Not recorded</span>{% endif %}</td>
+          <td>{{ c.calving_date }}</td>
+          <td>{{ c.birth_weight_kg|default:"—" }}</td>
+          <td>
+            {% if c.complications %}
+              <span class="sf-badge sf-badge-red"><i class="fa-solid fa-circle-exclamation" style="font-size:9px;"></i> {{ c.complications|truncatechars:30 }}</span>
+            {% else %}
+              <span class="sf-badge sf-badge-green"><i class="fa-solid fa-check" style="font-size:9px;"></i> Normal</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
-
-<!-- Scripts -->
-<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
-<script>
-$(document).ready(function(){
-    $('#calvingTable').DataTable({
-        pageLength:10,
-        dom:'Bfrtip',
-        buttons:['copy','csv','excel','pdf','print']
-    });
-});
-</script>
-
-</body>
-</html>
+{% endblock %}
+{% block extra_scripts %}
+<script>$(document).ready(function(){$('#calvingTable').DataTable({pageLength:15,dom:'Bfrtip',buttons:['copy','csv','excel','pdf','print']});});</script>
+{% endblock %}

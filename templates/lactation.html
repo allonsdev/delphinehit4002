@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Lactation Records — Smart Farm{% endblock %}
+{% block page_title %}Lactation Records{% endblock %}
+{% block page_subtitle %}Daily milk yield per lactation cycle{% endblock %}
+
+{% block content %}
+
+<!-- Stat Cards -->
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;">
+  <div class="sf-stat-card">
+    <div>
+      <div class="sf-stat-label">Total Records</div>
+      <div class="sf-stat-val">{{ total }}</div>
+      <div class="sf-stat-sub">Lactation entries</div>
+    </div>
+    <div class="sf-stat-icon" style="background:#dbeafe;color:#2563eb;"><i class="fa-solid fa-droplet"></i></div>
+  </div>
+  <div class="sf-stat-card">
+    <div>
+      <div class="sf-stat-label">Avg Daily Yield</div>
+      <div class="sf-stat-val">{{ avg_yield }} L</div>
+      <div class="sf-stat-sub">Per record average</div>
+    </div>
+    <div class="sf-stat-icon" style="background:#dcfce7;color:#16a34a;"><i class="fa-solid fa-chart-line"></i></div>
+  </div>
+  <div class="sf-stat-card">
+    <div>
+      <div class="sf-stat-label">Animals</div>
+      <div class="sf-stat-val">{{ data|length }}</div>
+      <div class="sf-stat-sub">Lactation records</div>
+    </div>
+    <div class="sf-stat-icon" style="background:#fef3c7;color:#d97706;"><i class="fa-solid fa-cow"></i></div>
+  </div>
+</div>
+
+<!-- Table -->
+<div class="sf-card">
+  <div class="sf-card-title">Lactation Records</div>
+  <div class="sf-card-sub">Full lactation cycle history</div>
+  <div class="table-responsive">
+    <table id="lactationTable" class="table sf-table">
+      <thead>
+        <tr>
+          <th>Animal</th>
+          <th>Lactation Number</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Daily Yield (L)</th>
+          <th>Total Yield (L)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for l in data %}
+        <tr>
+          <td><span style="font-weight:600;">{{ l.animal.tag_number }}</span></td>
+          <td>{{ l.lactation_number|default:"—" }}</td>
+          <td>{{ l.start_date|default:"—" }}</td>
+          <td>{{ l.end_date|default:"—" }}</td>
+          <td>
+            {% if l.daily_milk_yield_liters %}
+              <span class="sf-badge sf-badge-blue">{{ l.daily_milk_yield_liters }} L</span>
+            {% else %}—{% endif %}
+          </td>
+          <td>{{ l.total_yield_liters|default:"—" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+$(document).ready(function(){
+  $('#lactationTable').DataTable({
+    pageLength: 10,
+    dom: 'Bfrtip',
+    buttons: ['copy','csv','excel','pdf','print']
+  });
+});
+</script>
+{% endblock %}

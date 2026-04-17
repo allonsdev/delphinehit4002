@@ -1,273 +1,149 @@
+{% extends "base.html" %}
 {% load static %}
 {% load humanize %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Smart Farm Enterprise Dashboard</title>
+{% block title %}Dashboard — Smart Farm{% endblock %}
+{% block page_title %}Farm Analytics Dashboard{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+.hero-stats { display: grid; grid-template-columns: repeat(6,1fr); gap: 14px; margin-bottom: 26px; }
+.charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 26px; }
+.tables-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 26px; }
+@media(max-width:1200px){ .hero-stats{grid-template-columns:repeat(3,1fr);} }
+</style>
+{% endblock %}
+{% block content %}
 
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- DataTables -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
-
-    <!-- FullCalendar -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.css">
-
-    <!-- Material Icons -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <style>
-        body { font-family: 'Segoe UI', sans-serif; background:#f4f6f9; margin:0; }
-        /* Sidebar */
-        .sidebar { width:230px; height:100vh; background:#1b5e20; color:white; position:fixed; padding:20px; }
-        .sidebar h4 { margin-bottom:20px; }
-        .sidebar a { color:white; display:block; padding:10px; border-radius:6px; text-decoration:none; margin-bottom:6px; transition:0.2s; }
-        .sidebar a:hover { background:rgba(255,255,255,0.15); }
-        /* Header */
-        .header { margin-left:230px; background:white; padding:12px 25px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 10px rgba(0,0,0,0.08); position:sticky; top:0; z-index:100; }
-        .header-icons i { font-size:24px; margin-left:15px; cursor:pointer; }
-        /* Content */
-        .content { margin-left:230px; padding:25px; }
-        /* Counter Cards */
-        .card-counter { border:none; border-radius:12px; color:white; padding:20px; box-shadow:0 6px 15px rgba(0,0,0,0.1); }
-        .card-counter i { font-size:35px; }
-        .card-animals{background:#4CAF50;} .card-alerts{background:#F44336;} .card-farms{background:#2196F3;}
-        .card-revenue{background:#009688;} .card-milk{background:#FF9800;} .card-devices{background:#9C27B0;}
-        /* Charts */
-        .chart-box { background:white; padding:20px; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.08); margin-bottom:25px; }
-        canvas { max-height:300px !important; }
-        /* Calendar */
-        #calendar { max-width:900px; margin:auto; }
-        /* DataTables */
-        table.dataTable { width:100% !important; }
-        /* Badges */
-        .badge-active{background:#4CAF50;} .badge-sold{background:#2196F3;} .badge-deceased{background:#F44336;} .badge-quarantine{background:#FFC107;color:black;}
-        .badge-overdue{background:#F44336;} .badge-due{background:#4CAF50;} .badge-about{background:#FF9800;}
-        
-        /* Fix pagination container */
-.dataTables_wrapper .dataTables_paginate {
-    margin-top: 15px !important;
-}
-
-/* Force proper spacing between items */
-.dataTables_wrapper .dataTables_paginate .paginate_button {
-    margin: 0 4px !important;
-    padding: 6px 12px !important;
-    border-radius: 6px;
-    border: none !important;
-    background: #f1f3f5 !important;
-    color: #1b5e20 !important;
-}
-
-/* Hover */
-.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-    background: #4CAF50 !important;
-    color: #fff !important;
-}
-
-/* Active page */
-.dataTables_wrapper .dataTables_paginate .current {
-    background: #1b5e20 !important;
-    color: #fff !important;
-    font-weight: bold;
-}
-
-/* Previous & Next spacing fix */
-.dataTables_wrapper .dataTables_paginate .paginate_button.previous,
-.dataTables_wrapper .dataTables_paginate .paginate_button.next {
-    font-weight: 500;
-}
-    </style>
-</head>
-
-<body>
-
-<!-- Sidebar -->
-<!-- Sidebar -->
-<div class="sidebar">
-    <h4><span class="material-icons">agriculture</span> Smart Farm</h4>
-    <a href="{% url 'dashboard' %}"><span class="material-icons">dashboard</span> Dashboard</a>
-    <a href="{% url 'animal_list' %}"><span class="material-icons">pets</span> Animals</a>
-    <a href="{% url 'vaccination_list' %}"><span class="material-icons">vaccines</span> Vaccinations</a>
-    <a href="{% url 'disease_list' %}"><span class="material-icons">health_and_safety</span> Health</a>
-    <a href="{% url 'breeding_list' %}"><span class="material-icons">biotech</span> Breeding</a>
-    <a href="{% url 'production_list' %}"><span class="material-icons">monitor_heart</span> Production</a>
-    <a href="{% url 'feeding_list' %}"><span class="material-icons">feed</span> Feeding</a>
-    <a href="{% url 'device_list' %}"><span class="material-icons">devices</span> Devices</a>
-    <a href="{% url 'location_log_list' %}"><span class="material-icons">location_on</span> GPS Tracking</a>
-    <a href="{% url 'sale_list' %}"><span class="material-icons">payments</span> Sales</a>
-    <hr>
-    <a href="{% url 'logout' %}"><span class="material-icons">logout</span> Logout</a>
+<div class="sf-section-header">
+  <div>
+    <h2>Overview</h2>
+    <p>Real-time farm analytics and performance metrics</p>
+  </div>
+  <span style="font-size:12px;color:var(--sf-muted);"><i class="fa-regular fa-clock"></i> Last updated: just now</span>
 </div>
 
-<!-- Header -->
-<div class="header">
-    <h5>Farm Analytics Dashboard</h5>
-    <div class="header-icons">
-        <span>{{ request.user.username }}</span>
-        <i class="material-icons">notifications</i>
-        <i class="material-icons">account_circle</i>
-    </div>
+<div class="hero-stats">
+  <div class="sf-stat-card">
+    <div><div class="sf-stat-label">Animals</div><div class="sf-stat-val">{{ total_animals|intcomma }}</div><div class="sf-stat-sub">Total livestock</div></div>
+    <div class="sf-stat-icon" style="background:#dcfce7;color:#16a34a;"><i class="fa-solid fa-cow"></i></div>
+  </div>
+  <div class="sf-stat-card">
+    <div><div class="sf-stat-label">Farms</div><div class="sf-stat-val">{{ total_farms }}</div><div class="sf-stat-sub">Active locations</div></div>
+    <div class="sf-stat-icon" style="background:#dbeafe;color:#2563eb;"><i class="fa-solid fa-tractor"></i></div>
+  </div>
+  <div class="sf-stat-card">
+    <div><div class="sf-stat-label">Alerts</div><div class="sf-stat-val" style="color:#dc2626;">{{ total_alerts }}</div><div class="sf-stat-sub">Unresolved</div></div>
+    <div class="sf-stat-icon" style="background:#fee2e2;color:#dc2626;"><i class="fa-solid fa-triangle-exclamation"></i></div>
+  </div>
+  <div class="sf-stat-card">
+    <div><div class="sf-stat-label">Devices</div><div class="sf-stat-val">{{ total_devices }}</div><div class="sf-stat-sub">GPS &amp; RFID</div></div>
+    <div class="sf-stat-icon" style="background:#ede9fe;color:#7c3aed;"><i class="fa-solid fa-microchip"></i></div>
+  </div>
+  <div class="sf-stat-card">
+    <div><div class="sf-stat-label">Milk Yield</div><div class="sf-stat-val">{{ milk_total|floatformat:0 }}</div><div class="sf-stat-sub">Litres total</div></div>
+    <div class="sf-stat-icon" style="background:#fef3c7;color:#d97706;"><i class="fa-solid fa-droplet"></i></div>
+  </div>
+  <div class="sf-stat-card">
+    <div><div class="sf-stat-label">Revenue</div><div class="sf-stat-val">${{ revenue|floatformat:0 }}</div><div class="sf-stat-sub">Total sales</div></div>
+    <div class="sf-stat-icon" style="background:#ccfbf1;color:#0d9488;"><i class="fa-solid fa-sack-dollar"></i></div>
+  </div>
 </div>
 
-<!-- Content -->
-<div class="content">
-
-<!-- Counters -->
-<div class="row g-3 mb-4">
-    <div class="col-md-2"><div class="card-counter card-animals d-flex justify-content-between align-items-center"><div><h6>Animals</h6><h3>{{total_animals|intcomma}}</h3></div><i class="material-icons">pets</i></div></div>
-    <div class="col-md-2"><div class="card-counter card-farms d-flex justify-content-between align-items-center"><div><h6>Farms</h6><h3>{{total_farms}}</h3></div><i class="material-icons">location_city</i></div></div>
-    <div class="col-md-2"><div class="card-counter card-alerts d-flex justify-content-between align-items-center"><div><h6>Alerts</h6><h3>{{total_alerts}}</h3></div><i class="material-icons">warning</i></div></div>
-    <div class="col-md-2"><div class="card-counter card-devices d-flex justify-content-between align-items-center"><div><h6>Devices</h6><h3>{{total_devices}}</h3></div><i class="material-icons">memory</i></div></div>
-    <div class="col-md-2"><div class="card-counter card-milk d-flex justify-content-between align-items-center"><div><h6>Milk</h6><h3>{{milk_total|floatformat:0}} L</h3></div><i class="material-icons">water_drop</i></div></div>
-    <div class="col-md-2"><div class="card-counter card-revenue d-flex justify-content-between align-items-center"><div><h6>Revenue</h6><h3>${{revenue|floatformat:0}}</h3></div><i class="material-icons">payments</i></div></div>
+<div class="charts-grid">
+  <div class="sf-card">
+    <div class="sf-card-title">Animals by Status</div>
+    <div class="sf-card-sub">Current herd distribution</div>
+    <div style="position:relative;height:240px;"><canvas id="statusChart" role="img" aria-label="Pie chart animals by status"></canvas></div>
+  </div>
+  <div class="sf-card">
+    <div class="sf-card-title">Animals by Breed</div>
+    <div class="sf-card-sub">Breed composition breakdown</div>
+    <div style="position:relative;height:240px;"><canvas id="breedChart" role="img" aria-label="Bar chart animals by breed"></canvas></div>
+  </div>
+  <div class="sf-card">
+    <div class="sf-card-title">Milk Production Trend</div>
+    <div class="sf-card-sub">Daily yield over time</div>
+    <div style="position:relative;height:220px;"><canvas id="milkChart" role="img" aria-label="Line chart milk production"></canvas></div>
+  </div>
+  <div class="sf-card">
+    <div class="sf-card-title">Weight Gain Trend</div>
+    <div class="sf-card-sub">Average weight gain per period</div>
+    <div style="position:relative;height:220px;"><canvas id="weightChart" role="img" aria-label="Line chart weight gain"></canvas></div>
+  </div>
 </div>
 
-<!-- Charts (20 placeholders) -->
-<div class="row g-4">
-    {% comment %} You can duplicate these blocks for all 20 charts {% endcomment %}
-    <div class="col-md-6"><div class="chart-box"><h5>Animals by Status</h5><canvas id="statusChart"></canvas></div></div>
-    <div class="col-md-6"><div class="chart-box"><h5>Animals by Breed</h5><canvas id="breedChart"></canvas></div></div>
-    <div class="col-md-6"><div class="chart-box"><h5>Milk Production Trend</h5><canvas id="milkChart"></canvas></div></div>
-    <div class="col-md-6"><div class="chart-box"><h5>Weight Gain Trend</h5><canvas id="weightChart"></canvas></div></div>
+<div class="sf-card">
+  <div class="sf-card-title">Farm Scheduler</div>
+  <div class="sf-card-sub">Upcoming vaccinations, treatments &amp; events</div>
+  <div id="calendar"></div>
 </div>
 
-<!-- Scheduler -->
-<div class="chart-box mb-4">
-    <h5>Farm Scheduler</h5>
-    <div id="calendar"></div>
-</div>
-
-<!-- Example DataTable (Animals) -->
-<div class="chart-box mb-4">
-    <h5>Animals</h5>
+<div class="tables-grid">
+  <div class="sf-card">
+    <div class="sf-card-title">Recent Animals</div>
+    <div class="sf-card-sub">Latest livestock records</div>
     <div class="table-responsive">
-        <table id="animalsTable" class="table table-striped table-bordered">
-            <thead>
-                <tr>
-                    <th>Tag</th>
-                    <th>Breed</th>
-                    <th>Sex</th>
-                    <th>Status</th>
-                    <th>Weight</th>
-                    <th>Paddock</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for a in animals %}
-                <tr>
-                    <td>{{ a.tag_number }}</td>
-                    <td>{{ a.breed }}</td>
-                    <td>{{ a.sex }}</td>
-                    <td>
-                        {% if a.status == "ACTIVE" %}
-                            <span class="badge badge-active">Active</span>
-                        {% elif a.status == "SOLD" %}
-                            <span class="badge badge-sold">Sold</span>
-                        {% elif a.status == "DECEASED" %}
-                            <span class="badge badge-deceased">Deceased</span>
-                        {% else %}
-                            <span class="badge badge-quarantine">Quarantine</span>
-                        {% endif %}
-                    </td>
-                    <td>{{ a.current_weight_kg }}</td>
-                    <td>{{ a.current_paddock }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+      <table id="animalsTable" class="table sf-table">
+        <thead><tr><th>Tag</th><th>Breed</th><th>Sex</th><th>Status</th><th>Weight</th></tr></thead>
+        <tbody>
+          {% for a in animals %}
+          <tr>
+            <td><span style="font-weight:600;">{{ a.tag_number }}</span></td>
+            <td>{{ a.breed }}</td>
+            <td>{{ a.sex }}</td>
+            <td>
+              {% if a.status == "ACTIVE" %}<span class="sf-badge sf-badge-green"><i class="fa-solid fa-circle" style="font-size:7px;"></i> Active</span>
+              {% elif a.status == "SOLD" %}<span class="sf-badge sf-badge-blue"><i class="fa-solid fa-circle" style="font-size:7px;"></i> Sold</span>
+              {% elif a.status == "DECEASED" %}<span class="sf-badge sf-badge-red"><i class="fa-solid fa-circle" style="font-size:7px;"></i> Deceased</span>
+              {% else %}<span class="sf-badge sf-badge-amber"><i class="fa-solid fa-circle" style="font-size:7px;"></i> Quarantine</span>{% endif %}
+            </td>
+            <td>{{ a.current_weight_kg }} kg</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-</div>
-
-<div class="chart-box mb-4">
-    <h5>Alerts</h5>
+  </div>
+  <div class="sf-card">
+    <div class="sf-card-title">Active Alerts</div>
+    <div class="sf-card-sub">Requires attention</div>
     <div class="table-responsive">
-        <table id="alertsTable" class="table table-striped table-bordered">
-            <thead>
-                <tr>
-                    <th>Animal</th>
-                    <th>Type</th>
-                    <th>Status</th>
-                    <th>Due</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for a in alerts %}
-                <tr>
-                    <td>{{ a.animal.tag_number }}</td>
-                    <td>{{ a.alert_type }}</td>
-                    <td>
-                        {% if a.status == "OVERDUE" %}
-                            <span class="badge badge-overdue">Overdue</span>
-                        {% elif a.status == "ABOUT_TO_DUE" %}
-                            <span class="badge badge-about">Due Soon</span>
-                        {% else %}
-                            <span class="badge badge-due">Due</span>
-                        {% endif %}
-                    </td>
-                    <td>{{ a.due_date }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+      <table id="alertsTable" class="table sf-table">
+        <thead><tr><th>Animal</th><th>Type</th><th>Status</th><th>Due</th></tr></thead>
+        <tbody>
+          {% for a in alerts %}
+          <tr>
+            <td><span style="font-weight:600;">{{ a.animal.tag_number }}</span></td>
+            <td>{{ a.alert_type }}</td>
+            <td>
+              {% if a.status == "OVERDUE" %}<span class="sf-badge sf-badge-red">Overdue</span>
+              {% elif a.status == "ABOUT_TO_DUE" %}<span class="sf-badge sf-badge-amber">Due Soon</span>
+              {% else %}<span class="sf-badge sf-badge-green">Due</span>{% endif %}
+            </td>
+            <td>{{ a.due_date }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
+  </div>
 </div>
 
-</div>
-
-<!-- Scripts -->
-<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
+{% endblock %}
+{% block extra_scripts %}
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.9/index.global.min.js"></script>
-
 <script>
 $(document).ready(function(){
-    $('#animalsTable, #alertsTable').DataTable({
-        pageLength:10,
-        dom:'Bfrtip',
-        buttons:['copy','csv','excel','pdf','print']
-    });
+  $('#animalsTable,#alertsTable').DataTable({pageLength:5,dom:'frtip',pagingType:'simple'});
 });
-
-// Charts
-const statusChart = new Chart(document.getElementById('statusChart'), {
-    type:'pie',
-    data:{ labels:['Active','Sold','Deceased','Quarantine'], datasets:[{data:{{status_data|safe}}, backgroundColor:['#4CAF50','#2196F3','#F44336','#FFC107']}] }
-});
-const breedChart = new Chart(document.getElementById('breedChart'), {
-    type:'bar',
-    data:{ labels:{{breed_labels|safe}}, datasets:[{data:{{breed_counts|safe}}, backgroundColor:'#4CAF50'}] }
-});
-const milkChart = new Chart(document.getElementById('milkChart'), {
-    type:'line',
-    data:{ labels:{{milk_labels|safe}}, datasets:[{label:'Milk Yield', data:{{milk_data|safe}}, borderColor:'#FF9800', backgroundColor:'rgba(255,152,0,0.2)', tension:0.3}] }
-});
-const weightChart = new Chart(document.getElementById('weightChart'), {
-    type:'line',
-    data:{ labels:{{weight_labels|safe}}, datasets:[{label:'Weight Gain', data:{{weight_data|safe}}, borderColor:'#009688', backgroundColor:'rgba(0,150,136,0.2)', tension:0.3}] }
-});
-
-// Calendar
-document.addEventListener("DOMContentLoaded", function(){
-    var calendarEl = document.getElementById('calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView:'dayGridMonth',
-        height:500,
-        events:{{events|safe}}
-    });
-    calendar.render();
+new Chart(document.getElementById('statusChart'),{type:'doughnut',data:{labels:{{ status_labels|safe }},datasets:[{data:{{ status_data|safe }},backgroundColor:['#16a34a','#2563eb','#dc2626','#d97706'],borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:12}}}},cutout:'60%'}});
+new Chart(document.getElementById('breedChart'),{type:'bar',data:{labels:{{ breed_labels|safe }},datasets:[{label:'Animals',data:{{ breed_counts|safe }},backgroundColor:'#16a34a',borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,0.04)'}},x:{grid:{display:false}}}}});
+new Chart(document.getElementById('milkChart'),{type:'line',data:{labels:{{ milk_labels|safe }},datasets:[{label:'Litres',data:{{ milk_data|safe }},borderColor:'#d97706',backgroundColor:'rgba(217,119,6,0.1)',tension:0.4,fill:true,pointRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,0.04)'}},x:{grid:{display:false}}}}});
+new Chart(document.getElementById('weightChart'),{type:'line',data:{labels:{{ weight_labels|safe }},datasets:[{label:'kg',data:{{ weight_data|safe }},borderColor:'#0d9488',backgroundColor:'rgba(13,148,136,0.1)',tension:0.4,fill:true,pointRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,0.04)'}},x:{grid:{display:false}}}}});
+document.addEventListener('DOMContentLoaded',function(){
+  var cal=new FullCalendar.Calendar(document.getElementById('calendar'),{initialView:'dayGridMonth',height:480,headerToolbar:{left:'prev,next today',center:'title',right:'dayGridMonth,listWeek'},events:{{ events|safe }},eventColor:'#1b5e20'});
+  cal.render();
 });
 </script>
-
-</body>
-</html>
+{% endblock %}

@@ -1,199 +1,101 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Farm System Login</title>
-
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Material Icons -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-    <style>
-        body {
-            margin: 0;
-            height: 100vh;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        .login-container {
-            height: 100vh;
-        }
-
-        /* LEFT SIDE IMAGE */
-        .image-side {
-            background: url('https://images.pexels.com/photos/735967/pexels-photo-735967.jpeg') no-repeat center center;
-            background-size: cover;
-            position: relative;
-        }
-
-        /* PREMIUM OVERLAY */
-        .image-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 100%;
-
-            background: linear-gradient(
-                135deg,
-                rgba(0, 0, 0, 0.75),
-                rgba(46, 125, 50, 0.85)
-            );
-
-            backdrop-filter: blur(4px);
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            color: white;
-            text-align: center;
-            padding: 30px;
-        }
-
-        /* TEXT ON IMAGE */
-        .overlay-content h2 {
-            font-weight: 700;
-            font-size: 32px;
-        }
-
-        .overlay-content p {
-            opacity: 0.9;
-            font-size: 16px;
-        }
-
-        /* RIGHT SIDE FORM */
-        .form-side {
-            background: #f8f9fa;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .login-card {
-            width: 100%;
-            max-width: 350px;
-        }
-
-        .login-title {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .login-title i {
-            font-size: 50px;
-            color: #4CAF50;
-        }
-
-        .input-group {
-            position: relative;
-            margin-bottom: 18px;
-        }
-
-        .input-group i {
-            position: absolute;
-            top: 10px;
-            left: 12px;
-            color: #777;
-        }
-
-        .form-control {
-            padding-left: 45px;
-            border-radius: 10px;
-            height: 45px;
-        }
-
-        .btn-login {
-            background: #4CAF50;
-            border: none;
-            border-radius: 10px;
-            height: 45px;
-            width: 100%;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        .btn-login:hover {
-            background: #388E3C;
-        }
-
-        .footer-text {
-            text-align: center;
-            margin-top: 15px;
-            font-size: 13px;
-            color: #999;
-        }
-
-        /* MOBILE VIEW */
-        @media (max-width: 768px) {
-            .image-side {
-                display: none;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login — Smart Farm</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Plus Jakarta Sans',sans-serif;height:100vh;display:flex;overflow:hidden;}
+.left-panel{flex:0 0 55%;background:#1b5e20;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.left-bg{position:absolute;inset:0;background:url('https://images.pexels.com/photos/735967/pexels-photo-735967.jpeg') center/cover;opacity:0.35;}
+.left-content{position:relative;z-index:2;color:#fff;padding:60px;max-width:500px;}
+.left-content .brand{display:flex;align-items:center;gap:12px;margin-bottom:48px;}
+.left-content .brand i{font-size:28px;color:#a5d6a7;}
+.left-content .brand span{font-size:22px;font-weight:800;letter-spacing:-0.5px;}
+.left-content h1{font-size:40px;font-weight:800;line-height:1.15;margin-bottom:20px;letter-spacing:-1px;}
+.left-content h1 span{color:#a5d6a7;}
+.left-content p{font-size:15px;opacity:0.85;line-height:1.7;margin-bottom:40px;}
+.features{display:flex;flex-direction:column;gap:14px;}
+.feature{display:flex;align-items:center;gap:12px;font-size:14px;opacity:0.9;}
+.feature i{width:32px;height:32px;background:rgba(255,255,255,0.15);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.right-panel{flex:1;background:#fff;display:flex;align-items:center;justify-content:center;padding:40px;}
+.login-box{width:100%;max-width:380px;}
+.login-box h2{font-size:26px;font-weight:800;margin-bottom:6px;letter-spacing:-0.5px;}
+.login-box p{font-size:14px;color:#6b7280;margin-bottom:32px;}
+.form-group{margin-bottom:18px;}
+.form-group label{display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:6px;}
+.input-wrap{position:relative;}
+.input-wrap i{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:#9ca3af;font-size:14px;}
+.input-wrap input{width:100%;padding:11px 14px 11px 40px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:14px;font-family:inherit;outline:none;transition:border 0.2s;}
+.input-wrap input:focus{border-color:#1b5e20;}
+.btn-login{width:100%;padding:13px;background:#1b5e20;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;transition:background 0.2s;font-family:inherit;}
+.btn-login:hover{background:#2e7d32;}
+.alert-msg{background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:10px 14px;font-size:13px;color:#dc2626;margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+.footer-note{text-align:center;font-size:12px;color:#9ca3af;margin-top:24px;}
+@media(max-width:768px){.left-panel{display:none;}.right-panel{flex:1;}}
+</style>
 </head>
 <body>
 
-<div class="container-fluid login-container">
-    <div class="row h-100">
-
-        <!-- LEFT IMAGE -->
-        <div class="col-md-6 d-none d-md-block image-side">
-            <div class="image-overlay">
-                <div class="overlay-content">
-                    <h2>Smart Livestock System</h2>
-                    <p>
-                        Monitor animal health, track movement, and optimize farm productivity in real-time.
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- RIGHT FORM -->
-        <div class="col-md-6 form-side">
-            <div class="login-card">
-
-                <div class="login-title">
-                    <i class="material-icons">agriculture</i>
-                    <h4>Login</h4>
-                </div>
-
-                <!-- Django Messages -->
-                {% if messages %}
-                    {% for message in messages %}
-                        <div class="alert alert-danger">{{ message }}</div>
-                    {% endfor %}
-                {% endif %}
-
-                <form method="POST">
-                    {% csrf_token %}
-
-                    <div class="input-group">
-                        <i class="material-icons">person</i>
-                        <input type="text" name="username" class="form-control" placeholder="Username" required>
-                    </div>
-
-                    <div class="input-group">
-                        <i class="material-icons">lock</i>
-                        <input type="password" name="password" class="form-control" placeholder="Password" required>
-                    </div>
-
-                    <button type="submit" class="btn btn-login">
-                        Login
-                    </button>
-                </form>
-
-                <div class="footer-text">
-                    © 2026 Smart Farm System
-                </div>
-
-            </div>
-        </div>
-
+<div class="left-panel">
+  <div class="left-bg"></div>
+  <div class="left-content">
+    <div class="brand">
+      <i class="fa-solid fa-leaf"></i>
+      <span>Smart Farm</span>
     </div>
+    <h1>Modern <span>Livestock</span> Management</h1>
+    <p>Monitor animal health, track GPS movement, and optimise farm productivity — all in one intelligent platform.</p>
+    <div class="features">
+      <div class="feature"><i class="fa-solid fa-cow"></i>Real-time animal tracking &amp; health monitoring</div>
+      <div class="feature"><i class="fa-solid fa-map-location-dot"></i>GPS-based paddock mapping &amp; geofencing</div>
+      <div class="feature"><i class="fa-solid fa-chart-line"></i>Production analytics &amp; performance insights</div>
+      <div class="feature"><i class="fa-solid fa-triangle-exclamation"></i>Automated alerts for vaccinations &amp; treatment</div>
+    </div>
+  </div>
+</div>
+
+<div class="right-panel">
+  <div class="login-box">
+    <div style="width:44px;height:44px;background:#dcfce7;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;">
+      <i class="fa-solid fa-leaf" style="color:#1b5e20;font-size:20px;"></i>
+    </div>
+    <h2>Welcome back</h2>
+    <p>Sign in to your farm management account</p>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert-msg"><i class="fa-solid fa-circle-exclamation"></i>{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+      {% csrf_token %}
+      <div class="form-group">
+        <label>Username</label>
+        <div class="input-wrap">
+          <i class="fa-solid fa-user"></i>
+          <input type="text" name="username" placeholder="Enter your username" required autocomplete="username">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <div class="input-wrap">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" name="password" placeholder="Enter your password" required autocomplete="current-password">
+        </div>
+      </div>
+      <button type="submit" class="btn-login">
+        <i class="fa-solid fa-right-to-bracket"></i> Sign In
+      </button>
+    </form>
+
+    <div class="footer-note">© 2026 Smart Farm System · All rights reserved</div>
+  </div>
 </div>
 
 </body>

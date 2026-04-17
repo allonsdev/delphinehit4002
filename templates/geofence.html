@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Geofences — Smart Farm{% endblock %}
+{% block page_title %}Geofences{% endblock %}
+{% block page_subtitle %}Virtual boundary zones per paddock{% endblock %}
+
+{% block content %}
+
+<!-- Stat Cards -->
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;">
+  <div class="sf-stat-card">
+    <div>
+      <div class="sf-stat-label">Total Geofences</div>
+      <div class="sf-stat-val">{{ total }}</div>
+      <div class="sf-stat-sub">Configured boundaries</div>
+    </div>
+    <div class="sf-stat-icon" style="background:#ede9fe;color:#7c3aed;"><i class="fa-solid fa-draw-polygon"></i></div>
+  </div>
+  <div class="sf-stat-card">
+    <div>
+      <div class="sf-stat-label">Active Zones</div>
+      <div class="sf-stat-val">{{ total }}</div>
+      <div class="sf-stat-sub">Monitoring enabled</div>
+    </div>
+    <div class="sf-stat-icon" style="background:#dcfce7;color:#16a34a;"><i class="fa-solid fa-shield-halved"></i></div>
+  </div>
+  <div class="sf-stat-card">
+    <div>
+      <div class="sf-stat-label">Alerts Sent</div>
+      <div class="sf-stat-val">—</div>
+      <div class="sf-stat-sub">Breach notifications</div>
+    </div>
+    <div class="sf-stat-icon" style="background:#fee2e2;color:#dc2626;"><i class="fa-solid fa-bell"></i></div>
+  </div>
+</div>
+
+<!-- Geofence Cards -->
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:24px;">
+  {% for g in data %}
+  <div class="sf-card" style="margin-bottom:0;border-left:4px solid #7c3aed;">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;">
+      <div>
+        <div style="font-size:15px;font-weight:700;color:var(--sf-text);">{{ g.name|default:"Geofence #"|add:forloop.counter }}</div>
+        <div style="font-size:12px;color:var(--sf-muted);margin-top:2px;">
+          <i class="fa-solid fa-map-pin" style="color:#7c3aed;margin-right:4px;"></i>{{ g.paddock.name|default:"No paddock" }}
+        </div>
+      </div>
+      <span class="sf-badge sf-badge-purple"><i class="fa-solid fa-circle" style="font-size:7px;"></i> Active</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <div style="background:#f8fafc;border-radius:7px;padding:8px 10px;">
+        <div style="font-size:10px;color:var(--sf-muted);font-weight:600;text-transform:uppercase;">Radius</div>
+        <div style="font-size:14px;font-weight:700;color:var(--sf-text);">{{ g.radius_meters|default:"—" }} m</div>
+      </div>
+      <div style="background:#f8fafc;border-radius:7px;padding:8px 10px;">
+        <div style="font-size:10px;color:var(--sf-muted);font-weight:600;text-transform:uppercase;">Type</div>
+        <div style="font-size:14px;font-weight:700;color:var(--sf-text);">{{ g.fence_type|default:"Circle" }}</div>
+      </div>
+      <div style="background:#f8fafc;border-radius:7px;padding:8px 10px;">
+        <div style="font-size:10px;color:var(--sf-muted);font-weight:600;text-transform:uppercase;">Latitude</div>
+        <div style="font-size:13px;font-weight:600;color:var(--sf-text);">{{ g.center_latitude|default:"—" }}</div>
+      </div>
+      <div style="background:#f8fafc;border-radius:7px;padding:8px 10px;">
+        <div style="font-size:10px;color:var(--sf-muted);font-weight:600;text-transform:uppercase;">Longitude</div>
+        <div style="font-size:13px;font-weight:600;color:var(--sf-text);">{{ g.center_longitude|default:"—" }}</div>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="sf-card" style="text-align:center;color:var(--sf-muted);padding:40px;grid-column:1/-1;">
+    <i class="fa-solid fa-draw-polygon" style="font-size:40px;opacity:.3;margin-bottom:12px;display:block;"></i>
+    No geofences configured yet.
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Table -->
+<div class="sf-card">
+  <div class="sf-card-title">All Geofences</div>
+  <div class="sf-card-sub">Complete boundary configuration list</div>
+  <div class="table-responsive">
+    <table id="geofenceTable" class="table sf-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Paddock</th>
+          <th>Radius (m)</th>
+          <th>Type</th>
+          <th>Center Lat</th>
+          <th>Center Lon</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for g in data %}
+        <tr>
+          <td><span style="font-weight:600;">{{ g.name|default:"—" }}</span></td>
+          <td>{{ g.paddock.name|default:"—" }}</td>
+          <td>{{ g.radius_meters|default:"—" }}</td>
+          <td>{{ g.fence_type|default:"Circle" }}</td>
+          <td>{{ g.center_latitude|default:"—" }}</td>
+          <td>{{ g.center_longitude|default:"—" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+$(document).ready(function(){
+  $('#geofenceTable').DataTable({
+    pageLength: 10,
+    dom: 'Bfrtip',
+    buttons: ['copy','csv','excel','pdf','print']
+  });
+});
+</script>
+{% endblock %}

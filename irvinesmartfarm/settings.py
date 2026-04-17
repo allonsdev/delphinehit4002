@@ -129,7 +129,7 @@ STATICFILES_DIRS = [
 ]
 
 
-BASE_URL = "https://delphinehit4002.onrender.com"
+BASE_URL = "http://127.0.0.1:8000"
 
 
 # In production, collectstatic will put built assets here
@@ -140,12 +140,21 @@ MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 
+
+DEFAULT_FROM_EMAIL = "smartmombe@gmail.com"
+ALERT_EMAIL_RECIPIENTS = ["smartmombe@gmail.com"]  # ← your actual recipients
+
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'your-email@gmail.com'
-EMAIL_HOST_PASSWORD = 'your-app-password'
+EMAIL_HOST_USER = 'smartmombe@gmail.com'
+EMAIL_HOST_PASSWORD = 'toab hrtc czer azza'
+
+
+
+
 
 
 LOGIN_URL = '/login/'

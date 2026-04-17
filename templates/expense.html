@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+{% block title %}Expenses — Smart Farm{% endblock %}
+{% block page_title %}Expenses{% endblock %}
+{% block page_subtitle %}Farm cost tracking and category breakdown{% endblock %}
+
+{% block content %}
+
+<!-- Stat Cards -->
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;">
+  <div class="sf-stat-card">
+    <div>
+      <div class="sf-stat-label">Total Records</div>
+      <div class="sf-stat-val">{{ total }}</div>
+      <div class="sf-stat-sub">Expense entries</div>
+    </div>
+    <div class="sf-stat-icon" style="background:#fef3c7;color:#d97706;"><i class="fa-solid fa-receipt"></i></div>
+  </div>
+  <div class="sf-stat-card">
+    <div>
+      <div class="sf-stat-label">Total Spent</div>
+      <div class="sf-stat-val" style="color:#dc2626;">${{ total_amount|intcomma }}</div>
+      <div class="sf-stat-sub">Combined expenditure</div>
+    </div>
+    <div class="sf-stat-icon" style="background:#fee2e2;color:#dc2626;"><i class="fa-solid fa-circle-dollar-to-slot"></i></div>
+  </div>
+  <div class="sf-stat-card">
+    <div>
+      <div class="sf-stat-label">Avg per Record</div>
+      <div class="sf-stat-val">${{ avg_amount }}</div>
+      <div class="sf-stat-sub">Average expense</div>
+    </div>
+    <div class="sf-stat-icon" style="background:#dcfce7;color:#16a34a;"><i class="fa-solid fa-chart-pie"></i></div>
+  </div>
+</div>
+
+<!-- Charts -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;">
+  <div class="sf-card">
+    <div class="sf-card-title">Expenses by Category</div>
+    <div class="sf-card-sub">Total spend per category</div>
+    <div style="position:relative;height:240px;">
+      <canvas id="expenseCatChart"></canvas>
+    </div>
+  </div>
+  <div class="sf-card">
+    <div class="sf-card-title">Category Breakdown</div>
+    <div class="sf-card-sub">Proportional cost distribution</div>
+    <div style="position:relative;height:240px;">
+      <canvas id="expensePieChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Table -->
+<div class="sf-card">
+  <div class="sf-card-title">All Expenses</div>
+  <div class="sf-card-sub">Complete expense ledger</div>
+  <div class="table-responsive">
+    <table id="expenseTable" class="table sf-table">
+      <thead>
+        <tr>
+          <th>Animal</th>
+          <th>Category</th>
+          <th>Amount</th>
+          <th>Description</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for e in data %}
+        <tr>
+          <td><span style="font-weight:600;">{{ e.animal.tag_number|default:"—" }}</span></td>
+          <td>
+            <span class="sf-badge sf-badge-amber">{{ e.category|default:"Other" }}</span>
+          </td>
+          <td style="font-weight:600;color:#dc2626;">${{ e.amount }}</td>
+          <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+            {{ e.description|default:"—" }}
+          </td>
+          <td>{{ e.date|default:e.created_at }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+$(document).ready(function(){
+  $('#expenseTable').DataTable({
+    pageLength: 10,
+    dom: 'Bfrtip',
+    buttons: ['copy','csv','excel','pdf','print']
+  });
+});
+
+const colors = ['#dc2626','#d97706','#2563eb','#16a34a','#7c3aed','#0d9488','#db2777','#ea580c'];
+
+new Chart(document.getElementById('expenseCatChart'), {
+  type: 'bar',
+  data: {
+    labels: {{ expense_labels|safe }},
+    datasets: [{
+      label: 'Total ($)',
+      data: {{ expense_data|safe }},
+      backgroundColor: colors,
+      borderRadius: 6
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.04)' } },
+      x: { grid: { display: false } }
+    }
+  }
+});
+
+new Chart(document.getElementById('expensePieChart'), {
+  type: 'doughnut',
+  data: {
+    labels: {{ expense_labels|safe }},
+    datasets: [{
+      data: {{ expense_data|safe }},
+      backgroundColor: colors,
+      borderWidth: 2,
+      borderColor: '#fff'
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 12 } } } },
+    cutout: '55%'
+  }
+});
+</script>
+{% endblock %}

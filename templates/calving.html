@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+{% block title %}Calving Records — Smart Farm{% endblock %}
+{% block page_title %}Calving Records{% endblock %}
+{% block page_subtitle %}Birth records and calving history{% endblock %}
+
+{% block content %}
+
+<!-- Stat Cards -->
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;">
+  <div class="sf-stat-card">
+    <div>
+      <div class="sf-stat-label">Total Calvings</div>
+      <div class="sf-stat-val">{{ total_calvings|intcomma }}</div>
+      <div class="sf-stat-sub">Recorded births</div>
+    </div>
+    <div class="sf-stat-icon" style="background:#fef3c7;color:#d97706;"><i class="fa-solid fa-baby"></i></div>
+  </div>
+</div>
+
+<!-- Charts Row -->
+<div style="display:grid;grid-template-columns:1fr;gap:20px;margin-bottom:24px;">
+  <div class="sf-card">
+    <div class="sf-card-title">Monthly Calving Trend</div>
+    <div class="sf-card-sub">Number of calvings per month</div>
+    <div style="position:relative;height:220px;">
+      <canvas id="calvingChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Table -->
+<div class="sf-card">
+  <div class="sf-card-title">Calving Records</div>
+  <div class="sf-card-sub">Full birth history</div>
+  <div class="table-responsive">
+    <table id="calvingTable" class="table sf-table">
+      <thead>
+        <tr>
+          <th>Mother</th>
+          <th>Calf</th>
+          <th>Calving Date</th>
+          <th>Birth Weight (kg)</th>
+          <th>Complications</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in calvings %}
+        <tr>
+          <td><span style="font-weight:600;">{{ c.mother.tag_number }}</span></td>
+          <td>{% if c.calf %}{{ c.calf.tag_number }}{% else %}<span class="sf-badge sf-badge-amber">N/A</span>{% endif %}</td>
+          <td>{{ c.calving_date }}</td>
+          <td>{{ c.birth_weight_kg }}</td>
+          <td>{{ c.complications|default:"—" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+$(document).ready(function(){
+  $('#calvingTable').DataTable({
+    pageLength: 10,
+    dom: 'Bfrtip',
+    buttons: ['copy','csv','excel','pdf','print']
+  });
+});
+
+new Chart(document.getElementById('calvingChart'), {
+  type: 'bar',
+  data: {
+    labels: {{ calving_labels|safe }},
+    datasets: [{
+      label: 'Calvings',
+      data: {{ calving_monthly|safe }},
+      backgroundColor: '#d97706',
+      borderRadius: 6
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.04)' } },
+      x: { grid: { display: false } }
+    }
+  }
+});
+</script>
+{% endblock %}

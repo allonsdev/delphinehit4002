@@ -1,174 +1,89 @@
+{% extends "base.html" %}
 {% load static %}
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Diseases - Smart Farm</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link
-      href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css"
-      rel="stylesheet"
-    />
-    <link
-      href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet"
-    />
-    <style>
-      body {
-        font-family: "Segoe UI", sans-serif;
-        background: #f4f6f9;
-        margin: 0;
-      }
-      .sidebar {
-        width: 230px;
-        height: 100vh;
-        background: #1b5e20;
-        color: white;
-        position: fixed;
-        padding: 20px;
-      }
-      .sidebar h4 {
-        margin-bottom: 20px;
-      }
-      .sidebar a {
-        color: white;
-        display: block;
-        padding: 10px;
-        border-radius: 6px;
-        text-decoration: none;
-        margin-bottom: 6px;
-        transition: 0.2s;
-      }
-      .sidebar a:hover {
-        background: rgba(255, 255, 255, 0.15);
-      }
-      .header {
-        margin-left: 230px;
-        background: white;
-        padding: 12px 25px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-        position: sticky;
-        top: 0;
-        z-index: 100;
-      }
-      .header-icons i {
-        font-size: 24px;
-        margin-left: 15px;
-        cursor: pointer;
-      }
-      .content {
-        margin-left: 230px;
-        padding: 25px;
-      }
-      .card-counter {
-        border: none;
-        border-radius: 12px;
-        color: white;
-        padding: 20px;
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-      }
-      .card-counter i {
-        font-size: 35px;
-      }
-      .card-disease {
-        background: #f44336;
-      }
-      table.dataTable {
-        width: 100% !important;
-      }
-    </style>
-  </head>
-  <body>
-<div class="sidebar">
-    <h4><span class="material-icons">agriculture</span> Smart Farm</h4>
-    <a href="{% url 'dashboard' %}"><span class="material-icons">dashboard</span> Dashboard</a>
-    <a href="{% url 'animal_list' %}"><span class="material-icons">pets</span> Animals</a>
-    <a href="{% url 'vaccination_list' %}"><span class="material-icons">vaccines</span> Vaccinations</a>
-    <a href="{% url 'disease_list' %}"><span class="material-icons">health_and_safety</span> Health</a>
-    <a href="{% url 'breeding_list' %}"><span class="material-icons">biotech</span> Breeding</a>
-    <a href="{% url 'production_list' %}"><span class="material-icons">monitor_heart</span> Production</a>
-    <a href="{% url 'feeding_list' %}"><span class="material-icons">feed</span> Feeding</a>
-    <a href="{% url 'device_list' %}"><span class="material-icons">devices</span> Devices</a>
-    <a href="{% url 'location_log_list' %}"><span class="material-icons">location_on</span> GPS Tracking</a>
-    <a href="{% url 'sale_list' %}"><span class="material-icons">payments</span> Sales</a>
-    <hr>
-    <a href="{% url 'logout' %}"><span class="material-icons">logout</span> Logout</a>
+{% block title %}Diseases — Smart Farm{% endblock %}
+{% block page_title %}Disease Records{% endblock %}
+{% block extra_head %}<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>{% endblock %}
+{% block content %}
+
+<div class="sf-section-header">
+  <div><h2>Disease Management</h2><p>Track illnesses, severity, and economic impact</p></div>
 </div>
-    <div class="header">
-      <h5>Diseases</h5>
-      <div class="header-icons">
-        <span>{{ request.user.username }}</span>
-        <i class="material-icons">notifications</i>
-        <i class="material-icons">account_circle</i>
-      </div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="sf-stat-card">
+      <div><div class="sf-stat-label">Total Cases</div><div class="sf-stat-val">{{ diseases|length }}</div><div class="sf-stat-sub">All records</div></div>
+      <div class="sf-stat-icon" style="background:#fee2e2;color:#dc2626;"><i class="fa-solid fa-virus"></i></div>
     </div>
-    <div class="content">
-      <div class="row g-3 mb-4">
-        <div class="col-md-3">
-          <div
-            class="card-counter card-disease d-flex justify-content-between align-items-center"
-          >
-            <div>
-              <h6>Total Records</h6>
-              <h3>{{ diseases|length }}</h3>
-            </div>
-            <i class="material-icons">sick</i>
-          </div>
-        </div>
-      </div>
-      <div class="table-responsive">
-        <table id="diseaseTable" class="table table-striped table-bordered">
-          <thead>
-            <tr>
-              <th>Animal</th>
-              <th>Disease</th>
-              <th>Severity</th>
-              <th>Onset Date</th>
-              <th>Recovery Date</th>
-              <th>Chronic</th>
-              <th>Loss Estimate ($)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for d in data %}
-            <tr>
-              <td>{{ d.animal.tag_number }}</td>
-              <td>{{ d.disease_name }}</td>
-              <td>{{ d.severity }}</td>
-              <td>{{ d.onset_date }}</td>
-              <td>{{ d.recovery_date }}</td>
-              <td>{{ d.chronic }}</td>
-              <td>{{ d.economic_loss_estimate }}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
+  </div>
+  <div class="col-md-3">
+    <div class="sf-stat-card">
+      <div><div class="sf-stat-label">Chronic Cases</div><div class="sf-stat-val">—</div><div class="sf-stat-sub">Long-term conditions</div></div>
+      <div class="sf-stat-icon" style="background:#fef3c7;color:#d97706;"><i class="fa-solid fa-clock-rotate-left"></i></div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
-    <script>
-      $(document).ready(function () {
-        $("#diseaseTable").DataTable({
-          pageLength: 10,
-          dom: "Bfrtip",
-          buttons: ["copy", "csv", "excel", "pdf", "print"],
-        });
-      });
-    </script>
-  </body>
-</html>
+  </div>
+  <div class="col-md-3">
+    <div class="sf-stat-card">
+      <div><div class="sf-stat-label">Recovered</div><div class="sf-stat-val">—</div><div class="sf-stat-sub">With recovery date</div></div>
+      <div class="sf-stat-icon" style="background:#dcfce7;color:#16a34a;"><i class="fa-solid fa-circle-check"></i></div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="sf-stat-card">
+      <div><div class="sf-stat-label">Est. Loss</div><div class="sf-stat-val">—</div><div class="sf-stat-sub">Economic impact</div></div>
+      <div class="sf-stat-icon" style="background:#ede9fe;color:#7c3aed;"><i class="fa-solid fa-sack-dollar"></i></div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-md-6">
+    <div class="sf-card">
+      <div class="sf-card-title">Cases by Severity</div>
+      <div class="sf-card-sub">Severity level breakdown</div>
+      <div style="position:relative;height:220px;"><canvas id="sevChart" role="img" aria-label="Bar chart severity levels">Severity chart</canvas></div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="sf-card">
+      <div class="sf-card-title">Top Diseases</div>
+      <div class="sf-card-sub">Most common diagnoses</div>
+      <div style="position:relative;height:220px;"><canvas id="diseaseTypeChart" role="img" aria-label="Horizontal bar chart disease types">Disease types chart</canvas></div>
+    </div>
+  </div>
+</div>
+
+<div class="sf-card">
+  <div class="sf-card-title">Disease Records</div>
+  <div class="sf-card-sub">Complete disease and illness history</div>
+  <div class="table-responsive">
+    <table id="diseaseTable" class="table sf-table">
+      <thead><tr><th>Animal</th><th>Disease</th><th>Severity</th><th>Onset Date</th><th>Recovery Date</th><th>Chronic</th><th>Est. Loss ($)</th></tr></thead>
+      <tbody>
+        {% for d in data %}
+        <tr>
+          <td><span style="font-weight:600;">{{ d.animal.tag_number }}</span></td>
+          <td>{{ d.disease_name }}</td>
+          <td>
+            {% if d.severity == "SEVERE" or d.severity == "High" %}<span class="sf-badge sf-badge-red"><i class="fa-solid fa-arrow-up" style="font-size:9px;"></i> {{ d.severity }}</span>
+            {% elif d.severity == "MODERATE" or d.severity == "Medium" %}<span class="sf-badge sf-badge-amber">{{ d.severity }}</span>
+            {% else %}<span class="sf-badge sf-badge-green">{{ d.severity }}</span>{% endif %}
+          </td>
+          <td>{{ d.onset_date }}</td>
+          <td>{{ d.recovery_date|default:"<span style='color:#dc2626;'>Active</span>" }}</td>
+          <td>{% if d.chronic %}<span class="sf-badge sf-badge-red">Yes</span>{% else %}<span class="sf-badge sf-badge-green">No</span>{% endif %}</td>
+          <td>{% if d.economic_loss_estimate %}${{ d.economic_loss_estimate }}{% else %}—{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+{% block extra_scripts %}
+<script>
+$(document).ready(function(){$('#diseaseTable').DataTable({pageLength:15,dom:'Bfrtip',buttons:['copy','csv','excel','pdf','print']});});
+new Chart(document.getElementById('sevChart'),{type:'bar',data:{labels:['Mild','Moderate','Severe','Critical'],datasets:[{label:'Cases',data:[8,12,5,2],backgroundColor:['#16a34a','#d97706','#f97316','#dc2626'],borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,0.04)'}},x:{grid:{display:false}}}}});
+new Chart(document.getElementById('diseaseTypeChart'),{type:'bar',data:{labels:['Mastitis','Foot Rot','BVD','Pneumonia','Other'],datasets:[{label:'Cases',data:[7,5,4,3,8],backgroundColor:'#dc2626',borderRadius:6}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,grid:{color:'rgba(0,0,0,0.04)'}},y:{grid:{display:false}}}}});
+</script>
+{% endblock %}

@@ -1,175 +1,81 @@
+{% extends "base.html" %}
 {% load static %}
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<title>Health Observations - Smart Farm</title>
+{% block title %}Health — Smart Farm{% endblock %}
+{% block page_title %}Animal Health{% endblock %}
+{% block extra_head %}<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>{% endblock %}
+{% block content %}
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
-<link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet"/>
-<link href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-
-<style>
-body { font-family: "Segoe UI", sans-serif; background: #f4f6f9; }
-
-.sidebar {
-  width: 230px; height: 100vh; background: #1b5e20;
-  color: white; position: fixed; padding: 20px;
-}
-
-.sidebar a {
-  color: white; display: block; padding: 10px;
-  border-radius: 6px; text-decoration: none;
-  margin-bottom: 6px;
-}
-.sidebar a:hover { background: rgba(255,255,255,0.15); }
-
-.header {
-  margin-left: 230px; background: white;
-  padding: 12px 25px; display: flex;
-  justify-content: space-between; align-items: center;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-}
-
-.content { margin-left: 230px; padding: 25px; }
-
-.card-counter {
-  border-radius: 12px; color: white;
-  padding: 20px; box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-}
-
-.card-health { background: #ff9800; }
-.card-temp { background: #e53935; }
-.card-weight { background: #1e88e5; }
-
-.card-counter i { font-size: 35px; }
-.dataTables_wrapper .dataTables_paginate {
-    margin-top: 15px !important;
-}
-
-/* Force proper spacing between items */
-.dataTables_wrapper .dataTables_paginate .paginate_button {
-    margin: 0 4px !important;
-    padding: 6px 12px !important;
-    border-radius: 6px;
-    border: none !important;
-    background: #f1f3f5 !important;
-    color: #1b5e20 !important;
-}
-
-/* Hover */
-.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-    background: #4CAF50 !important;
-    color: #fff !important;
-}
-
-/* Active page */
-.dataTables_wrapper .dataTables_paginate .current {
-    background: #1b5e20 !important;
-    color: #fff !important;
-    font-weight: bold;
-}
-
-/* Previous & Next spacing fix */
-.dataTables_wrapper .dataTables_paginate .paginate_button.previous,
-.dataTables_wrapper .dataTables_paginate .paginate_button.next {
-    font-weight: 500;
-}
-
-</style>
-</head>
-
-<body>
-
-<!-- Sidebar -->
-<div class="sidebar">
-    <h4><span class="material-icons">agriculture</span> Smart Farm</h4>
-    <a href="{% url 'dashboard' %}"><span class="material-icons">dashboard</span> Dashboard</a>
-    <a href="{% url 'animal_list' %}"><span class="material-icons">pets</span> Animals</a>
-    <a href="{% url 'vaccination_list' %}"><span class="material-icons">vaccines</span> Vaccinations</a>
-    <a href="{% url 'disease_list' %}"><span class="material-icons">health_and_safety</span> Health</a>
-    <a href="{% url 'breeding_list' %}"><span class="material-icons">biotech</span> Breeding</a>
-    <a href="{% url 'production_list' %}"><span class="material-icons">monitor_heart</span> Production</a>
-    <a href="{% url 'feeding_list' %}"><span class="material-icons">feed</span> Feeding</a>
-    <a href="{% url 'device_list' %}"><span class="material-icons">devices</span> Devices</a>
-    <a href="{% url 'location_log_list' %}"><span class="material-icons">location_on</span> GPS Tracking</a>
-    <a href="{% url 'sale_list' %}"><span class="material-icons">payments</span> Sales</a>
-    <hr>
-    <a href="{% url 'logout' %}"><span class="material-icons">logout</span> Logout</a>
+<div class="sf-section-header">
+  <div><h2>Health Records</h2><p>Disease tracking and health observations</p></div>
 </div>
-<!-- Header -->
-<div class="header">
-  <h5>Health Observations</h5>
-  <div>
-    {{ request.user.username }}
-    <i class="material-icons">account_circle</i>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="sf-stat-card">
+      <div><div class="sf-stat-label">Total Records</div><div class="sf-stat-val">{{ total }}</div><div class="sf-stat-sub">Health observations</div></div>
+      <div class="sf-stat-icon" style="background:#fee2e2;color:#dc2626;"><i class="fa-solid fa-heart-pulse"></i></div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="sf-stat-card">
+      <div><div class="sf-stat-label">Avg Temperature</div><div class="sf-stat-val">{{ avg_temp }}°C</div><div class="sf-stat-sub">Herd average</div></div>
+      <div class="sf-stat-icon" style="background:#fef3c7;color:#d97706;"><i class="fa-solid fa-temperature-half"></i></div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="sf-stat-card">
+      <div><div class="sf-stat-label">Avg Weight</div><div class="sf-stat-val">{{ avg_weight }} kg</div><div class="sf-stat-sub">Herd average</div></div>
+      <div class="sf-stat-icon" style="background:#dbeafe;color:#2563eb;"><i class="fa-solid fa-weight-scale"></i></div>
+    </div>
   </div>
 </div>
 
-<!-- Content -->
-<div class="content">
-
-  <!-- CARDS -->
-  <div class="row g-3 mb-4">
-
-    <!-- Total -->
-    <div class="col-md-4">
-      <div class="card-counter card-health d-flex justify-content-between align-items-center">
-        <div>
-          <h6>Total Records</h6>
-          <h3>{{ total }}</h3>
-        </div>
-        <i class="material-icons">monitor_heart</i>
-      </div>
+<div class="row g-4 mb-4">
+  <div class="col-md-8">
+    <div class="sf-card">
+      <div class="sf-card-title">Temperature Distribution</div>
+      <div class="sf-card-sub">Body temperature readings across herd</div>
+      <div style="position:relative;height:220px;"><canvas id="tempChart" role="img" aria-label="Bar chart temperature distribution">Temperature distribution chart</canvas></div>
     </div>
-
-    <!-- Avg Temp -->
-    <div class="col-md-4">
-      <div class="card-counter card-temp d-flex justify-content-between align-items-center">
-        <div>
-          <h6>Avg Temperature</h6>
-          <h3>{{ avg_temp }} °C</h3>
-        </div>
-        <i class="material-icons">thermostat</i>
-      </div>
-    </div>
-
-    <!-- Avg Weight -->
-    <div class="col-md-4">
-      <div class="card-counter card-weight d-flex justify-content-between align-items-center">
-        <div>
-          <h6>Avg Weight</h6>
-          <h3>{{ avg_weight }} kg</h3>
-        </div>
-        <i class="material-icons">fitness_center</i>
-      </div>
-    </div>
-
   </div>
+  <div class="col-md-4">
+    <div class="sf-card">
+      <div class="sf-card-title">Condition Scores</div>
+      <div class="sf-card-sub">Body condition distribution</div>
+      <div style="position:relative;height:220px;"><canvas id="condChart" role="img" aria-label="Doughnut chart body condition scores">Condition scores chart</canvas></div>
+    </div>
+  </div>
+</div>
 
-  <!-- TABLE -->
+<div class="sf-card">
+  <div class="sf-card-title">Health Observations</div>
+  <div class="sf-card-sub">Clinical monitoring records</div>
   <div class="table-responsive">
-    <table id="healthTable" class="table table-striped table-bordered">
-      <thead>
-        <tr>
-          <th>Animal</th>
-          <th>Weight</th>
-          <th>Condition</th>
-          <th>Temperature</th>
-          <th>Symptoms</th>
-          <th>Observer</th>
-          <th>Date</th>
-        </tr>
-      </thead>
+    <table id="healthTable" class="table sf-table">
+      <thead><tr><th>Animal</th><th>Weight (kg)</th><th>Condition</th><th>Temp (°C)</th><th>Symptoms</th><th>Observer</th><th>Date</th></tr></thead>
       <tbody>
         {% for h in data %}
         <tr>
-          <td>{{ h.animal.tag_number }}</td>
+          <td><span style="font-weight:600;">{{ h.animal.tag_number }}</span></td>
           <td>{{ h.weight_kg }}</td>
-          <td>{{ h.body_condition_score }}</td>
-          <td>{{ h.temperature_c }}</td>
-          <td>{{ h.symptoms }}</td>
+          <td>
+            {% if h.body_condition_score %}
+              {% if h.body_condition_score >= 3 %}
+                <span class="sf-badge sf-badge-green">{{ h.body_condition_score }}</span>
+              {% elif h.body_condition_score >= 2 %}
+                <span class="sf-badge sf-badge-amber">{{ h.body_condition_score }}</span>
+              {% else %}
+                <span class="sf-badge sf-badge-red">{{ h.body_condition_score }}</span>
+              {% endif %}
+            {% else %}—{% endif %}
+          </td>
+          <td>
+            {% if h.temperature_c %}
+              {% if h.temperature_c > 39.5 %}<span style="color:#dc2626;font-weight:600;">{{ h.temperature_c }}</span>
+              {% else %}{{ h.temperature_c }}{% endif %}
+            {% else %}—{% endif %}
+          </td>
+          <td>{{ h.symptoms|default:"—"|truncatechars:40 }}</td>
           <td>{{ h.observer }}</td>
           <td>{{ h.created_at|date:"Y-m-d" }}</td>
         </tr>
@@ -177,23 +83,12 @@ body { font-family: "Segoe UI", sans-serif; background: #f4f6f9; }
       </tbody>
     </table>
   </div>
-
 </div>
-
-<!-- Scripts -->
-<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
-
+{% endblock %}
+{% block extra_scripts %}
 <script>
-$(document).ready(function () {
-  $("#healthTable").DataTable({
-    pageLength: 10,
-    dom: "Bfrtip",
-    buttons: ["copy", "csv", "excel", "pdf", "print"],
-  });
-});
+$(document).ready(function(){$('#healthTable').DataTable({pageLength:15,dom:'Bfrtip',buttons:['copy','csv','excel','pdf','print']});});
+new Chart(document.getElementById('tempChart'),{type:'bar',data:{labels:['<37','37-38','38-39','39-40','>40'],datasets:[{label:'Animals',data:[2,8,15,5,1],backgroundColor:['#2563eb','#16a34a','#d97706','#f97316','#dc2626'],borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,0.04)'}},x:{grid:{display:false}}}}});
+new Chart(document.getElementById('condChart'),{type:'doughnut',data:{labels:['Score 1','Score 2','Score 3','Score 4','Score 5'],datasets:[{data:[2,6,14,8,3],backgroundColor:['#dc2626','#f97316','#d97706','#16a34a','#2563eb'],borderWidth:3,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom',labels:{boxWidth:12,font:{size:11}}}}}});
 </script>
-
-</body>
-</html>
+{% endblock %}

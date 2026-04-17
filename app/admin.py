@@ -1,11 +1,6 @@
-from django.contrib import admin
+from django.contrib import admin, messages
 from .models import *
 from import_export.admin import ExportMixin
-from django.contrib import admin
-from django.db.models import Count, Sum
-from django.utils.html import format_html
-from import_export.admin import ExportMixin
-from django.contrib import admin
 from django.db.models import Count, Sum
 from django.utils.html import format_html
 from .models import (
@@ -19,11 +14,56 @@ from .models import (
     ProductionRecord,
     ExpenseRecord,
 )
+from .utils import generate_qr
 
 
-# ==============================
+# =====================================================
+# QR REGENERATION ACTIONS
+# =====================================================
+
+def _run_regeneration(modeladmin, request, queryset, label="selected"):
+    success, failed = 0, 0
+    for animal in queryset.iterator():
+        try:
+            generate_qr(animal)
+            success += 1
+        except Exception as e:
+            failed += 1
+            modeladmin.message_user(
+                request,
+                f"Failed for {animal.tag_number}: {e}",
+                level=messages.ERROR,
+            )
+    level = messages.SUCCESS if not failed else messages.WARNING
+    modeladmin.message_user(
+        request,
+        f"QR regeneration complete ({label}): {success} succeeded, {failed} failed.",
+        level=level,
+    )
+
+
+@admin.action(description="🔄 Regenerate QR codes — selected animals")
+def regenerate_qr_selected(modeladmin, request, queryset):
+    _run_regeneration(modeladmin, request, queryset, label="selected")
+
+
+@admin.action(description="🔄 Regenerate QR codes — ALL animals")
+def regenerate_qr_all(modeladmin, request, queryset):
+    _run_regeneration(modeladmin, request, Animal.objects.all(), label="all")
+
+
+@admin.action(description="🔄 Regenerate QR codes — missing only")
+def regenerate_qr_missing(modeladmin, request, queryset):
+    missing = Animal.objects.filter(qr_image="")
+    if not missing.exists():
+        modeladmin.message_user(request, "No animals with missing QR images found.", level=messages.INFO)
+        return
+    _run_regeneration(modeladmin, request, missing, label="missing")
+
+
+# =====================================================
 # INLINES
-# ==============================
+# =====================================================
 
 class DiseaseInline(admin.TabularInline):
     model = DiseaseRecord
@@ -62,13 +102,19 @@ class ProductionInline(admin.TabularInline):
     extra = 0
 
 
-# ==============================
+# =====================================================
 # ANIMAL ADMIN
-
-
+# =====================================================
 
 @admin.register(Animal)
 class AnimalAdmin(ExportMixin, admin.ModelAdmin):
+
+    # ✅ ACTIONS WIRED IN
+    actions = [
+        regenerate_qr_selected,
+        regenerate_qr_all,
+        regenerate_qr_missing,
+    ]
 
     # =====================================================
     # LIST VIEW
@@ -136,7 +182,6 @@ class AnimalAdmin(ExportMixin, admin.ModelAdmin):
     # COLORED STATUS BADGE
     # =====================================================
     def colored_status(self, obj):
-
         colors = {
             "ACTIVE": "#28a745",
             "SOLD": "#17a2b8",
@@ -145,7 +190,6 @@ class AnimalAdmin(ExportMixin, admin.ModelAdmin):
             "CULLED": "#6c757d",
             "MISSING": "#343a40",
         }
-
         return format_html(
             '<span style="padding:4px 10px; border-radius:8px; '
             'background:{}; color:white; font-weight:600;">{}</span>',
@@ -174,7 +218,6 @@ class AnimalAdmin(ExportMixin, admin.ModelAdmin):
     # DASHBOARD
     # =====================================================
     def summary_dashboard(self, obj):
-
         active_diseases = obj.diseaserecord_set.filter(
             recovery_date__isnull=True
         ).count()
@@ -252,7 +295,7 @@ class AnimalAdmin(ExportMixin, admin.ModelAdmin):
     qr_preview.short_description = "QR Code"
 
     # =====================================================
-    # FIELDSETS (COLLAPSIBLE)
+    # FIELDSETS
     # =====================================================
     fieldsets = (
 
@@ -347,14 +390,18 @@ class AnimalAdmin(ExportMixin, admin.ModelAdmin):
             "fields": ("summary_dashboard",),
         }),
     )
-# --------------------------
-# Farm & Paddock
-# --------------------------
+
+
+# =====================================================
+# FARM & PADDOCK
+# =====================================================
+
 @admin.register(Farm)
 class FarmAdmin(ExportMixin, admin.ModelAdmin):
     list_display = ("name", "location_name", "size_hectares", "owner")
     search_fields = ("name", "location_name", "owner")
     list_filter = ("location_name",)
+
 
 @admin.register(Paddock)
 class PaddockAdmin(ExportMixin, admin.ModelAdmin):
@@ -362,17 +409,17 @@ class PaddockAdmin(ExportMixin, admin.ModelAdmin):
     search_fields = ("name", "farm__name")
     list_filter = ("farm",)
 
-# --------------------------
-# Animal & QR codes
-# --------------------------
 
-# Health & Treatment
-# --------------------------
+# =====================================================
+# HEALTH & TREATMENT
+# =====================================================
+
 @admin.register(VaccinationRecord)
 class VaccinationAdmin(ExportMixin, admin.ModelAdmin):
     list_display = ("animal", "vaccine_name", "date_administered", "next_due_date")
     search_fields = ("animal__tag_number", "vaccine_name")
     list_filter = ("vaccine_name", "date_administered")
+
 
 @admin.register(TreatmentRecord)
 class TreatmentAdmin(ExportMixin, admin.ModelAdmin):
@@ -380,11 +427,13 @@ class TreatmentAdmin(ExportMixin, admin.ModelAdmin):
     search_fields = ("animal__tag_number", "diagnosis", "medication")
     list_filter = ("treatment_date",)
 
+
 @admin.register(HealthObservation)
 class HealthObservationAdmin(ExportMixin, admin.ModelAdmin):
     list_display = ("animal", "weight_kg", "body_condition_score", "temperature_c", "created_at")
     search_fields = ("animal__tag_number",)
     list_filter = ("created_at",)
+
 
 @admin.register(LabTest)
 class LabTestAdmin(ExportMixin, admin.ModelAdmin):
@@ -392,20 +441,24 @@ class LabTestAdmin(ExportMixin, admin.ModelAdmin):
     search_fields = ("animal__tag_number", "test_name")
     list_filter = ("test_name", "test_date")
 
+
 @admin.register(DiseaseRecord)
 class DiseaseAdmin(ExportMixin, admin.ModelAdmin):
     list_display = ("animal", "disease_name", "severity", "onset_date", "recovery_date", "chronic")
     search_fields = ("animal__tag_number", "disease_name")
     list_filter = ("severity", "chronic")
 
-# --------------------------
-# Breeding & Calving
-# --------------------------
+
+# =====================================================
+# BREEDING & CALVING
+# =====================================================
+
 @admin.register(BreedingEvent)
 class BreedingAdmin(ExportMixin, admin.ModelAdmin):
     list_display = ("female", "male", "method", "breeding_date", "confirmed_pregnant")
     search_fields = ("female__tag_number", "male__tag_number")
     list_filter = ("method", "confirmed_pregnant", "breeding_date")
+
 
 @admin.register(CalvingRecord)
 class CalvingAdmin(ExportMixin, admin.ModelAdmin):
@@ -413,19 +466,23 @@ class CalvingAdmin(ExportMixin, admin.ModelAdmin):
     search_fields = ("mother__tag_number", "calf__tag_number")
     list_filter = ("calving_date",)
 
-# --------------------------
-# Production & Feeding
-# --------------------------
+
+# =====================================================
+# PRODUCTION & FEEDING
+# =====================================================
+
 @admin.register(ProductionRecord)
 class ProductionAdmin(ExportMixin, admin.ModelAdmin):
     list_display = ("animal", "record_date", "milk_yield_liters", "weight_gain_kg", "feed_consumption_kg")
     search_fields = ("animal__tag_number",)
     list_filter = ("record_date",)
 
+
 @admin.register(FeedType)
 class FeedTypeAdmin(ExportMixin, admin.ModelAdmin):
     list_display = ("name", "energy_mj", "protein_percent", "cost_per_kg")
     search_fields = ("name",)
+
 
 @admin.register(FeedingRecord)
 class FeedingAdmin(ExportMixin, admin.ModelAdmin):
@@ -433,14 +490,17 @@ class FeedingAdmin(ExportMixin, admin.ModelAdmin):
     search_fields = ("animal__tag_number", "feed_type__name")
     list_filter = ("feeding_time", "feed_type")
 
-# --------------------------
-# GPS & Movement
-# --------------------------
+
+# =====================================================
+# GPS & MOVEMENT
+# =====================================================
+
 @admin.register(LocationLog)
 class LocationLogAdmin(ExportMixin, admin.ModelAdmin):
     list_display = ("animal", "timestamp", "latitude", "longitude", "speed")
     search_fields = ("animal__tag_number",)
     list_filter = ("timestamp",)
+
 
 @admin.register(MovementEvent)
 class MovementEventAdmin(ExportMixin, admin.ModelAdmin):
@@ -448,11 +508,13 @@ class MovementEventAdmin(ExportMixin, admin.ModelAdmin):
     search_fields = ("animal__tag_number",)
     list_filter = ("created_at",)
 
+
 @admin.register(Device)
 class DeviceAdmin(ExportMixin, admin.ModelAdmin):
     list_display = ("device_id", "device_type", "battery_level", "assigned_animal")
     search_fields = ("device_id", "assigned_animal__tag_number")
     list_filter = ("device_type",)
+
 
 @admin.register(Geofence)
 class GeofenceAdmin(ExportMixin, admin.ModelAdmin):
@@ -460,37 +522,38 @@ class GeofenceAdmin(ExportMixin, admin.ModelAdmin):
     search_fields = ("paddock__name",)
     list_filter = ("alert_on_exit",)
 
-# --------------------------
-# Alerts, Expenses & Sales
-# --------------------------
+
+# =====================================================
+# ALERTS, EXPENSES & SALES
+# =====================================================
+
 @admin.register(Alert)
-class AlertAdmin(ExportMixin,admin.ModelAdmin):
+class AlertAdmin(ExportMixin, admin.ModelAdmin):
     list_display = ("animal", "alert_type", "status_badge", "due_date")
     list_filter = ("status", "alert_type")
 
     def status_badge(self, obj):
-        if obj.status == "OVERDUE":
-            color = "red"
-        elif obj.status == "ABOUT_TO_DUE":
-            color = "orange"
-        elif obj.status == "DUE":
-            color = "blue"
-        else:
-            color = "green"
-
+        colors = {
+            "OVERDUE": "red",
+            "ABOUT_TO_DUE": "orange",
+            "DUE": "blue",
+        }
+        color = colors.get(obj.status, "green")
         return format_html(
             '<span style="background:{}; color:white; padding:4px 10px; border-radius:6px;">{}</span>',
             color,
-            obj.status
+            obj.status,
         )
 
     status_badge.short_description = "Status"
+
 
 @admin.register(ExpenseRecord)
 class ExpenseAdmin(ExportMixin, admin.ModelAdmin):
     list_display = ("animal", "category", "amount", "expense_date")
     search_fields = ("animal__tag_number", "category")
     list_filter = ("category", "expense_date")
+
 
 @admin.register(SaleRecord)
 class SaleAdmin(ExportMixin, admin.ModelAdmin):
