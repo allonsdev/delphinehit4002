@@ -129,7 +129,7 @@ STATICFILES_DIRS = [
 ]
 
 
-BASE_URL = "http://127.0.0.1:8000"
+BASE_URL = "https://delphinehit4002.onrender.com"
 
 
 # In production, collectstatic will put built assets here
