@@ -1,28 +1,30 @@
 from io import BytesIO
-
 from django.conf import settings
 from django.core.files import File
-
+from django.urls import reverse
 import qrcode
 
 
 def generate_qr(animal):
     """
-    Regenerate the QR code and image for a given Animal instance.
-    Deletes the old image file before saving the new one.
+    Generate or regenerate QR code pointing to animal detail page.
     """
-    admin_url = f"{settings.BASE_URL}/admin/app/animal/{animal.id}/change/"
 
-    # Delete old image from storage if it exists
+    # ✅ Use Django URL instead of admin
+    detail_path = reverse("animal_detail", kwargs={"pk": animal.id})
+    full_url = f"{settings.BASE_URL}{detail_path}"
+
+    # Delete old image if exists
     if animal.qr_image:
         animal.qr_image.delete(save=False)
 
-    # Build new QR image
-    qr = qrcode.make(admin_url)
+    # Create QR
+    qr = qrcode.make(full_url)
     buffer = BytesIO()
     qr.save(buffer, format="PNG")
-    buffer.seek(0)  # critical — prevents corrupt/empty file
+    buffer.seek(0)
 
-    animal.qr_code = admin_url
+    # Save
+    animal.qr_code = full_url
     animal.qr_image.save(f"{animal.tag_number}_qr.png", File(buffer), save=False)
     animal.save(update_fields=["qr_code", "qr_image"])

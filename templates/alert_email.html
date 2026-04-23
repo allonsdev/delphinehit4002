@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Smart Farm Alert</title>
+</head>
+<body style="margin:0;padding:0;background:#0f1a0f;font-family:'Georgia',serif;">
+
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#0f1a0f;padding:48px 0;">
+  <tr><td align="center">
+
+    <!-- OUTER CARD -->
+    <table width="620" cellpadding="0" cellspacing="0" style="background:#0f1a0f;border-radius:20px;overflow:hidden;border:1px solid #2a3d2a;">
+
+      <!-- TOP ACCENT BAR -->
+      <tr>
+        <td style="height:4px;background:linear-gradient(90deg,#4ade80,#22c55e,#16a34a,#4ade80);background-size:200% 100%;"></td>
+      </tr>
+
+      <!-- HEADER -->
+      <tr>
+        <td style="padding:36px 40px 28px;background:linear-gradient(160deg,#162416 0%,#0f1a0f 100%);">
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td valign="middle">
+                <!-- Logo mark -->
+                <table cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td style="background:#22c55e;border-radius:12px;width:44px;height:44px;text-align:center;vertical-align:middle;">
+                      <span style="font-size:22px;line-height:44px;">🌿</span>
+                    </td>
+                    <td style="padding-left:14px;vertical-align:middle;">
+                      <div style="color:#f0fdf4;font-size:18px;font-weight:700;letter-spacing:-.3px;">Smart Farm</div>
+                      <div style="color:#4ade80;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;margin-top:1px;">Livestock Management System</div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+              <td align="right" valign="middle">
+                {% if alert_type == "GEOFENCE_BREACH" %}
+                  <div style="background:#7f1d1d;border:1px solid #ef4444;border-radius:20px;padding:7px 16px;color:#fca5a5;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;white-space:nowrap;">⚡ Breach Alert</div>
+                {% elif alert_type == "VACCINE_DUE" %}
+                  <div style="background:#1e3a5f;border:1px solid #3b82f6;border-radius:20px;padding:7px 16px;color:#93c5fd;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;white-space:nowrap;">💉 Vaccine Due</div>
+                {% elif alert_type == "TREATMENT_DUE" %}
+                  <div style="background:#3b1f00;border:1px solid #f59e0b;border-radius:20px;padding:7px 16px;color:#fcd34d;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;white-space:nowrap;">💊 Treatment Due</div>
+                {% elif alert_type == "HEALTH_RISK" %}
+                  <div style="background:#4a1942;border:1px solid #c026d3;border-radius:20px;padding:7px 16px;color:#e879f9;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;white-space:nowrap;">🩺 Health Risk</div>
+                {% else %}
+                  <div style="background:#1f2937;border:1px solid #6b7280;border-radius:20px;padding:7px 16px;color:#d1d5db;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;white-space:nowrap;">🔔 Alert</div>
+                {% endif %}
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <!-- DIVIDER -->
+      <tr><td style="height:1px;background:linear-gradient(90deg,transparent,#2a3d2a,transparent);"></td></tr>
+
+      <!-- HERO BANNER -->
+      <tr>
+        <td style="padding:0;">
+          {% if alert_type == "GEOFENCE_BREACH" %}
+          <div style="background:linear-gradient(135deg,#7f1d1d 0%,#991b1b 100%);padding:28px 40px;border-left:4px solid #ef4444;">
+            <div style="font-size:32px;margin-bottom:8px;">🚨</div>
+            <div style="color:#fef2f2;font-size:22px;font-weight:700;line-height:1.3;">{{ breach_count }} Animal{{ breach_count|pluralize }} Outside Paddock Boundar{{ breach_count|pluralize:"y,ies" }}</div>
+            <div style="color:#fca5a5;font-size:13px;margin-top:6px;">Detected at {{ timestamp }} — Immediate field response required</div>
+          </div>
+          {% else %}
+          <div style="background:linear-gradient(135deg,#162416 0%,#1a2e1a 100%);padding:28px 40px;border-left:4px solid #22c55e;">
+            <div style="font-size:32px;margin-bottom:8px;">
+              {% if alert_type == "VACCINE_DUE" %}💉{% elif alert_type == "TREATMENT_DUE" %}💊{% elif alert_type == "HEALTH_RISK" %}🩺{% elif alert_type == "VET_VISIT" %}🏥{% else %}🔔{% endif %}
+            </div>
+            <div style="color:#f0fdf4;font-size:22px;font-weight:700;line-height:1.3;">
+              {% if alerts|length == 1 %}
+                {{ alerts.0.animal.tag_number }} — {{ alerts.0.get_alert_type_display }}
+              {% else %}
+                {{ alerts|length }} Alert{{ alerts|length|pluralize }} Require Attention
+              {% endif %}
+            </div>
+            <div style="color:#86efac;font-size:13px;margin-top:6px;">Generated {{ timestamp }}</div>
+          </div>
+          {% endif %}
+        </td>
+      </tr>
+
+      <!-- BODY -->
+      <tr>
+        <td style="padding:36px 40px;background:#111b11;">
+
+          <p style="color:#86efac;font-size:14px;line-height:1.8;margin:0 0 28px;font-family:'Georgia',serif;">
+            Dear Farm Manager,<br><br>
+            {% if alert_type == "GEOFENCE_BREACH" %}
+              The Smart Farm geo-monitoring system has detected <strong style="color:#4ade80;">{{ breach_count }} animal{{ breach_count|pluralize }}</strong> outside their assigned paddock boundaries. Please review the table below and dispatch personnel immediately.
+            {% else %}
+              The Smart Farm alert system has flagged the following {{ alerts|length }} item{{ alerts|length|pluralize }} that require your attention. Please review and take action before the due date{{ alerts|length|pluralize }} pass.
+            {% endif %}
+          </p>
+
+          <!-- ===== GEOFENCE TABLE ===== -->
+          {% if alert_type == "GEOFENCE_BREACH" %}
+          <table width="100%" cellpadding="0" cellspacing="0" style="border-radius:12px;overflow:hidden;border:1px solid #2a3d2a;margin-bottom:28px;">
+            <tr style="background:#162416;">
+              <th style="padding:13px 18px;text-align:left;font-size:10px;font-weight:700;color:#4ade80;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #2a3d2a;font-family:monospace;">Tag #</th>
+              <th style="padding:13px 18px;text-align:left;font-size:10px;font-weight:700;color:#4ade80;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #2a3d2a;font-family:monospace;">Paddock</th>
+              <th style="padding:13px 18px;text-align:left;font-size:10px;font-weight:700;color:#4ade80;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #2a3d2a;font-family:monospace;">Coordinates</th>
+              <th style="padding:13px 18px;text-align:left;font-size:10px;font-weight:700;color:#4ade80;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #2a3d2a;font-family:monospace;">Status</th>
+            </tr>
+            {% for animal in animals %}
+            <tr style="background:{% cycle '#111b11' '#132013' %};">
+              <td style="padding:14px 18px;font-size:14px;font-weight:700;color:#f0fdf4;border-bottom:1px solid #1e2e1e;font-family:monospace;">{{ animal.tag }}</td>
+              <td style="padding:14px 18px;font-size:13px;color:#86efac;border-bottom:1px solid #1e2e1e;">{{ animal.paddock }}</td>
+              <td style="padding:14px 18px;font-size:11px;color:#4ade80;font-family:monospace;border-bottom:1px solid #1e2e1e;">{{ animal.lat|floatformat:5 }}, {{ animal.lon|floatformat:5 }}</td>
+              <td style="padding:14px 18px;border-bottom:1px solid #1e2e1e;">
+                <span style="background:#7f1d1d;color:#fca5a5;padding:4px 12px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.5px;border:1px solid #ef4444;">⚡ OUTSIDE</span>
+              </td>
+            </tr>
+            {% endfor %}
+          </table>
+
+          <!-- Recommended Actions -->
+          <table width="100%" cellpadding="0" cellspacing="0" style="background:#162416;border-radius:12px;border:1px solid #2a3d2a;margin-bottom:28px;">
+            <tr>
+              <td style="padding:22px 26px;">
+                <div style="color:#4ade80;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;font-family:monospace;">📋 Immediate Actions</div>
+                <table cellpadding="0" cellspacing="0">
+                  {% for action in "12345" %}
+                  <tr>
+                    <td style="padding:5px 0;vertical-align:top;">
+                      <span style="background:#22c55e;color:#0f1a0f;border-radius:50%;width:20px;height:20px;display:inline-block;text-align:center;line-height:20px;font-size:10px;font-weight:700;margin-right:12px;">{{ forloop.counter }}</span>
+                    </td>
+                    <td style="padding:5px 0;color:#86efac;font-size:13px;line-height:1.6;">
+                      {% if forloop.counter == 1 %}Dispatch a farm worker immediately to locate and secure the animal(s)
+                      {% elif forloop.counter == 2 %}Inspect paddock fence perimeter for damage or gaps
+                      {% elif forloop.counter == 3 %}Verify GPS collar sync status in the Devices panel
+                      {% elif forloop.counter == 4 %}Log the incident in the Smart Farm alert system
+                      {% elif forloop.counter == 5 %}Update the animal's paddock assignment if relocated intentionally
+                      {% endif %}
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </table>
+              </td>
+            </tr>
+          </table>
+
+          <!-- CTA -->
+          <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:8px;">
+            <tr>
+              <td align="center">
+                <a href="{{ BASE_URL }}/locations/"
+                   style="display:inline-block;background:linear-gradient(135deg,#16a34a,#22c55e);color:#0f1a0f;text-decoration:none;padding:15px 40px;border-radius:12px;font-weight:700;font-size:14px;letter-spacing:.3px;font-family:sans-serif;">
+                  🗺️ View Live Paddock Map
+                </a>
+              </td>
+            </tr>
+          </table>
+
+          <!-- ===== GENERAL ALERTS TABLE ===== -->
+          {% else %}
+          <table width="100%" cellpadding="0" cellspacing="0" style="border-radius:12px;overflow:hidden;border:1px solid #2a3d2a;margin-bottom:28px;">
+            <tr style="background:#162416;">
+              <th style="padding:13px 18px;text-align:left;font-size:10px;font-weight:700;color:#4ade80;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #2a3d2a;font-family:monospace;">Animal</th>
+              <th style="padding:13px 18px;text-align:left;font-size:10px;font-weight:700;color:#4ade80;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #2a3d2a;font-family:monospace;">Alert Type</th>
+              <th style="padding:13px 18px;text-align:left;font-size:10px;font-weight:700;color:#4ade80;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #2a3d2a;font-family:monospace;">Due Date</th>
+              <th style="padding:13px 18px;text-align:left;font-size:10px;font-weight:700;color:#4ade80;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #2a3d2a;font-family:monospace;">Status</th>
+              <th style="padding:13px 18px;text-align:left;font-size:10px;font-weight:700;color:#4ade80;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #2a3d2a;font-family:monospace;">Message</th>
+            </tr>
+            {% for alert in alerts %}
+            <tr style="background:{% cycle '#111b11' '#132013' %};">
+              <td style="padding:14px 18px;font-size:14px;font-weight:700;color:#f0fdf4;border-bottom:1px solid #1e2e1e;font-family:monospace;">{{ alert.animal.tag_number }}</td>
+              <td style="padding:14px 18px;border-bottom:1px solid #1e2e1e;">
+                {% if alert.alert_type == "VACCINE_DUE" %}
+                  <span style="background:#1e3a5f;color:#93c5fd;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700;border:1px solid #3b82f6;">💉 Vaccine</span>
+                {% elif alert.alert_type == "TREATMENT_DUE" %}
+                  <span style="background:#3b1f00;color:#fcd34d;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700;border:1px solid #f59e0b;">💊 Treatment</span>
+                {% elif alert.alert_type == "VET_VISIT" %}
+                  <span style="background:#162416;color:#86efac;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700;border:1px solid #22c55e;">🏥 Vet Visit</span>
+                {% elif alert.alert_type == "HEALTH_RISK" %}
+                  <span style="background:#4a1942;color:#e879f9;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700;border:1px solid #c026d3;">🩺 Health</span>
+                {% else %}
+                  <span style="background:#1f2937;color:#d1d5db;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700;border:1px solid #6b7280;">🔔 Alert</span>
+                {% endif %}
+              </td>
+              <td style="padding:14px 18px;font-size:13px;color:#86efac;border-bottom:1px solid #1e2e1e;font-family:monospace;">
+                {% if alert.due_date %}{{ alert.due_date }}{% else %}—{% endif %}
+              </td>
+              <td style="padding:14px 18px;border-bottom:1px solid #1e2e1e;">
+                {% if alert.status == "OVERDUE" %}
+                  <span style="background:#7f1d1d;color:#fca5a5;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700;border:1px solid #ef4444;">⚠ OVERDUE</span>
+                {% elif alert.status == "ABOUT_TO_DUE" %}
+                  <span style="background:#3b1f00;color:#fcd34d;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700;border:1px solid #f59e0b;">⏰ SOON</span>
+                {% else %}
+                  <span style="background:#162416;color:#4ade80;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700;border:1px solid #22c55e;">✓ DUE</span>
+                {% endif %}
+              </td>
+              <td style="padding:14px 18px;font-size:12px;color:#86efac;border-bottom:1px solid #1e2e1e;max-width:180px;">{{ alert.message|truncatechars:60 }}</td>
+            </tr>
+            {% endfor %}
+          </table>
+
+          <!-- Summary boxes -->
+          <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+            <tr>
+              <td width="32%" style="padding-right:8px;">
+                <div style="background:#7f1d1d;border:1px solid #ef4444;border-radius:10px;padding:16px;text-align:center;">
+                  <div style="color:#fca5a5;font-size:24px;font-weight:700;">{{ overdue_count }}</div>
+                  <div style="color:#fca5a5;font-size:11px;margin-top:4px;text-transform:uppercase;letter-spacing:.5px;">Overdue</div>
+                </div>
+              </td>
+              <td width="32%" style="padding:0 4px;">
+                <div style="background:#3b1f00;border:1px solid #f59e0b;border-radius:10px;padding:16px;text-align:center;">
+                  <div style="color:#fcd34d;font-size:24px;font-weight:700;">{{ soon_count }}</div>
+                  <div style="color:#fcd34d;font-size:11px;margin-top:4px;text-transform:uppercase;letter-spacing:.5px;">Due Soon</div>
+                </div>
+              </td>
+              <td width="32%" style="padding-left:8px;">
+                <div style="background:#162416;border:1px solid #22c55e;border-radius:10px;padding:16px;text-align:center;">
+                  <div style="color:#4ade80;font-size:24px;font-weight:700;">{{ total_count }}</div>
+                  <div style="color:#4ade80;font-size:11px;margin-top:4px;text-transform:uppercase;letter-spacing:.5px;">Total Alerts</div>
+                </div>
+              </td>
+            </tr>
+          </table>
+
+          <!-- CTA -->
+          <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:8px;">
+            <tr>
+              <td align="center" style="padding-right:8px;" width="50%">
+                <a href="{{ BASE_URL }}/alerts/"
+                   style="display:inline-block;background:linear-gradient(135deg,#16a34a,#22c55e);color:#0f1a0f;text-decoration:none;padding:14px 28px;border-radius:12px;font-weight:700;font-size:13px;font-family:sans-serif;width:100%;box-sizing:border-box;text-align:center;">
+                  🔔 View All Alerts
+                </a>
+              </td>
+              <td align="center" style="padding-left:8px;" width="50%">
+                <a href="{{ BASE_URL }}/animals/"
+                   style="display:inline-block;background:#162416;color:#4ade80;text-decoration:none;padding:14px 28px;border-radius:12px;font-weight:700;font-size:13px;font-family:sans-serif;border:1px solid #22c55e;width:100%;box-sizing:border-box;text-align:center;">
+                  🐄 Manage Animals
+                </a>
+              </td>
+            </tr>
+          </table>
+          {% endif %}
+
+        </td>
+      </tr>
+
+      <!-- DIVIDER -->
+      <tr><td style="height:1px;background:linear-gradient(90deg,transparent,#2a3d2a,transparent);"></td></tr>
+
+      <!-- FOOTER -->
+      <tr>
+        <td style="background:#0c140c;padding:24px 40px;text-align:center;">
+          <div style="font-size:11px;color:#2a3d2a;line-height:1.9;font-family:monospace;">
+            <span style="color:#4ade80;">Smart Farm</span> · Livestock Management System<br>
+            <span style="color:#2d4a2d;">This is an automated alert · Do not reply · alerts@smartfarm.co.za</span><br>
+            <span style="color:#1e301e;">© {{ timestamp|slice:"-4:" }} Smart Farm · All rights reserved</span>
+          </div>
+        </td>
+      </tr>
+
+      <!-- BOTTOM ACCENT -->
+      <tr>
+        <td style="height:3px;background:linear-gradient(90deg,#16a34a,#4ade80,#22c55e);"></td>
+      </tr>
+
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>

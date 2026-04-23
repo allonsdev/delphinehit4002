@@ -239,6 +239,7 @@ class Animal(TimeStampedModel):
             qr = qrcode.make(full_url)
             buf = BytesIO()
             qr.save(buf, format="PNG")
+            buf.seek(0)  # 🔥 IMPORTANT FIX
 
             self.qr_image.save(f"{self.tag_number}_qr.png", File(buf), save=False)
 
