@@ -22,6 +22,7 @@
 {% block extra_head %}{% endblock %}
 
 <style>
+/* ── CSS VARIABLES ──────────────────────────────────── */
 :root {
   --sf-green:       #1b5e20;
   --sf-green-light: #2e7d32;
@@ -42,6 +43,7 @@ body {
   font-family: 'Inter', sans-serif;
   background: var(--sf-bg);
   color: var(--sf-text);
+  overflow-x: hidden;
 }
 
 /* ── SIDEBAR ────────────────────────────────────────── */
@@ -54,13 +56,28 @@ body {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  z-index: 200;
+  z-index: 300;
+  transition: transform .3s cubic-bezier(.4,0,.2,1);
+}
+
+/* Mobile: sidebar slides off-screen by default */
+@media (max-width: 768px) {
+  .sf-sidebar {
+    transform: translateX(-100%);
+  }
+  .sf-sidebar.open {
+    transform: translateX(0);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.25);
+  }
 }
 
 .sf-sidebar-logo {
   padding: 20px 18px 14px;
   border-bottom: 1px solid rgba(255,255,255,0.12);
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 .sf-sidebar-logo h4 {
   color: #fff;
@@ -69,6 +86,26 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
+  margin: 0;
+}
+
+/* Close button inside sidebar (mobile only) */
+.sf-sidebar-close {
+  display: none;
+  background: rgba(255,255,255,0.15);
+  border: none;
+  color: #fff;
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+@media (max-width: 768px) {
+  .sf-sidebar-close { display: flex; }
 }
 
 .sf-nav-section {
@@ -108,6 +145,16 @@ body {
   border-top: 1px solid rgba(255,255,255,0.12);
 }
 
+/* ── OVERLAY (mobile) ───────────────────────────────── */
+.sf-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 299;
+}
+.sf-overlay.show { display: block; }
+
 /* ── HEADER ─────────────────────────────────────────── */
 .sf-header {
   margin-left: var(--sf-sidebar-w);
@@ -121,15 +168,26 @@ body {
   position: sticky;
   top: 0;
   z-index: 100;
+  transition: margin-left .3s;
 }
+
+@media (max-width: 768px) {
+  .sf-header {
+    margin-left: 0;
+    padding: 0 16px;
+  }
+}
+
 .sf-header-title h5 {
   font-size: 15px;
   font-weight: 600;
   color: var(--sf-text);
+  margin: 0;
 }
 .sf-header-title p {
   font-size: 12px;
   color: var(--sf-muted);
+  margin: 0;
 }
 .sf-header-right {
   display: flex;
@@ -148,11 +206,38 @@ body {
   font-size: 13px;
 }
 
+/* Hamburger button */
+.sf-hamburger {
+  display: none;
+  background: none;
+  border: 1px solid var(--sf-border);
+  border-radius: 7px;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--sf-text);
+  font-size: 15px;
+  flex-shrink: 0;
+}
+@media (max-width: 768px) {
+  .sf-hamburger { display: flex; }
+}
+
 /* ── MAIN CONTENT ───────────────────────────────────── */
 .sf-main {
   margin-left: var(--sf-sidebar-w);
   padding: 24px;
   min-height: calc(100vh - var(--sf-header-h));
+  transition: margin-left .3s;
+}
+
+@media (max-width: 768px) {
+  .sf-main {
+    margin-left: 0;
+    padding: 16px;
+  }
 }
 
 /* ── SECTION HEADER ─────────────────────────────────── */
@@ -161,6 +246,8 @@ body {
   align-items: flex-start;
   justify-content: space-between;
   margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 .sf-section-header h2 {
   font-size: 20px;
@@ -202,7 +289,7 @@ body {
 .sf-card-sub   { font-size: 12px; color: var(--sf-muted); margin-bottom: 14px; margin-top: 2px; }
 
 /* ── TABLES ─────────────────────────────────────────── */
-.sf-table { font-size: 13px; }
+.sf-table { font-size: 13px; width: 100%; }
 .sf-table thead th {
   background: #f8fafc;
   color: var(--sf-muted);
@@ -212,10 +299,14 @@ body {
   letter-spacing: .05em;
   border-bottom: 1px solid var(--sf-border);
   padding: 10px 12px;
+  white-space: nowrap;
 }
 .sf-table tbody td { padding: 10px 12px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
 .sf-table tbody tr:last-child td { border-bottom: none; }
 .sf-table tbody tr:hover { background: #f8fafc; }
+
+/* Table responsive wrapper */
+.table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
 /* ── BADGES ─────────────────────────────────────────── */
 .sf-badge {
@@ -246,16 +337,16 @@ body {
 .sf-counter h6  { font-size: 12px; font-weight: 600; opacity: .85; margin-bottom: 4px; }
 .sf-counter h3  { font-size: 26px; font-weight: 700; }
 .sf-counter i   { font-size: 32px; opacity: .7; }
-.sf-counter-teal    { background: linear-gradient(135deg,#00897b,#00695c); }
-.sf-counter-green   { background: linear-gradient(135deg,#43a047,#2e7d32); }
-.sf-counter-blue    { background: linear-gradient(135deg,#1e88e5,#1565c0); }
-.sf-counter-orange  { background: linear-gradient(135deg,#fb8c00,#e65100); }
-.sf-counter-purple  { background: linear-gradient(135deg,#8e24aa,#6a1b9a); }
-.sf-counter-indigo  { background: linear-gradient(135deg,#3949ab,#283593); }
-.sf-counter-red     { background: linear-gradient(135deg,#e53935,#b71c1c); }
-.sf-counter-cyan    { background: linear-gradient(135deg,#00acc1,#006064); }
+.sf-counter-teal   { background: linear-gradient(135deg,#00897b,#00695c); }
+.sf-counter-green  { background: linear-gradient(135deg,#43a047,#2e7d32); }
+.sf-counter-blue   { background: linear-gradient(135deg,#1e88e5,#1565c0); }
+.sf-counter-orange { background: linear-gradient(135deg,#fb8c00,#e65100); }
+.sf-counter-purple { background: linear-gradient(135deg,#8e24aa,#6a1b9a); }
+.sf-counter-indigo { background: linear-gradient(135deg,#3949ab,#283593); }
+.sf-counter-red    { background: linear-gradient(135deg,#e53935,#b71c1c); }
+.sf-counter-cyan   { background: linear-gradient(135deg,#00acc1,#006064); }
 
-/* ── DATATABLES PAGINATION ──────────────────────────── */
+/* ── DATATABLES ─────────────────────────────────────── */
 .dataTables_wrapper .dataTables_paginate { margin-top: 14px; }
 .dataTables_wrapper .dataTables_paginate .paginate_button {
   margin: 0 3px !important;
@@ -287,20 +378,34 @@ body {
   font-size: 12px !important;
   padding: 5px 12px !important;
 }
+
+/* ── MOBILE RESPONSIVE GRID HELPERS ────────────────── */
+@media (max-width: 576px) {
+  .row > [class*="col-"] { margin-bottom: 14px; }
+  .sf-counter h3 { font-size: 20px; }
+  .sf-counter i  { font-size: 24px; }
+  .sf-card       { padding: 14px; }
+}
 </style>
 </head>
 <body>
 
+<!-- ═══ MOBILE OVERLAY ════════════════════════════════════════ -->
+<div class="sf-overlay" id="sfOverlay" onclick="closeSidebar()"></div>
+
 <!-- ═══ SIDEBAR ═══════════════════════════════════════════════ -->
-<aside class="sf-sidebar">
+<aside class="sf-sidebar" id="sfSidebar">
   <div class="sf-sidebar-logo">
     <h4><i class="fa-solid fa-seedling"></i> Smart Farm</h4>
+    <button class="sf-sidebar-close" onclick="closeSidebar()" aria-label="Close menu">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
   </div>
 
   <!-- Overview -->
   <div class="sf-nav-section">
     <div class="sf-nav-label">Overview</div>
-    <a href="{% url 'dashboard' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+    <a href="{% url 'dashboard' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" onclick="closeSidebarMobile()">
       <i class="fa-solid fa-gauge-high"></i> Dashboard
     </a>
   </div>
@@ -308,13 +413,13 @@ body {
   <!-- Livestock -->
   <div class="sf-nav-section">
     <div class="sf-nav-label">Livestock</div>
-    <a href="{% url 'animal_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'animal_list' %}active{% endif %}">
+    <a href="{% url 'animal_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'animal_list' or request.resolver_match.url_name == 'animal_detail' %}active{% endif %}" onclick="closeSidebarMobile()">
       <i class="fa-solid fa-cow"></i> Animals
     </a>
-    <a href="{% url 'farm_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'farm_list' %}active{% endif %}">
+    <a href="{% url 'farm_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'farm_list' %}active{% endif %}" onclick="closeSidebarMobile()">
       <i class="fa-solid fa-tractor"></i> Farms
     </a>
-    <a href="{% url 'paddock_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'paddock_list' %}active{% endif %}">
+    <a href="{% url 'paddock_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'paddock_list' %}active{% endif %}" onclick="closeSidebarMobile()">
       <i class="fa-solid fa-map"></i> Paddocks
     </a>
   </div>
@@ -322,19 +427,19 @@ body {
   <!-- Health -->
   <div class="sf-nav-section">
     <div class="sf-nav-label">Health</div>
-    <a href="{% url 'vaccination_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'vaccination_list' %}active{% endif %}">
+    <a href="{% url 'vaccination_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'vaccination_list' %}active{% endif %}" onclick="closeSidebarMobile()">
       <i class="fa-solid fa-syringe"></i> Vaccinations
     </a>
-    <a href="{% url 'disease_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'disease_list' %}active{% endif %}">
+    <a href="{% url 'disease_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'disease_list' %}active{% endif %}" onclick="closeSidebarMobile()">
       <i class="fa-solid fa-heart-pulse"></i> Diseases
     </a>
-    <a href="{% url 'treatment_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'treatment_list' %}active{% endif %}">
+    <a href="{% url 'treatment_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'treatment_list' %}active{% endif %}" onclick="closeSidebarMobile()">
       <i class="fa-solid fa-kit-medical"></i> Treatments
     </a>
-    <a href="{% url 'health_observation_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'health_observation_list' %}active{% endif %}">
+    <a href="{% url 'health_observation_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'health_observation_list' %}active{% endif %}" onclick="closeSidebarMobile()">
       <i class="fa-solid fa-stethoscope"></i> Observations
     </a>
-    <a href="{% url 'labtest_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'labtest_list' %}active{% endif %}">
+    <a href="{% url 'labtest_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'labtest_list' %}active{% endif %}" onclick="closeSidebarMobile()">
       <i class="fa-solid fa-flask"></i> Lab Tests
     </a>
   </div>
@@ -342,16 +447,16 @@ body {
   <!-- Breeding -->
   <div class="sf-nav-section">
     <div class="sf-nav-label">Breeding</div>
-    <a href="{% url 'breeding_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'breeding_list' %}active{% endif %}">
+    <a href="{% url 'breeding_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'breeding_list' %}active{% endif %}" onclick="closeSidebarMobile()">
       <i class="fa-solid fa-dna"></i> Breeding
     </a>
-    <a href="{% url 'calving_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'calving_list' %}active{% endif %}">
+    <a href="{% url 'calving_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'calving_list' %}active{% endif %}" onclick="closeSidebarMobile()">
       <i class="fa-solid fa-baby"></i> Calving
     </a>
-    <a href="{% url 'reproductive_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'reproductive_list' %}active{% endif %}">
+    <a href="{% url 'reproductive_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'reproductive_list' %}active{% endif %}" onclick="closeSidebarMobile()">
       <i class="fa-solid fa-venus-mars"></i> Reproductive
     </a>
-    <a href="{% url 'lactation_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'lactation_list' %}active{% endif %}">
+    <a href="{% url 'lactation_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'lactation_list' %}active{% endif %}" onclick="closeSidebarMobile()">
       <i class="fa-solid fa-droplet"></i> Lactation
     </a>
   </div>
@@ -359,33 +464,33 @@ body {
   <!-- Production -->
   <div class="sf-nav-section">
     <div class="sf-nav-label">Production</div>
-    <a href="{% url 'production_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'production_list' %}active{% endif %}">
+    <a href="{% url 'production_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'production_list' %}active{% endif %}" onclick="closeSidebarMobile()">
       <i class="fa-solid fa-chart-line"></i> Production
     </a>
-    <a href="{% url 'feeding_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'feeding_list' %}active{% endif %}">
+    <a href="{% url 'feeding_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'feeding_list' %}active{% endif %}" onclick="closeSidebarMobile()">
       <i class="fa-solid fa-bowl-food"></i> Feeding
     </a>
-    <a href="{% url 'feedtype_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'feedtype_list' %}active{% endif %}">
+    <a href="{% url 'feedtype_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'feedtype_list' %}active{% endif %}" onclick="closeSidebarMobile()">
       <i class="fa-solid fa-seedling"></i> Feed Types
     </a>
   </div>
 
   <!-- GPS & Tracking -->
   <div class="sf-nav-section">
-    <div class="sf-nav-label">GPS & Tracking</div>
-    <a href="{% url 'location_log_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'location_log_list' %}active{% endif %}">
+    <div class="sf-nav-label">GPS &amp; Tracking</div>
+    <a href="{% url 'location_log_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'location_log_list' %}active{% endif %}" onclick="closeSidebarMobile()">
       <i class="fa-solid fa-map-location-dot"></i> Farm Map
     </a>
-    <a href="{% url 'movement_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'movement_list' %}active{% endif %}">
+    <a href="{% url 'movement_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'movement_list' %}active{% endif %}" onclick="closeSidebarMobile()">
       <i class="fa-solid fa-route"></i> Movements
     </a>
-    <a href="{% url 'device_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'device_list' %}active{% endif %}">
+    <a href="{% url 'device_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'device_list' %}active{% endif %}" onclick="closeSidebarMobile()">
       <i class="fa-solid fa-microchip"></i> Devices
     </a>
-    <a href="{% url 'geofence_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'geofence_list' %}active{% endif %}">
+    <a href="{% url 'geofence_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'geofence_list' %}active{% endif %}" onclick="closeSidebarMobile()">
       <i class="fa-solid fa-draw-polygon"></i> Geofences
     </a>
-    <a href="{% url 'environmental_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'environmental_list' %}active{% endif %}">
+    <a href="{% url 'environmental_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'environmental_list' %}active{% endif %}" onclick="closeSidebarMobile()">
       <i class="fa-solid fa-temperature-half"></i> Environment
     </a>
   </div>
@@ -393,13 +498,13 @@ body {
   <!-- Finance -->
   <div class="sf-nav-section">
     <div class="sf-nav-label">Finance</div>
-    <a href="{% url 'sale_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'sale_list' %}active{% endif %}">
+    <a href="{% url 'sale_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'sale_list' %}active{% endif %}" onclick="closeSidebarMobile()">
       <i class="fa-solid fa-sack-dollar"></i> Sales
     </a>
-    <a href="{% url 'expense_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'expense_list' %}active{% endif %}">
+    <a href="{% url 'expense_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'expense_list' %}active{% endif %}" onclick="closeSidebarMobile()">
       <i class="fa-solid fa-receipt"></i> Expenses
     </a>
-    <a href="{% url 'alert_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'alert_list' %}active{% endif %}">
+    <a href="{% url 'alert_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'alert_list' %}active{% endif %}" onclick="closeSidebarMobile()">
       <i class="fa-solid fa-triangle-exclamation"></i> Alerts
     </a>
   </div>
@@ -414,18 +519,33 @@ body {
 
 <!-- ═══ HEADER ════════════════════════════════════════════════ -->
 <header class="sf-header">
-  <div class="sf-header-title">
-    <h5>{% block page_title %}Smart Farm{% endblock %}</h5>
-    <p>{% block page_subtitle %}{% endblock %}</p>
+  <div style="display:flex;align-items:center;gap:14px;min-width:0;">
+    <!-- Hamburger (mobile) -->
+    <button class="sf-hamburger" id="sfHamburger" onclick="openSidebar()" aria-label="Open menu">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <div class="sf-header-title" style="min-width:0;">
+      <h5 style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{% block page_title %}Smart Farm{% endblock %}</h5>
+      <p style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{% block page_subtitle %}{% endblock %}</p>
+    </div>
   </div>
   <div class="sf-header-right">
-    <span style="font-size:13px;color:var(--sf-muted);">{{ request.user.username }}</span>
+    <span style="font-size:13px;color:var(--sf-muted);display:none;" class="d-sm-inline">{{ request.user.username }}</span>
     <div class="sf-avatar">{{ request.user.username|first|upper }}</div>
   </div>
 </header>
 
 <!-- ═══ MAIN ══════════════════════════════════════════════════ -->
 <main class="sf-main">
+  {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert" style="border-radius:10px;font-size:14px;margin-bottom:16px;">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endfor %}
+  {% endif %}
+
   {% block content %}{% endblock %}
 </main>
 
@@ -438,6 +558,34 @@ body {
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.bootstrap5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+
+<script>
+// ── SIDEBAR TOGGLE ────────────────────────────────────
+function openSidebar() {
+  document.getElementById('sfSidebar').classList.add('open');
+  document.getElementById('sfOverlay').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSidebar() {
+  document.getElementById('sfSidebar').classList.remove('open');
+  document.getElementById('sfOverlay').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+// Only close on mobile (sidebar is always visible on desktop)
+function closeSidebarMobile() {
+  if (window.innerWidth <= 768) {
+    closeSidebar();
+  }
+}
+
+// Close sidebar on ESC key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeSidebar();
+});
+</script>
+
 {% block extra_scripts %}{% endblock %}
 </body>
 </html>

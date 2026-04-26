@@ -1,15 +1,18 @@
 import json
 from datetime import timedelta
 
+from django import forms as _forms
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg, Count, Q, Sum
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils.timezone import now
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.conf import settings
+from django.views.decorators.http import require_POST
 
 from .models import (
     Alert, Animal, BreedingEvent, CalvingRecord, Device,
@@ -19,6 +22,74 @@ from .models import (
     Paddock, ProductionRecord, ReproductiveStatus,
     SaleRecord, TreatmentRecord, VaccinationRecord,
 )
+
+
+# =============================================================================
+# ANIMAL EDIT FORM
+# =============================================================================
+
+class AnimalEditForm(_forms.ModelForm):
+    class Meta:
+        model  = Animal
+        fields = [
+            "tag_number", "electronic_id", "registration_number",
+            "insurance_policy_number",
+            "species", "breed", "strain", "color", "horn_status", "purpose",
+            "sex", "date_of_birth", "birth_type", "birth_weight_kg",
+            "weaning_date", "weaning_weight_kg",
+            "sire_tag", "dam_tag", "genetic_merit_index",
+            "status", "acquisition_date", "acquisition_method", "purchase_price",
+            "farm", "current_paddock",
+            "current_weight_kg", "height_cm", "body_length_cm",
+            "temperament_score", "lameness_score",
+            "date_of_death", "cause_of_death", "culling_reason",
+            "notes",
+        ]
+
+
+# =============================================================================
+# SHARED HELPER — build animal detail context
+# =============================================================================
+
+def _animal_detail_context(animal):
+    milk_total      = animal.productionrecord_set.aggregate(t=Sum("milk_yield_liters"))["t"] or 0
+    total_expenses  = animal.expenserecord_set.aggregate(t=Sum("amount"))["t"] or 0
+    active_diseases = animal.diseaserecord_set.filter(recovery_date__isnull=True).count()
+    last_location   = LocationLog.objects.filter(animal=animal).order_by("-timestamp").first()
+
+    weight_history = list(
+        animal.healthobservation_set.order_by("created_at").values("created_at", "weight_kg")
+    )
+    weight_labels = [w["created_at"].strftime("%d %b") for w in weight_history if w["weight_kg"]]
+    weight_data   = [w["weight_kg"]  for w in weight_history if w["weight_kg"]]
+
+    milk_history = list(
+        animal.productionrecord_set.order_by("record_date").values("record_date", "milk_yield_liters")
+    )
+    milk_labels = [m["record_date"].strftime("%d %b") for m in milk_history if m["milk_yield_liters"]]
+    milk_data   = [m["milk_yield_liters"] for m in milk_history if m["milk_yield_liters"]]
+
+    return {
+        "animal":          animal,
+        "farms":           Farm.objects.all(),
+        "paddocks":        Paddock.objects.select_related("farm").all(),
+        "diseases":        animal.diseaserecord_set.all(),
+        "vaccinations":    animal.vaccinationrecord_set.all(),
+        "treatments":      animal.treatmentrecord_set.all(),
+        "health":          animal.healthobservation_set.order_by("-created_at"),
+        "breeding":        animal.female_events.select_related("male"),
+        "calving":         animal.calvings.all(),
+        "production":      animal.productionrecord_set.order_by("-record_date"),
+        "expenses":        animal.expenserecord_set.all(),
+        "milk_total":      milk_total,
+        "total_expenses":  total_expenses,
+        "active_diseases": active_diseases,
+        "last_location":   last_location,
+        "weight_labels":   json.dumps(weight_labels),
+        "weight_data":     json.dumps(weight_data),
+        "milk_labels":     json.dumps(milk_labels),
+        "milk_data":       json.dumps(milk_data),
+    }
 
 
 # =============================================================================
@@ -66,7 +137,6 @@ def dashboard(request):
     status_qs = Animal.objects.values("status").annotate(count=Count("status"))
     breed_qs  = Animal.objects.values("breed").annotate(count=Count("id"))
 
-    # ── Milk production trend (last 30 days, daily totals) ────────────────
     milk_qs = (
         ProductionRecord.objects
         .values("record_date")
@@ -76,7 +146,6 @@ def dashboard(request):
     milk_labels = json.dumps([str(r["record_date"]) for r in milk_qs])
     milk_data   = json.dumps([float(r["total"] or 0) for r in milk_qs])
 
-    # ── Weight gain trend (average per record date) ───────────────────────
     weight_qs = (
         ProductionRecord.objects
         .values("record_date")
@@ -136,15 +205,11 @@ def paddock_list(request):
     if q:
         data = data.filter(name__icontains=q)
 
-    total_paddocks   = data.count()
-    total_capacity   = data.aggregate(t=Sum("capacity"))["t"] or 0
-    farm_count       = Farm.objects.count()
-
     return render(request, "paddock.html", {
         "data":            data,
-        "total_paddocks":  total_paddocks,
-        "total_capacity":  total_capacity,
-        "farm_count":      farm_count,
+        "total_paddocks":  data.count(),
+        "total_capacity":  data.aggregate(t=Sum("capacity"))["t"] or 0,
+        "farm_count":      Farm.objects.count(),
     })
 
 
@@ -187,12 +252,7 @@ def farm_map_view(request):
 
     animal_data = []
     for a in animals:
-        last_log = (
-            LocationLog.objects
-            .filter(animal=a)
-            .order_by("-timestamp")
-            .first()
-        )
+        last_log = LocationLog.objects.filter(animal=a).order_by("-timestamp").first()
         if last_log:
             lat, lon = last_log.latitude, last_log.longitude
         elif a.current_paddock:
@@ -235,13 +295,13 @@ def farm_map_view(request):
 
 
 def _send_geofence_alert_email(outside_animals):
-    subject = f"🚨 Geofence Breach — {len(outside_animals)} Animal(s) Outside Boundary"
+    subject        = f"🚨 Geofence Breach — {len(outside_animals)} Animal(s) Outside Boundary"
     from_email     = settings.DEFAULT_FROM_EMAIL
     recipient_list = getattr(settings, "ALERT_EMAIL_RECIPIENTS", [])
     if not recipient_list:
         return
 
-    html_content  = render_to_string("email.html", {
+    html_content = render_to_string("email.html", {
         "animals":      outside_animals,
         "breach_count": len(outside_animals),
         "timestamp":    now().strftime("%d %b %Y, %H:%M"),
@@ -259,7 +319,7 @@ def _send_geofence_alert_email(outside_animals):
 
 
 # =============================================================================
-# ANIMAL
+# ANIMAL — list / detail / update / delete
 # =============================================================================
 
 def animal_list(request):
@@ -283,45 +343,40 @@ def animal_list(request):
     })
 
 
+@login_required
 def animal_detail(request, pk):
     animal = get_object_or_404(Animal, id=pk)
+    ctx = _animal_detail_context(animal)
+    ctx["form"] = AnimalEditForm(instance=animal)
+    return render(request, "animal_detail.html", ctx)
 
-    milk_total      = animal.productionrecord_set.aggregate(t=Sum("milk_yield_liters"))["t"] or 0
-    total_expenses  = animal.expenserecord_set.aggregate(t=Sum("amount"))["t"] or 0
-    active_diseases = animal.diseaserecord_set.filter(recovery_date__isnull=True).count()
-    last_location   = LocationLog.objects.filter(animal=animal).order_by("-timestamp").first()
 
-    weight_history = list(
-        animal.healthobservation_set.order_by("created_at").values("created_at", "weight_kg")
-    )
-    weight_labels = [w["created_at"].strftime("%d %b") for w in weight_history if w["weight_kg"]]
-    weight_data   = [w["weight_kg"]  for w in weight_history if w["weight_kg"]]
+@login_required
+def animal_update(request, pk):
+    animal = get_object_or_404(Animal, pk=pk)
 
-    milk_history = list(
-        animal.productionrecord_set.order_by("record_date").values("record_date", "milk_yield_liters")
-    )
-    milk_labels = [m["record_date"].strftime("%d %b") for m in milk_history if m["milk_yield_liters"]]
-    milk_data   = [m["milk_yield_liters"] for m in milk_history if m["milk_yield_liters"]]
+    if request.method == "POST":
+        form = AnimalEditForm(request.POST, instance=animal)
+        if form.is_valid():
+            form.save()
+            return redirect(
+                reverse("animal_detail", kwargs={"pk": pk}) + "?saved=1"
+            )
+        # Invalid — re-render detail page with errors so Edit tab opens
+        ctx = _animal_detail_context(animal)
+        ctx["form"] = form
+        return render(request, "animal_detail.html", ctx)
 
-    return render(request, "animal_detail.html", {
-        "animal":           animal,
-        "diseases":         animal.diseaserecord_set.all(),
-        "vaccinations":     animal.vaccinationrecord_set.all(),
-        "treatments":       animal.treatmentrecord_set.all(),
-        "health":           animal.healthobservation_set.order_by("-created_at"),
-        "breeding":         animal.female_events.select_related("male"),
-        "calving":          animal.calvings.all(),
-        "production":       animal.productionrecord_set.order_by("-record_date"),
-        "expenses":         animal.expenserecord_set.all(),
-        "milk_total":       milk_total,
-        "total_expenses":   total_expenses,
-        "active_diseases":  active_diseases,
-        "last_location":    last_location,
-        "weight_labels":    json.dumps(weight_labels),
-        "weight_data":      json.dumps(weight_data),
-        "milk_labels":      json.dumps(milk_labels),
-        "milk_data":        json.dumps(milk_data),
-    })
+    return redirect("animal_detail", pk=pk)
+
+
+@login_required
+def animal_delete(request, pk):
+    animal = get_object_or_404(Animal, pk=pk)
+    tag    = animal.tag_number
+    animal.delete()
+    messages.success(request, f"Animal {tag} has been deleted.")
+    return redirect("animal_list")
 
 
 # =============================================================================
@@ -333,20 +388,15 @@ def disease_list(request):
     if request.GET.get("q"):
         data = data.filter(disease_name__icontains=request.GET["q"])
 
-    total        = data.count()
-    active       = data.filter(recovery_date__isnull=True).count()
-    recovered    = data.filter(recovery_date__isnull=False).count()
-
-    # Disease distribution for chart
     disease_dist = list(
         data.values("disease_name").annotate(count=Count("id")).order_by("-count")[:10]
     )
 
     return render(request, "disease.html", {
         "data":            data,
-        "total":           total,
-        "active":          active,
-        "recovered":       recovered,
+        "total":           data.count(),
+        "active":          data.filter(recovery_date__isnull=True).count(),
+        "recovered":       data.filter(recovery_date__isnull=False).count(),
         "disease_labels":  json.dumps([d["disease_name"] for d in disease_dist]),
         "disease_counts":  json.dumps([d["count"] for d in disease_dist]),
     })
@@ -358,7 +408,6 @@ def vaccination_list(request):
         data = data.filter(vaccine_name__icontains=request.GET["q"])
     today = now().date()
 
-    # Vaccine type distribution
     vax_dist = list(
         data.values("vaccine_name").annotate(count=Count("id")).order_by("-count")[:10]
     )
@@ -379,16 +428,15 @@ def treatment_list(request):
     if request.GET.get("q"):
         data = data.filter(diagnosis__icontains=request.GET["q"])
 
-    total = data.count()
     med_dist = list(
         data.values("medication").annotate(count=Count("id")).order_by("-count")[:10]
     )
 
     return render(request, "treatment.html", {
-        "data":          data,
-        "total":         total,
-        "med_labels":    json.dumps([m["medication"] for m in med_dist]),
-        "med_counts":    json.dumps([m["count"] for m in med_dist]),
+        "data":       data,
+        "total":      data.count(),
+        "med_labels": json.dumps([m["medication"] for m in med_dist]),
+        "med_counts": json.dumps([m["count"] for m in med_dist]),
     })
 
 
@@ -396,7 +444,6 @@ def health_observation_list(request):
     data  = HealthObservation.objects.select_related("animal")
     stats = data.aggregate(avg_temp=Avg("temperature_c"), avg_weight=Avg("weight_kg"))
 
-    # Temperature trend
     temp_qs = (
         data.values("created_at__date")
         .annotate(avg_t=Avg("temperature_c"))
@@ -404,22 +451,18 @@ def health_observation_list(request):
     )
 
     return render(request, "health.html", {
-        "data":         data,
-        "total":        data.count(),
-        "avg_temp":     round(stats["avg_temp"],   1) if stats["avg_temp"]   else 0,
-        "avg_weight":   round(stats["avg_weight"], 1) if stats["avg_weight"] else 0,
-        "temp_labels":  json.dumps([str(r["created_at__date"]) for r in temp_qs]),
-        "temp_data":    json.dumps([float(r["avg_t"] or 0) for r in temp_qs]),
+        "data":        data,
+        "total":       data.count(),
+        "avg_temp":    round(stats["avg_temp"],   1) if stats["avg_temp"]   else 0,
+        "avg_weight":  round(stats["avg_weight"], 1) if stats["avg_weight"] else 0,
+        "temp_labels": json.dumps([str(r["created_at__date"]) for r in temp_qs]),
+        "temp_data":   json.dumps([float(r["avg_t"] or 0) for r in temp_qs]),
     })
 
 
 def labtest_list(request):
     data = LabTest.objects.select_related("animal")
-    total = data.count()
-    return render(request, "lab.html", {
-        "data":  data,
-        "total": total,
-    })
+    return render(request, "lab.html", {"data": data, "total": data.count()})
 
 
 # =============================================================================
@@ -435,73 +478,60 @@ def breeding_list(request):
         natural_count=Count("id", filter=Q(method="NATURAL")),
     )
 
-    # Monthly breeding trend
     monthly = list(
         data.values("breeding_date__month", "breeding_date__year")
         .annotate(count=Count("id"))
         .order_by("breeding_date__year", "breeding_date__month")
     )
-    month_labels = json.dumps([
-        f"{r['breeding_date__year']}-{r['breeding_date__month']:02d}" for r in monthly
-    ])
-    month_data = json.dumps([r["count"] for r in monthly])
 
     return render(request, "breeding.html", {
         **{"data": data},
         **stats,
-        "month_labels": month_labels,
-        "month_data":   month_data,
+        "month_labels": json.dumps([
+            f"{r['breeding_date__year']}-{r['breeding_date__month']:02d}" for r in monthly
+        ]),
+        "month_data": json.dumps([r["count"] for r in monthly]),
     })
 
 
 def calving_list(request):
     data = CalvingRecord.objects.select_related("mother", "calf")
-    total_calvings = data.count()
 
-    # Calvings per month
     monthly = list(
         data.values("calving_date__month", "calving_date__year")
         .annotate(count=Count("id"))
         .order_by("calving_date__year", "calving_date__month")
     )
-    calving_labels = json.dumps([
-        f"{r['calving_date__year']}-{r['calving_date__month']:02d}" for r in monthly
-    ])
-    calving_monthly = json.dumps([r["count"] for r in monthly])
 
     return render(request, "calving.html", {
         "calvings":        data,
-        "total_calvings":  total_calvings,
-        "calving_labels":  calving_labels,
-        "calving_monthly": calving_monthly,
+        "total_calvings":  data.count(),
+        "calving_labels":  json.dumps([
+            f"{r['calving_date__year']}-{r['calving_date__month']:02d}" for r in monthly
+        ]),
+        "calving_monthly": json.dumps([r["count"] for r in monthly]),
     })
 
 
 def reproductive_list(request):
     data = ReproductiveStatus.objects.select_related("animal")
-    total = data.count()
-
-    # Status distribution
-    status_dist = list(
-        data.values("reproductive_status").annotate(count=Count("id"))
-    )
+    status_dist = list(data.values("reproductive_status").annotate(count=Count("id")))
 
     return render(request, "reproductive.html", {
-        "data":              data,
-        "total":             total,
-        "repro_labels":      json.dumps([s["reproductive_status"] for s in status_dist]),
-        "repro_counts":      json.dumps([s["count"] for s in status_dist]),
+        "data":         data,
+        "total":        data.count(),
+        "repro_labels": json.dumps([s["reproductive_status"] for s in status_dist]),
+        "repro_counts": json.dumps([s["count"] for s in status_dist]),
     })
 
 
 def lactation_list(request):
-    data = LactationRecord.objects.select_related("animal")
-    total = data.count()
+    data      = LactationRecord.objects.select_related("animal")
     avg_yield = data.aggregate(avg=Avg("peak_yield_liters"))["avg"] or 0
 
     return render(request, "lactation.html", {
         "data":      data,
-        "total":     total,
+        "total":     data.count(),
         "avg_yield": round(avg_yield, 1),
     })
 
@@ -518,26 +548,18 @@ def production_list(request):
         avg_feed=Avg("feed_consumption_kg"),
     )
 
-    # Milk trend
     milk_trend = list(
         data.values("record_date")
         .annotate(total_milk=Sum("milk_yield_liters"), avg_gain=Avg("weight_gain_kg"))
         .order_by("record_date")
     )
-    prod_milk_labels  = json.dumps([str(r["record_date"]) for r in milk_trend])
-    prod_milk_data    = json.dumps([float(r["total_milk"] or 0) for r in milk_trend])
-    prod_weight_labels = json.dumps([str(r["record_date"]) for r in milk_trend])
-    prod_weight_data   = json.dumps([float(r["avg_gain"] or 0) for r in milk_trend])
 
-    # Feed vs milk scatter (top 50)
     feed_milk_pairs = list(
         data.filter(
             feed_consumption_kg__isnull=False,
             milk_yield_liters__isnull=False,
         ).values("feed_consumption_kg", "milk_yield_liters")[:50]
     )
-    scatter_feed  = json.dumps([float(r["feed_consumption_kg"]) for r in feed_milk_pairs])
-    scatter_milk  = json.dumps([float(r["milk_yield_liters"]) for r in feed_milk_pairs])
 
     return render(request, "productive.html", {
         "data":               data,
@@ -545,12 +567,12 @@ def production_list(request):
         "avg_milk":           round(stats["avg_milk"],        1) if stats["avg_milk"]        else 0,
         "avg_weight_gain":    round(stats["avg_weight_gain"], 1) if stats["avg_weight_gain"] else 0,
         "avg_feed":           round(stats["avg_feed"],        1) if stats["avg_feed"]        else 0,
-        "prod_milk_labels":   prod_milk_labels,
-        "prod_milk_data":     prod_milk_data,
-        "prod_weight_labels": prod_weight_labels,
-        "prod_weight_data":   prod_weight_data,
-        "scatter_feed":       scatter_feed,
-        "scatter_milk":       scatter_milk,
+        "prod_milk_labels":   json.dumps([str(r["record_date"]) for r in milk_trend]),
+        "prod_milk_data":     json.dumps([float(r["total_milk"] or 0) for r in milk_trend]),
+        "prod_weight_labels": json.dumps([str(r["record_date"]) for r in milk_trend]),
+        "prod_weight_data":   json.dumps([float(r["avg_gain"] or 0) for r in milk_trend]),
+        "scatter_feed":       json.dumps([float(r["feed_consumption_kg"]) for r in feed_milk_pairs]),
+        "scatter_milk":       json.dumps([float(r["milk_yield_liters"]) for r in feed_milk_pairs]),
     })
 
 
@@ -563,21 +585,14 @@ def feeding_list(request):
         unique_animals=Count("animal", distinct=True),
     )
 
-    # Feed type distribution
     feed_dist = list(
         data.values("feed_type__name").annotate(total=Sum("quantity_kg")).order_by("-total")[:8]
     )
-    feed_type_labels = json.dumps([r["feed_type__name"] or "Unknown" for r in feed_dist])
-    feed_type_data   = json.dumps([float(r["total"] or 0) for r in feed_dist])
-
-    # Daily feeding trend
     daily_feed = list(
         data.values("feeding_time__date")
         .annotate(total=Sum("quantity_kg"))
         .order_by("feeding_time__date")
     )
-    feed_day_labels = json.dumps([str(r["feeding_time__date"]) for r in daily_feed])
-    feed_day_data   = json.dumps([float(r["total"] or 0) for r in daily_feed])
 
     return render(request, "feeding.html", {
         "data":             data,
@@ -585,10 +600,10 @@ def feeding_list(request):
         "total_feed":       round(stats["total_feed"], 1) if stats["total_feed"] else 0,
         "avg_feed":         round(stats["avg_feed"],   1) if stats["avg_feed"]   else 0,
         "unique_animals":   stats["unique_animals"],
-        "feed_type_labels": feed_type_labels,
-        "feed_type_data":   feed_type_data,
-        "feed_day_labels":  feed_day_labels,
-        "feed_day_data":    feed_day_data,
+        "feed_type_labels": json.dumps([r["feed_type__name"] or "Unknown" for r in feed_dist]),
+        "feed_type_data":   json.dumps([float(r["total"] or 0) for r in feed_dist]),
+        "feed_day_labels":  json.dumps([str(r["feeding_time__date"]) for r in daily_feed]),
+        "feed_day_data":    json.dumps([float(r["total"] or 0) for r in daily_feed]),
     })
 
 
@@ -602,45 +617,34 @@ def feedtype_list(request):
 
 def location_log_list(request):
     data = LocationLog.objects.select_related("animal").order_by("-timestamp")[:500]
-    total_logs    = LocationLog.objects.count()
-    unique_animals = LocationLog.objects.values("animal").distinct().count()
-
     return render(request, "location_logs.html", {
         "data":            data,
-        "total_logs":      total_logs,
-        "unique_animals":  unique_animals,
+        "total_logs":      LocationLog.objects.count(),
+        "unique_animals":  LocationLog.objects.values("animal").distinct().count(),
     })
 
 
 def movement_list(request):
     data = MovementEvent.objects.select_related("animal", "from_paddock", "to_paddock")
-    total_movements = data.count()
 
-    # Movements per paddock
     paddock_dist = list(
         data.values("to_paddock__name").annotate(count=Count("id")).order_by("-count")[:8]
     )
-    move_labels = json.dumps([r["to_paddock__name"] or "Unknown" for r in paddock_dist])
-    move_counts = json.dumps([r["count"] for r in paddock_dist])
-
-    # Monthly movement trend
     monthly = list(
         data.values("created_at__month", "created_at__year")
         .annotate(count=Count("id"))
         .order_by("created_at__year", "created_at__month")
     )
-    move_month_labels = json.dumps([
-        f"{r['created_at__year']}-{r['created_at__month']:02d}" for r in monthly
-    ])
-    move_month_data = json.dumps([r["count"] for r in monthly])
 
     return render(request, "movement.html", {
         "data":              data,
-        "total_movements":   total_movements,
-        "move_labels":       move_labels,
-        "move_counts":       move_counts,
-        "move_month_labels": move_month_labels,
-        "move_month_data":   move_month_data,
+        "total_movements":   data.count(),
+        "move_labels":       json.dumps([r["to_paddock__name"] or "Unknown" for r in paddock_dist]),
+        "move_counts":       json.dumps([r["count"] for r in paddock_dist]),
+        "move_month_labels": json.dumps([
+            f"{r['created_at__year']}-{r['created_at__month']:02d}" for r in monthly
+        ]),
+        "move_month_data":   json.dumps([r["count"] for r in monthly]),
     })
 
 
@@ -648,13 +652,9 @@ def device_list(request):
     data = Device.objects.select_related("assigned_animal")
     if request.GET.get("q"):
         data = data.filter(device_id__icontains=request.GET["q"])
-    active_threshold = now() - timedelta(hours=24)
 
-    # Device type distribution
-    type_dist = list(
-        data.values("device_type").annotate(count=Count("id"))
-    )
-    # Battery level buckets
+    active_threshold = now() - timedelta(hours=24)
+    type_dist = list(data.values("device_type").annotate(count=Count("id")))
     low    = Device.objects.filter(battery_level__lt=20).count()
     medium = Device.objects.filter(battery_level__gte=20, battery_level__lt=60).count()
     high   = Device.objects.filter(battery_level__gte=60).count()
@@ -673,37 +673,27 @@ def device_list(request):
 
 def geofence_list(request):
     data = Geofence.objects.select_related("paddock")
-    return render(request, "geofence.html", {
-        "data":  data,
-        "total": data.count(),
-    })
+    return render(request, "geofence.html", {"data": data, "total": data.count()})
 
 
 def environmental_list(request):
-    data = EnvironmentalLog.objects.select_related("paddock")
-    stats = data.aggregate(
-        avg_temp=Avg("temperature_c"),
-        avg_humidity=Avg("humidity_percent"),
-    )
+    data  = EnvironmentalLog.objects.select_related("paddock")
+    stats = data.aggregate(avg_temp=Avg("temperature_c"), avg_humidity=Avg("humidity_percent"))
 
-    # Temperature trend
     temp_trend = list(
         data.values("created_at__date")
         .annotate(avg_t=Avg("temperature_c"), avg_h=Avg("humidity_percent"))
         .order_by("created_at__date")
     )
-    env_labels   = json.dumps([str(r["created_at__date"]) for r in temp_trend])
-    env_temp     = json.dumps([float(r["avg_t"] or 0) for r in temp_trend])
-    env_humidity = json.dumps([float(r["avg_h"] or 0) for r in temp_trend])
 
     return render(request, "environmental.html", {
         "data":         data,
         "total":        data.count(),
         "avg_temp":     round(stats["avg_temp"],     1) if stats["avg_temp"]     else 0,
         "avg_humidity": round(stats["avg_humidity"], 1) if stats["avg_humidity"] else 0,
-        "env_labels":   env_labels,
-        "env_temp":     env_temp,
-        "env_humidity": env_humidity,
+        "env_labels":   json.dumps([str(r["created_at__date"]) for r in temp_trend]),
+        "env_temp":     json.dumps([float(r["avg_t"] or 0) for r in temp_trend]),
+        "env_humidity": json.dumps([float(r["avg_h"] or 0) for r in temp_trend]),
     })
 
 
@@ -712,27 +702,24 @@ def environmental_list(request):
 # =============================================================================
 
 def expense_list(request):
-    data = ExpenseRecord.objects.select_related("animal")
+    data  = ExpenseRecord.objects.select_related("animal")
     stats = data.aggregate(
         total=Count("id"),
         total_amount=Sum("amount"),
         avg_amount=Avg("amount"),
     )
 
-    # Expense by category
     cat_dist = list(
         data.values("category").annotate(total=Sum("amount")).order_by("-total")[:8]
     )
-    expense_labels = json.dumps([r["category"] or "Other" for r in cat_dist])
-    expense_data   = json.dumps([float(r["total"] or 0) for r in cat_dist])
 
     return render(request, "expense.html", {
         "data":           data,
         "total":          stats["total"],
         "total_amount":   round(stats["total_amount"], 2) if stats["total_amount"] else 0,
         "avg_amount":     round(stats["avg_amount"],   2) if stats["avg_amount"]   else 0,
-        "expense_labels": expense_labels,
-        "expense_data":   expense_data,
+        "expense_labels": json.dumps([r["category"] or "Other" for r in cat_dist]),
+        "expense_data":   json.dumps([float(r["total"] or 0) for r in cat_dist]),
     })
 
 
@@ -745,16 +732,11 @@ def sale_list(request):
         avg_weight=Avg("weight_at_sale_kg"),
     )
 
-    # Monthly revenue trend
     monthly = list(
         data.values("sale_date__month", "sale_date__year")
         .annotate(revenue=Sum("sale_price"))
         .order_by("sale_date__year", "sale_date__month")
     )
-    sale_month_labels = json.dumps([
-        f"{r['sale_date__year']}-{r['sale_date__month']:02d}" for r in monthly
-    ])
-    sale_month_data = json.dumps([float(r["revenue"] or 0) for r in monthly])
 
     return render(request, "sale.html", {
         "data":              data,
@@ -762,29 +744,24 @@ def sale_list(request):
         "total_revenue":     round(stats["total_revenue"], 2) if stats["total_revenue"] else 0,
         "avg_price":         round(stats["avg_price"],     2) if stats["avg_price"]     else 0,
         "avg_weight":        round(stats["avg_weight"],    1) if stats["avg_weight"]    else 0,
-        "sale_month_labels": sale_month_labels,
-        "sale_month_data":   sale_month_data,
+        "sale_month_labels": json.dumps([
+            f"{r['sale_date__year']}-{r['sale_date__month']:02d}" for r in monthly
+        ]),
+        "sale_month_data":   json.dumps([float(r["revenue"] or 0) for r in monthly]),
     })
 
 
 def alert_list(request):
     data = Alert.objects.select_related("animal")
-    total    = data.count()
-    overdue  = data.filter(status="OVERDUE").count()
-    due_soon = data.filter(status="ABOUT_TO_DUE").count()
-
-    # Alert type distribution
-    type_dist = list(
-        data.values("alert_type").annotate(count=Count("id")).order_by("-count")
-    )
+    type_dist = list(data.values("alert_type").annotate(count=Count("id")).order_by("-count"))
 
     return render(request, "alert.html", {
-        "data":          data,
-        "total":         total,
-        "overdue":       overdue,
-        "due_soon":      due_soon,
-        "alert_labels":  json.dumps([t["alert_type"] for t in type_dist]),
-        "alert_counts":  json.dumps([t["count"] for t in type_dist]),
+        "data":         data,
+        "total":        data.count(),
+        "overdue":      data.filter(status="OVERDUE").count(),
+        "due_soon":     data.filter(status="ABOUT_TO_DUE").count(),
+        "alert_labels": json.dumps([t["alert_type"] for t in type_dist]),
+        "alert_counts": json.dumps([t["count"] for t in type_dist]),
     })
 
 
