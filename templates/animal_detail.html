@@ -34,6 +34,11 @@
   .edit-actions-bar .btn-cancel,
   .btn-danger-outline { justify-content: center; width: 100%; }
   #animalMap         { height: 240px !important; }
+
+  /* Inline rows become stacked cards on mobile */
+  .inline-row        { grid-template-columns: 1fr !important; }
+  .inline-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .inline-card       { border-radius: 10px !important; }
 }
 
 /* ── HERO ─────────────────────────────────────────── */
@@ -146,7 +151,7 @@
 .empty-state i { font-size: 34px; margin-bottom: 12px; opacity: .35; display: block; }
 
 /* ══════════════════════════════════════════════════
-   EDIT TAB
+   EDIT TAB — BASE FIELDS
 ══════════════════════════════════════════════════ */
 .sf-toast {
   position: fixed; top: 72px; right: 20px; z-index: 9999;
@@ -197,6 +202,7 @@
   color: var(--sf-text); background: #fff;
   transition: border-color .15s, box-shadow .15s;
   outline: none; appearance: none; -webkit-appearance: none;
+  box-sizing: border-box;
 }
 .sf-input:focus, .sf-select:focus, .sf-textarea:focus {
   border-color: var(--sf-green);
@@ -209,6 +215,15 @@
 }
 .sf-textarea  { resize: vertical; min-height: 80px; }
 .sf-field-hint  { font-size: 11px; color: var(--sf-muted); margin-top: 1px; }
+
+.sf-checkbox {
+  width: 18px; height: 18px; accent-color: var(--sf-green);
+  cursor: pointer; flex-shrink: 0;
+}
+.sf-checkbox-row {
+  display: flex; align-items: center; gap: 9px;
+  padding: 9px 0; font-size: 13.5px; font-weight: 500;
+}
 
 .edit-actions-bar {
   position: sticky; bottom: 0;
@@ -263,6 +278,141 @@
   padding: 14px 18px; margin-bottom: 16px; font-size: 13px; color: #dc2626;
 }
 .django-form-errors ul { margin: 6px 0 0 16px; }
+
+/* ══════════════════════════════════════════════════
+   INLINE FORMSETS
+══════════════════════════════════════════════════ */
+
+/* Section divider between base fields and inlines */
+.inline-section-divider {
+  display: flex; align-items: center; gap: 12px;
+  margin: 28px 0 16px;
+}
+.inline-section-divider span {
+  font-size: 11px; font-weight: 800; color: var(--sf-muted);
+  text-transform: uppercase; letter-spacing: 1px; white-space: nowrap;
+}
+.inline-section-divider::before,
+.inline-section-divider::after {
+  content: ''; flex: 1; height: 1px; background: var(--sf-border);
+}
+
+/* Each inline formset block */
+.inline-formset {
+  background: #fff; border: 1px solid var(--sf-border);
+  border-radius: 12px; margin-bottom: 14px; overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+}
+.inline-formset-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 18px; background: #f8fafc;
+  border-bottom: 1px solid var(--sf-border);
+  cursor: pointer; user-select: none;
+}
+.inline-formset-header h4 {
+  font-size: 11.5px; font-weight: 700; color: var(--sf-muted);
+  text-transform: uppercase; letter-spacing: .5px;
+  margin: 0; display: flex; align-items: center; gap: 8px;
+}
+.inline-formset-header h4 i { font-size: 13px; }
+.inline-formset-body { padding: 0; display: block; }
+.inline-formset-body.collapsed { display: none; }
+
+/* Individual inline row (one related record) */
+.inline-card {
+  border-bottom: 1px solid #f0f2f5;
+  padding: 16px 20px; position: relative;
+  transition: background .12s;
+}
+.inline-card:last-child { border-bottom: none; }
+.inline-card:hover { background: #fafbfc; }
+.inline-card.marked-delete { opacity: .45; background: #fff5f5; }
+
+.inline-row {
+  display: grid; gap: 12px;
+  align-items: start;
+}
+/* Column counts per formset type */
+.inline-row.cols-2 { grid-template-columns: 1fr 1fr; }
+.inline-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+.inline-row.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.inline-row.cols-6 { grid-template-columns: repeat(6, 1fr); }
+
+/* Compact field styling inside inline rows */
+.inline-field       { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.inline-field label { font-size: 10px; font-weight: 700; color: var(--sf-muted); text-transform: uppercase; letter-spacing: .4px; }
+.inline-field .sf-input,
+.inline-field .sf-select,
+.inline-field .sf-textarea { font-size: 12.5px; padding: 7px 9px; }
+.inline-field .sf-select   { padding-right: 28px; }
+
+/* Delete checkbox area */
+.inline-delete-area {
+  display: flex; align-items: center; gap: 6px;
+  margin-top: 10px; padding-top: 10px;
+  border-top: 1px dashed #e5e7eb;
+}
+.inline-delete-area label {
+  font-size: 11.5px; color: #dc2626; font-weight: 600; cursor: pointer;
+  display: flex; align-items: center; gap: 6px;
+}
+.inline-delete-area input[type="checkbox"] {
+  accent-color: #dc2626; width: 15px; height: 15px; cursor: pointer;
+}
+
+/* "Add another" footer button */
+.inline-add-btn {
+  display: flex; align-items: center; gap: 7px;
+  width: 100%; padding: 12px 20px;
+  background: transparent; border: none; border-top: 1px solid #f0f2f5;
+  color: var(--sf-green); font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: background .12s;
+  font-family: 'Inter', sans-serif;
+}
+.inline-add-btn:hover { background: #f0fdf4; }
+.inline-add-btn i { font-size: 12px; }
+
+/* Empty state inside inline */
+.inline-empty {
+  padding: 24px 20px; text-align: center;
+  color: var(--sf-muted); font-size: 13px;
+}
+.inline-empty i { font-size: 22px; opacity: .3; display: block; margin-bottom: 8px; }
+
+/* Badge showing count of existing records */
+.inline-count-badge {
+  background: var(--sf-green); color: #fff;
+  font-size: 10.5px; font-weight: 700;
+  border-radius: 20px; padding: 2px 8px;
+  display: inline-flex; align-items: center;
+  min-width: 22px; justify-content: center;
+}
+.inline-count-badge.zero {
+  background: #e2e8f0; color: var(--sf-muted);
+}
+
+/* Row number pill */
+.inline-row-num {
+  position: absolute; top: 14px; right: 16px;
+  font-size: 10px; color: var(--sf-muted); font-weight: 600;
+  background: #f1f5f9; border-radius: 20px;
+  padding: 2px 8px;
+}
+
+/* Mobile — all inline columns collapse to 1 or 2 */
+@media (max-width: 768px) {
+  .inline-row.cols-3,
+  .inline-row.cols-4,
+  .inline-row.cols-6 { grid-template-columns: 1fr 1fr !important; }
+  .inline-row.cols-2 { grid-template-columns: 1fr !important; }
+  .inline-row-num { display: none; }
+}
+@media (max-width: 480px) {
+  .inline-row.cols-3,
+  .inline-row.cols-4,
+  .inline-row.cols-6,
+  .inline-row.cols-2 { grid-template-columns: 1fr !important; }
+}
 </style>
 {% endblock %}
 
@@ -619,12 +769,19 @@
 <!-- ════ TAB: EDIT ════════════════════════════════════ -->
 <div id="tab-edit" class="sf-tab-panel">
 
-  {% if form.errors %}
+  {% if form.errors or disease_formset.errors or vaccination_formset.errors or treatment_formset.errors or health_obs_formset.errors or breeding_formset.errors or calving_formset.errors or production_formset.errors %}
   <div class="django-form-errors">
     <strong><i class="fa-solid fa-triangle-exclamation"></i> Please fix the errors below:</strong>
     <ul>
       {% for field in form %}{% for error in field.errors %}<li><strong>{{ field.label }}:</strong> {{ error }}</li>{% endfor %}{% endfor %}
       {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
+      {% for fs in disease_formset %}{% for field in fs %}{% for error in field.errors %}<li><strong>Disease – {{ field.label }}:</strong> {{ error }}</li>{% endfor %}{% endfor %}{% endfor %}
+      {% for fs in vaccination_formset %}{% for field in fs %}{% for error in field.errors %}<li><strong>Vaccination – {{ field.label }}:</strong> {{ error }}</li>{% endfor %}{% endfor %}{% endfor %}
+      {% for fs in treatment_formset %}{% for field in fs %}{% for error in field.errors %}<li><strong>Treatment – {{ field.label }}:</strong> {{ error }}</li>{% endfor %}{% endfor %}{% endfor %}
+      {% for fs in health_obs_formset %}{% for field in fs %}{% for error in field.errors %}<li><strong>Health Obs – {{ field.label }}:</strong> {{ error }}</li>{% endfor %}{% endfor %}{% endfor %}
+      {% for fs in breeding_formset %}{% for field in fs %}{% for error in field.errors %}<li><strong>Breeding – {{ field.label }}:</strong> {{ error }}</li>{% endfor %}{% endfor %}{% endfor %}
+      {% for fs in calving_formset %}{% for field in fs %}{% for error in field.errors %}<li><strong>Calving – {{ field.label }}:</strong> {{ error }}</li>{% endfor %}{% endfor %}{% endfor %}
+      {% for fs in production_formset %}{% for field in fs %}{% for error in field.errors %}<li><strong>Production – {{ field.label }}:</strong> {{ error }}</li>{% endfor %}{% endfor %}{% endfor %}
     </ul>
   </div>
   {% endif %}
@@ -632,6 +789,10 @@
   <form method="post" action="{% url 'animal_update' animal.pk %}" id="editAnimalForm" novalidate>
     {% csrf_token %}
     {% if form.errors %}<input type="hidden" id="openEditTab" value="1">{% endif %}
+
+    <!-- ══════════════════════════════════════════════
+         SECTION A — BASE ANIMAL FIELDS
+    ══════════════════════════════════════════════ -->
 
     <!-- ── 1. IDENTITY ─────────────────────────────── -->
     <div class="edit-fieldset" id="fs-identity">
@@ -916,6 +1077,439 @@
       </div>
     </div>
 
+    <!-- ══════════════════════════════════════════════
+         SECTION B — RELATED RECORD INLINES
+    ══════════════════════════════════════════════ -->
+    <div class="inline-section-divider">
+      <span><i class="fa-solid fa-table-list" style="margin-right:6px;"></i> Related Records</span>
+    </div>
+
+    <!-- ── INLINE: DISEASE RECORDS ─────────────────── -->
+    {{ disease_formset.management_form }}
+    <div class="inline-formset" id="ifs-disease">
+      <div class="inline-formset-header" onclick="toggleInline('ifs-disease')">
+        <h4>
+          <i class="fa-solid fa-virus" style="color:#dc2626;"></i> Disease Records
+          <span class="inline-count-badge {% if not diseases %}zero{% endif %}">{{ diseases|length }}</span>
+        </h4>
+        <i class="fa-solid fa-chevron-up edit-fieldset-toggle" id="toggle-ifs-disease"></i>
+      </div>
+      <div class="inline-formset-body" id="body-ifs-disease">
+        <div id="disease-forms">
+          {% for form in disease_formset %}
+          <div class="inline-card {% if form.DELETE.value %}marked-delete{% endif %}" id="disease-row-{{ forloop.counter0 }}">
+            <span class="inline-row-num">#{{ forloop.counter }}</span>
+            {{ form.id }}
+            <div class="inline-row cols-3">
+              <div class="inline-field">
+                <label>Disease Name</label>
+                {{ form.disease_name }}
+              </div>
+              <div class="inline-field">
+                <label>Severity</label>
+                {{ form.severity }}
+              </div>
+              <div class="inline-field">
+                <label>Onset Date</label>
+                {{ form.onset_date }}
+              </div>
+              <div class="inline-field">
+                <label>Recovery Date</label>
+                {{ form.recovery_date }}
+              </div>
+              <div class="inline-field">
+                <label>Economic Loss (R)</label>
+                {{ form.economic_loss_estimate }}
+              </div>
+              <div class="inline-field" style="justify-content:flex-end;padding-top:18px;">
+                <div class="sf-checkbox-row">
+                  {{ form.chronic }}
+                  <span>Chronic condition</span>
+                </div>
+              </div>
+            </div>
+            {% if form.instance.pk %}
+            <div class="inline-delete-area">
+              <label for="{{ form.DELETE.id_for_label }}">
+                <i class="fa-solid fa-trash-can"></i>
+                {{ form.DELETE }} Delete this record
+              </label>
+            </div>
+            {% endif %}
+          </div>
+          {% empty %}
+          <div class="inline-empty" id="disease-empty">
+            <i class="fa-solid fa-virus"></i>
+            <span>No disease records yet. Click below to add one.</span>
+          </div>
+          {% endfor %}
+        </div>
+        <button type="button" class="inline-add-btn" onclick="addInlineRow('disease', {{ disease_formset.total_form_count }})">
+          <i class="fa-solid fa-plus"></i> Add Disease Record
+        </button>
+      </div>
+    </div>
+
+    <!-- ── INLINE: VACCINATION RECORDS ─────────────── -->
+    {{ vaccination_formset.management_form }}
+    <div class="inline-formset" id="ifs-vaccination">
+      <div class="inline-formset-header" onclick="toggleInline('ifs-vaccination')">
+        <h4>
+          <i class="fa-solid fa-syringe" style="color:#7c3aed;"></i> Vaccination Records
+          <span class="inline-count-badge {% if not vaccinations %}zero{% endif %}">{{ vaccinations|length }}</span>
+        </h4>
+        <i class="fa-solid fa-chevron-up edit-fieldset-toggle" id="toggle-ifs-vaccination"></i>
+      </div>
+      <div class="inline-formset-body" id="body-ifs-vaccination">
+        <div id="vaccination-forms">
+          {% for form in vaccination_formset %}
+          <div class="inline-card {% if form.DELETE.value %}marked-delete{% endif %}" id="vaccination-row-{{ forloop.counter0 }}">
+            <span class="inline-row-num">#{{ forloop.counter }}</span>
+            {{ form.id }}
+            <div class="inline-row cols-3">
+              <div class="inline-field">
+                <label>Vaccine Name</label>
+                {{ form.vaccine_name }}
+              </div>
+              <div class="inline-field">
+                <label>Dose</label>
+                {{ form.dose }}
+              </div>
+              <div class="inline-field">
+                <label>Batch Number</label>
+                {{ form.batch_number }}
+              </div>
+              <div class="inline-field">
+                <label>Date Administered</label>
+                {{ form.date_administered }}
+              </div>
+              <div class="inline-field">
+                <label>Next Due Date</label>
+                {{ form.next_due_date }}
+              </div>
+              <div class="inline-field">
+                <label>Notes</label>
+                {{ form.notes }}
+              </div>
+            </div>
+            {% if form.instance.pk %}
+            <div class="inline-delete-area">
+              <label for="{{ form.DELETE.id_for_label }}">
+                <i class="fa-solid fa-trash-can"></i>
+                {{ form.DELETE }} Delete this record
+              </label>
+            </div>
+            {% endif %}
+          </div>
+          {% empty %}
+          <div class="inline-empty" id="vaccination-empty">
+            <i class="fa-solid fa-syringe"></i>
+            <span>No vaccination records yet. Click below to add one.</span>
+          </div>
+          {% endfor %}
+        </div>
+        <button type="button" class="inline-add-btn" onclick="addInlineRow('vaccination', {{ vaccination_formset.total_form_count }})">
+          <i class="fa-solid fa-plus"></i> Add Vaccination Record
+        </button>
+      </div>
+    </div>
+
+    <!-- ── INLINE: TREATMENT RECORDS ───────────────── -->
+    {{ treatment_formset.management_form }}
+    <div class="inline-formset" id="ifs-treatment">
+      <div class="inline-formset-header" onclick="toggleInline('ifs-treatment')">
+        <h4>
+          <i class="fa-solid fa-pills" style="color:#0891b2;"></i> Treatment Records
+          <span class="inline-count-badge {% if not treatments %}zero{% endif %}">{{ treatments|length }}</span>
+        </h4>
+        <i class="fa-solid fa-chevron-up edit-fieldset-toggle" id="toggle-ifs-treatment"></i>
+      </div>
+      <div class="inline-formset-body" id="body-ifs-treatment">
+        <div id="treatment-forms">
+          {% for form in treatment_formset %}
+          <div class="inline-card {% if form.DELETE.value %}marked-delete{% endif %}" id="treatment-row-{{ forloop.counter0 }}">
+            <span class="inline-row-num">#{{ forloop.counter }}</span>
+            {{ form.id }}
+            <div class="inline-row cols-3">
+              <div class="inline-field">
+                <label>Diagnosis</label>
+                {{ form.diagnosis }}
+              </div>
+              <div class="inline-field">
+                <label>Medication</label>
+                {{ form.medication }}
+              </div>
+              <div class="inline-field">
+                <label>Dosage</label>
+                {{ form.dosage }}
+              </div>
+              <div class="inline-field">
+                <label>Treatment Date</label>
+                {{ form.treatment_date }}
+              </div>
+              <div class="inline-field">
+                <label>Withdrawal Period (days)</label>
+                {{ form.withdrawal_period_days }}
+              </div>
+              <div class="inline-field">
+                <label>Notes</label>
+                {{ form.notes }}
+              </div>
+            </div>
+            {% if form.instance.pk %}
+            <div class="inline-delete-area">
+              <label for="{{ form.DELETE.id_for_label }}">
+                <i class="fa-solid fa-trash-can"></i>
+                {{ form.DELETE }} Delete this record
+              </label>
+            </div>
+            {% endif %}
+          </div>
+          {% empty %}
+          <div class="inline-empty" id="treatment-empty">
+            <i class="fa-solid fa-pills"></i>
+            <span>No treatment records yet. Click below to add one.</span>
+          </div>
+          {% endfor %}
+        </div>
+        <button type="button" class="inline-add-btn" onclick="addInlineRow('treatment', {{ treatment_formset.total_form_count }})">
+          <i class="fa-solid fa-plus"></i> Add Treatment Record
+        </button>
+      </div>
+    </div>
+
+    <!-- ── INLINE: HEALTH OBSERVATIONS ─────────────── -->
+    {{ health_obs_formset.management_form }}
+    <div class="inline-formset" id="ifs-health_obs">
+      <div class="inline-formset-header" onclick="toggleInline('ifs-health_obs')">
+        <h4>
+          <i class="fa-solid fa-stethoscope" style="color:#16a34a;"></i> Health Observations
+          <span class="inline-count-badge {% if not health %}zero{% endif %}">{{ health|length }}</span>
+        </h4>
+        <i class="fa-solid fa-chevron-up edit-fieldset-toggle" id="toggle-ifs-health_obs"></i>
+      </div>
+      <div class="inline-formset-body" id="body-ifs-health_obs">
+        <div id="health_obs-forms">
+          {% for form in health_obs_formset %}
+          <div class="inline-card {% if form.DELETE.value %}marked-delete{% endif %}" id="health_obs-row-{{ forloop.counter0 }}">
+            <span class="inline-row-num">#{{ forloop.counter }}</span>
+            {{ form.id }}
+            <div class="inline-row cols-4">
+              <div class="inline-field">
+                <label>Weight (kg)</label>
+                {{ form.weight_kg }}
+              </div>
+              <div class="inline-field">
+                <label>Body Condition (1–5)</label>
+                {{ form.body_condition_score }}
+              </div>
+              <div class="inline-field">
+                <label>Temperature (°C)</label>
+                {{ form.temperature_c }}
+              </div>
+              <div class="inline-field">
+                <label>Symptoms</label>
+                {{ form.symptoms }}
+              </div>
+            </div>
+            {% if form.instance.pk %}
+            <div class="inline-delete-area">
+              <label for="{{ form.DELETE.id_for_label }}">
+                <i class="fa-solid fa-trash-can"></i>
+                {{ form.DELETE }} Delete this record
+              </label>
+            </div>
+            {% endif %}
+          </div>
+          {% empty %}
+          <div class="inline-empty" id="health_obs-empty">
+            <i class="fa-solid fa-stethoscope"></i>
+            <span>No health observations yet. Click below to add one.</span>
+          </div>
+          {% endfor %}
+        </div>
+        <button type="button" class="inline-add-btn" onclick="addInlineRow('health_obs', {{ health_obs_formset.total_form_count }})">
+          <i class="fa-solid fa-plus"></i> Add Health Observation
+        </button>
+      </div>
+    </div>
+
+    <!-- ── INLINE: BREEDING EVENTS ─────────────────── -->
+    {{ breeding_formset.management_form }}
+    <div class="inline-formset" id="ifs-breeding">
+      <div class="inline-formset-header" onclick="toggleInline('ifs-breeding')">
+        <h4>
+          <i class="fa-solid fa-dna" style="color:#d97706;"></i> Breeding Events
+          <span class="inline-count-badge {% if not breeding %}zero{% endif %}">{{ breeding|length }}</span>
+        </h4>
+        <i class="fa-solid fa-chevron-up edit-fieldset-toggle" id="toggle-ifs-breeding"></i>
+      </div>
+      <div class="inline-formset-body" id="body-ifs-breeding">
+        <div id="breeding-forms">
+          {% for form in breeding_formset %}
+          <div class="inline-card {% if form.DELETE.value %}marked-delete{% endif %}" id="breeding-row-{{ forloop.counter0 }}">
+            <span class="inline-row-num">#{{ forloop.counter }}</span>
+            {{ form.id }}
+            <div class="inline-row cols-3">
+              <div class="inline-field">
+                <label>Sire (Male Animal)</label>
+                {{ form.male }}
+              </div>
+              <div class="inline-field">
+                <label>Method</label>
+                {{ form.method }}
+              </div>
+              <div class="inline-field">
+                <label>Breeding Date</label>
+                {{ form.breeding_date }}
+              </div>
+              <div class="inline-field">
+                <label>Expected Calving Date</label>
+                {{ form.expected_calving_date }}
+              </div>
+              <div class="inline-field">
+                <label>Confirmed Pregnant</label>
+                {{ form.confirmed_pregnant }}
+              </div>
+              <div class="inline-field">
+                <label>Notes</label>
+                {{ form.notes }}
+              </div>
+            </div>
+            {% if form.instance.pk %}
+            <div class="inline-delete-area">
+              <label for="{{ form.DELETE.id_for_label }}">
+                <i class="fa-solid fa-trash-can"></i>
+                {{ form.DELETE }} Delete this record
+              </label>
+            </div>
+            {% endif %}
+          </div>
+          {% empty %}
+          <div class="inline-empty" id="breeding-empty">
+            <i class="fa-solid fa-dna"></i>
+            <span>No breeding events yet. Click below to add one.</span>
+          </div>
+          {% endfor %}
+        </div>
+        <button type="button" class="inline-add-btn" onclick="addInlineRow('breeding', {{ breeding_formset.total_form_count }})">
+          <i class="fa-solid fa-plus"></i> Add Breeding Event
+        </button>
+      </div>
+    </div>
+
+    <!-- ── INLINE: CALVING RECORDS ─────────────────── -->
+    {{ calving_formset.management_form }}
+    <div class="inline-formset" id="ifs-calving">
+      <div class="inline-formset-header" onclick="toggleInline('ifs-calving')">
+        <h4>
+          <i class="fa-solid fa-baby" style="color:#ec4899;"></i> Calving Records
+          <span class="inline-count-badge {% if not calving %}zero{% endif %}">{{ calving|length }}</span>
+        </h4>
+        <i class="fa-solid fa-chevron-up edit-fieldset-toggle" id="toggle-ifs-calving"></i>
+      </div>
+      <div class="inline-formset-body" id="body-ifs-calving">
+        <div id="calving-forms">
+          {% for form in calving_formset %}
+          <div class="inline-card {% if form.DELETE.value %}marked-delete{% endif %}" id="calving-row-{{ forloop.counter0 }}">
+            <span class="inline-row-num">#{{ forloop.counter }}</span>
+            {{ form.id }}
+            <div class="inline-row cols-4">
+              <div class="inline-field">
+                <label>Calf (Animal)</label>
+                {{ form.calf }}
+              </div>
+              <div class="inline-field">
+                <label>Calving Date</label>
+                {{ form.calving_date }}
+              </div>
+              <div class="inline-field">
+                <label>Birth Weight (kg)</label>
+                {{ form.birth_weight_kg }}
+              </div>
+              <div class="inline-field">
+                <label>Complications</label>
+                {{ form.complications }}
+              </div>
+            </div>
+            {% if form.instance.pk %}
+            <div class="inline-delete-area">
+              <label for="{{ form.DELETE.id_for_label }}">
+                <i class="fa-solid fa-trash-can"></i>
+                {{ form.DELETE }} Delete this record
+              </label>
+            </div>
+            {% endif %}
+          </div>
+          {% empty %}
+          <div class="inline-empty" id="calving-empty">
+            <i class="fa-solid fa-baby"></i>
+            <span>No calving records yet. Click below to add one.</span>
+          </div>
+          {% endfor %}
+        </div>
+        <button type="button" class="inline-add-btn" onclick="addInlineRow('calving', {{ calving_formset.total_form_count }})">
+          <i class="fa-solid fa-plus"></i> Add Calving Record
+        </button>
+      </div>
+    </div>
+
+    <!-- ── INLINE: PRODUCTION RECORDS ─────────────── -->
+    {{ production_formset.management_form }}
+    <div class="inline-formset" id="ifs-production">
+      <div class="inline-formset-header" onclick="toggleInline('ifs-production')">
+        <h4>
+          <i class="fa-solid fa-chart-line" style="color:#2563eb;"></i> Production Records
+          <span class="inline-count-badge {% if not production %}zero{% endif %}">{{ production|length }}</span>
+        </h4>
+        <i class="fa-solid fa-chevron-up edit-fieldset-toggle" id="toggle-ifs-production"></i>
+      </div>
+      <div class="inline-formset-body" id="body-ifs-production">
+        <div id="production-forms">
+          {% for form in production_formset %}
+          <div class="inline-card {% if form.DELETE.value %}marked-delete{% endif %}" id="production-row-{{ forloop.counter0 }}">
+            <span class="inline-row-num">#{{ forloop.counter }}</span>
+            {{ form.id }}
+            <div class="inline-row cols-4">
+              <div class="inline-field">
+                <label>Record Date</label>
+                {{ form.record_date }}
+              </div>
+              <div class="inline-field">
+                <label>Milk Yield (L)</label>
+                {{ form.milk_yield_liters }}
+              </div>
+              <div class="inline-field">
+                <label>Weight Gain (kg)</label>
+                {{ form.weight_gain_kg }}
+              </div>
+              <div class="inline-field">
+                <label>Feed Consumed (kg)</label>
+                {{ form.feed_consumption_kg }}
+              </div>
+            </div>
+            {% if form.instance.pk %}
+            <div class="inline-delete-area">
+              <label for="{{ form.DELETE.id_for_label }}">
+                <i class="fa-solid fa-trash-can"></i>
+                {{ form.DELETE }} Delete this record
+              </label>
+            </div>
+            {% endif %}
+          </div>
+          {% empty %}
+          <div class="inline-empty" id="production-empty">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>No production records yet. Click below to add one.</span>
+          </div>
+          {% endfor %}
+        </div>
+        <button type="button" class="inline-add-btn" onclick="addInlineRow('production', {{ production_formset.total_form_count }})">
+          <i class="fa-solid fa-plus"></i> Add Production Record
+        </button>
+      </div>
+    </div>
+
     <!-- ── ACTIONS BAR ─────────────────────────────── -->
     <div class="edit-actions-bar">
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
@@ -972,6 +1566,16 @@ window.addEventListener('DOMContentLoaded', function() {
 
 // ── FIELDSET COLLAPSE ────────────────────────────────
 function toggleFieldset(id) {
+  var body   = document.getElementById('body-' + id);
+  var toggle = document.getElementById('toggle-' + id);
+  var isOpen = !body.classList.contains('collapsed');
+  body.classList.toggle('collapsed', isOpen);
+  toggle.classList.toggle('fa-chevron-up',  !isOpen);
+  toggle.classList.toggle('fa-chevron-down', isOpen);
+}
+
+// ── INLINE COLLAPSE ──────────────────────────────────
+function toggleInline(id) {
   var body   = document.getElementById('body-' + id);
   var toggle = document.getElementById('toggle-' + id);
   var isOpen = !body.classList.contains('collapsed');
@@ -1102,5 +1706,129 @@ if (document.getElementById('tab-location') && document.getElementById('tab-loca
 {% else %}
 function initMap() {}
 {% endif %}
+
+// ══════════════════════════════════════════════════════
+// DYNAMIC INLINE ROW CLONING
+// Template HTML strings are stored as data — when "Add"
+// is clicked we clone the last empty extra form, update
+// all index references, and inject it into the DOM.
+// ══════════════════════════════════════════════════════
+
+// Stores the next available index per prefix
+var inlineCounts = {
+  disease:      {{ disease_formset.total_form_count }},
+  vaccination:  {{ vaccination_formset.total_form_count }},
+  treatment:    {{ treatment_formset.total_form_count }},
+  health_obs:   {{ health_obs_formset.total_form_count }},
+  breeding:     {{ breeding_formset.total_form_count }},
+  calving:      {{ calving_formset.total_form_count }},
+  production:   {{ production_formset.total_form_count }},
+};
+
+// Map prefix → Django formset prefix string
+var prefixMap = {
+  disease:      'disease',
+  vaccination:  'vaccination',
+  treatment:    'treatment',
+  health_obs:   'health_obs',
+  breeding:     'breeding',
+  calving:      'calving',
+  production:   'production',
+};
+
+function addInlineRow(prefix, initialCount) {
+  var container   = document.getElementById(prefix + '-forms');
+  var emptyRow    = document.getElementById(prefix + '-empty');
+  var totalInput  = document.getElementById('id_' + prefixMap[prefix] + '-TOTAL_FORMS');
+
+  // Find the last inline-card (which is the blank extra form rendered by Django)
+  var existingCards = container.querySelectorAll('.inline-card');
+  if (existingCards.length === 0) return; // nothing to clone — shouldn't happen
+
+  // Clone the last card (Django always appends `extra=1` empty form at end)
+  var lastCard = existingCards[existingCards.length - 1];
+
+  // Only clone if the last card is truly empty (no pk in hidden id field)
+  var idField = lastCard.querySelector('input[type="hidden"][id$="-id"]');
+  var isBlankExtra = !idField || !idField.value;
+
+  var newCard;
+  if (isBlankExtra) {
+    // Re-use the existing blank, reveal it, then manufacture another blank via string replacement
+    newCard = lastCard;
+  } else {
+    // All existing extras were filled; clone last card and clear values
+    newCard = lastCard.cloneNode(true);
+    newCard.querySelectorAll('input:not([type=hidden]), select, textarea').forEach(function(el) {
+      if (el.type === 'checkbox') { el.checked = false; }
+      else { el.value = ''; }
+    });
+  }
+
+  var currentIndex = inlineCounts[prefix];
+
+  // Update all id/name attributes that contain the old index
+  var oldIndex = currentIndex - 1;
+  newCard.innerHTML = newCard.innerHTML
+    .replace(new RegExp(prefixMap[prefix] + '-' + oldIndex + '-', 'g'),
+             prefixMap[prefix] + '-' + currentIndex + '-');
+  newCard.id = prefix + '-row-' + currentIndex;
+
+  // Clear all input values in the new card
+  newCard.querySelectorAll('input:not([type=hidden]), select, textarea').forEach(function(el) {
+    if (el.type === 'checkbox') { el.checked = false; }
+    else { el.value = ''; }
+  });
+
+  // Remove the delete area from brand-new rows (no pk yet)
+  var delArea = newCard.querySelector('.inline-delete-area');
+  if (delArea) delArea.remove();
+
+  // Update row number pill
+  var numPill = newCard.querySelector('.inline-row-num');
+  if (numPill) numPill.textContent = '#' + (currentIndex + 1);
+
+  // Remove marked-delete class
+  newCard.classList.remove('marked-delete');
+
+  // Append to container if it was a fresh clone
+  if (!isBlankExtra) {
+    container.appendChild(newCard);
+  }
+
+  // Bump management form total
+  inlineCounts[prefix] = currentIndex + 1;
+  if (totalInput) totalInput.value = inlineCounts[prefix];
+
+  // Hide empty-state message
+  if (emptyRow) emptyRow.style.display = 'none';
+
+  // Mark form dirty
+  if (!formDirty) {
+    formDirty = true;
+    document.getElementById('unsavedDot').classList.add('visible');
+  }
+
+  // Smooth scroll to new row
+  newCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+  // Wire delete checkbox to toggle marked-delete class
+  var delCheckbox = newCard.querySelector('input[type="checkbox"][id$="-DELETE"]');
+  if (delCheckbox) {
+    delCheckbox.addEventListener('change', function() {
+      newCard.classList.toggle('marked-delete', this.checked);
+    });
+  }
+}
+
+// Wire existing delete checkboxes on page load
+document.querySelectorAll('.inline-card').forEach(function(card) {
+  var cb = card.querySelector('input[type="checkbox"][id$="-DELETE"]');
+  if (cb) {
+    cb.addEventListener('change', function() {
+      card.classList.toggle('marked-delete', this.checked);
+    });
+  }
+});
 </script>
 {% endblock %}
