@@ -460,7 +460,7 @@ def animal_list(request):
     })
 
 
-@login_required
+
 def animal_detail(request, pk):
     animal = get_object_or_404(Animal, id=pk)
     ctx = _animal_detail_context(animal)
