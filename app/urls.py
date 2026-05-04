@@ -49,6 +49,10 @@ urlpatterns = [
     path("expenses/", views.expense_list, name="expense_list"),
     path("sales/",    views.sale_list,    name="sale_list"),
     path("alerts/",   views.alert_list,   name="alert_list"),
+    path("gps/", views.gps_console, name="gps_console"),
+ 
+    # JSON poll endpoint  →  called every 2 s by the frontend JS
+    path("gps/stream/json/", views.gps_stream_json, name="gps_stream_json"),
 ]
 
 if settings.DEBUG:

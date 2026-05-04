@@ -139,6 +139,22 @@ body {
   background: rgba(255,255,255,0.15);
   color: #fff;
 }
+
+/* GPS Console nav link — subtle "live" pulse dot */
+.sf-nav-link .gps-live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4ade80;
+  flex-shrink: 0;
+  margin-left: auto;
+  animation: gps-pulse 1.8s ease-in-out infinite;
+}
+@keyframes gps-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: .4; transform: scale(.65); }
+}
+
 .sf-sidebar-footer {
   margin-top: auto;
   padding: 12px;
@@ -478,6 +494,13 @@ body {
   <!-- GPS & Tracking -->
   <div class="sf-nav-section">
     <div class="sf-nav-label">GPS &amp; Tracking</div>
+
+    <!-- ★ GPS Console — live terminal feed from NEO-6M Arduino -->
+    <a href="{% url 'gps_console' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'gps_console' %}active{% endif %}" onclick="closeSidebarMobile()">
+      <i class="fa-solid fa-satellite-dish"></i> GPS Console
+      <span class="gps-live-dot" title="Live feed"></span>
+    </a>
+
     <a href="{% url 'location_log_list' %}" class="sf-nav-link {% if request.resolver_match.url_name == 'location_log_list' %}active{% endif %}" onclick="closeSidebarMobile()">
       <i class="fa-solid fa-map-location-dot"></i> Farm Map
     </a>

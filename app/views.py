@@ -6,14 +6,13 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg, Count, Q, Sum
-from django.forms import inlineformset_factory
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.timezone import now
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.conf import settings
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_GET
 
 from .models import (
     Alert, Animal, BreedingEvent, CalvingRecord, Device,
@@ -46,106 +45,6 @@ class AnimalEditForm(_forms.ModelForm):
             "date_of_death", "cause_of_death", "culling_reason",
             "notes",
         ]
-
-
-# =============================================================================
-# INLINE FORMSET FACTORIES
-# =============================================================================
-
-DiseaseFormSet = inlineformset_factory(
-    Animal, DiseaseRecord,
-    fields=["disease_name", "severity", "onset_date", "recovery_date", "chronic", "economic_loss_estimate"],
-    extra=1, can_delete=True,
-    widgets={
-        "disease_name": _forms.TextInput(attrs={"class": "sf-input", "placeholder": "e.g. Mastitis"}),
-        "severity": _forms.Select(attrs={"class": "sf-select"},
-                                  choices=[("LOW","Low"),("MEDIUM","Medium"),("HIGH","High")]),
-        "onset_date": _forms.DateInput(attrs={"class": "sf-input", "type": "date"}),
-        "recovery_date": _forms.DateInput(attrs={"class": "sf-input", "type": "date"}),
-        "chronic": _forms.CheckboxInput(attrs={"class": "sf-checkbox"}),
-        "economic_loss_estimate": _forms.NumberInput(attrs={"class": "sf-input", "step": "0.01", "placeholder": "0.00"}),
-    }
-)
-
-VaccinationFormSet = inlineformset_factory(
-    Animal, VaccinationRecord,
-    fields=["vaccine_name", "dose", "date_administered", "next_due_date", "batch_number", "notes"],
-    extra=1, can_delete=True,
-    widgets={
-        "vaccine_name": _forms.TextInput(attrs={"class": "sf-input", "placeholder": "e.g. FMD Vaccine"}),
-        "dose": _forms.TextInput(attrs={"class": "sf-input", "placeholder": "e.g. 2ml"}),
-        "date_administered": _forms.DateInput(attrs={"class": "sf-input", "type": "date"}),
-        "next_due_date": _forms.DateInput(attrs={"class": "sf-input", "type": "date"}),
-        "batch_number": _forms.TextInput(attrs={"class": "sf-input", "placeholder": "Batch #"}),
-        "notes": _forms.Textarea(attrs={"class": "sf-textarea", "rows": "2"}),
-    }
-)
-
-TreatmentFormSet = inlineformset_factory(
-    Animal, TreatmentRecord,
-    fields=["diagnosis", "medication", "dosage", "treatment_date", "withdrawal_period_days", "notes"],
-    extra=1, can_delete=True,
-    widgets={
-        "diagnosis": _forms.TextInput(attrs={"class": "sf-input", "placeholder": "Diagnosis"}),
-        "medication": _forms.TextInput(attrs={"class": "sf-input", "placeholder": "Medication name"}),
-        "dosage": _forms.TextInput(attrs={"class": "sf-input", "placeholder": "e.g. 5ml/kg"}),
-        "treatment_date": _forms.DateInput(attrs={"class": "sf-input", "type": "date"}),
-        "withdrawal_period_days": _forms.NumberInput(attrs={"class": "sf-input", "placeholder": "Days"}),
-        "notes": _forms.Textarea(attrs={"class": "sf-textarea", "rows": "2"}),
-    }
-)
-
-HealthObservationFormSet = inlineformset_factory(
-    Animal, HealthObservation,
-    fields=["weight_kg", "body_condition_score", "temperature_c", "symptoms"],
-    extra=1, can_delete=True,
-    widgets={
-        "weight_kg": _forms.NumberInput(attrs={"class": "sf-input", "step": "0.1", "placeholder": "kg"}),
-        "body_condition_score": _forms.NumberInput(attrs={"class": "sf-input", "step": "0.1", "placeholder": "1–5"}),
-        "temperature_c": _forms.NumberInput(attrs={"class": "sf-input", "step": "0.1", "placeholder": "°C"}),
-        "symptoms": _forms.Textarea(attrs={"class": "sf-textarea", "rows": "2", "placeholder": "Describe symptoms…"}),
-    }
-)
-
-BreedingFormSet = inlineformset_factory(
-    Animal, BreedingEvent,
-    fk_name="female",
-    fields=["male", "method", "breeding_date", "expected_calving_date", "confirmed_pregnant", "notes"],
-    extra=1, can_delete=True,
-    widgets={
-        "male": _forms.Select(attrs={"class": "sf-select"}),
-        "method": _forms.Select(attrs={"class": "sf-select"}),
-        "breeding_date": _forms.DateInput(attrs={"class": "sf-input", "type": "date"}),
-        "expected_calving_date": _forms.DateInput(attrs={"class": "sf-input", "type": "date"}),
-        "confirmed_pregnant": _forms.NullBooleanSelect(attrs={"class": "sf-select"}),
-        "notes": _forms.Textarea(attrs={"class": "sf-textarea", "rows": "2"}),
-    }
-)
-
-CalvingFormSet = inlineformset_factory(
-    Animal, CalvingRecord,
-    fk_name="mother",
-    fields=["calf", "calving_date", "birth_weight_kg", "complications"],
-    extra=1, can_delete=True,
-    widgets={
-        "calf": _forms.Select(attrs={"class": "sf-select"}),
-        "calving_date": _forms.DateInput(attrs={"class": "sf-input", "type": "date"}),
-        "birth_weight_kg": _forms.NumberInput(attrs={"class": "sf-input", "step": "0.1", "placeholder": "kg"}),
-        "complications": _forms.Textarea(attrs={"class": "sf-textarea", "rows": "2", "placeholder": "None"}),
-    }
-)
-
-ProductionFormSet = inlineformset_factory(
-    Animal, ProductionRecord,
-    fields=["record_date", "milk_yield_liters", "weight_gain_kg", "feed_consumption_kg"],
-    extra=1, can_delete=True,
-    widgets={
-        "record_date": _forms.DateInput(attrs={"class": "sf-input", "type": "date"}),
-        "milk_yield_liters": _forms.NumberInput(attrs={"class": "sf-input", "step": "0.01", "placeholder": "L"}),
-        "weight_gain_kg": _forms.NumberInput(attrs={"class": "sf-input", "step": "0.01", "placeholder": "kg"}),
-        "feed_consumption_kg": _forms.NumberInput(attrs={"class": "sf-input", "step": "0.01", "placeholder": "kg"}),
-    }
-)
 
 
 # =============================================================================
@@ -190,22 +89,6 @@ def _animal_detail_context(animal):
         "weight_data":     json.dumps(weight_data),
         "milk_labels":     json.dumps(milk_labels),
         "milk_data":       json.dumps(milk_data),
-    }
-
-
-def _build_formsets(animal, data=None):
-    """Return all inline formsets, optionally bound to POST data."""
-    kwargs = {"instance": animal}
-    if data:
-        kwargs["data"] = data
-    return {
-        "disease_formset":      DiseaseFormSet(prefix="disease", **kwargs),
-        "vaccination_formset":  VaccinationFormSet(prefix="vaccination", **kwargs),
-        "treatment_formset":    TreatmentFormSet(prefix="treatment", **kwargs),
-        "health_obs_formset":   HealthObservationFormSet(prefix="health_obs", **kwargs),
-        "breeding_formset":     BreedingFormSet(prefix="breeding", **kwargs),
-        "calving_formset":      CalvingFormSet(prefix="calving", **kwargs),
-        "production_formset":   ProductionFormSet(prefix="production", **kwargs),
     }
 
 
@@ -460,12 +343,10 @@ def animal_list(request):
     })
 
 
-
 def animal_detail(request, pk):
     animal = get_object_or_404(Animal, id=pk)
     ctx = _animal_detail_context(animal)
     ctx["form"] = AnimalEditForm(instance=animal)
-    ctx.update(_build_formsets(animal))
     return render(request, "animal_detail.html", ctx)
 
 
@@ -474,15 +355,10 @@ def animal_update(request, pk):
     animal = get_object_or_404(Animal, pk=pk)
 
     if request.method == "POST":
-        form     = AnimalEditForm(request.POST, instance=animal)
-        formsets = _build_formsets(animal, data=request.POST)
+        form = AnimalEditForm(request.POST, instance=animal)
 
-        all_valid = form.is_valid() and all(fs.is_valid() for fs in formsets.values())
-
-        if all_valid:
+        if form.is_valid():
             form.save()
-            for fs in formsets.values():
-                fs.save()
             return redirect(
                 reverse("animal_detail", kwargs={"pk": pk}) + "?saved=1"
             )
@@ -490,7 +366,6 @@ def animal_update(request, pk):
         # Invalid — re-render detail page with errors so Edit tab opens
         ctx = _animal_detail_context(animal)
         ctx["form"] = form
-        ctx.update(formsets)
         return render(request, "animal_detail.html", ctx)
 
     return redirect("animal_detail", pk=pk)
@@ -901,3 +776,114 @@ def scan_qr(request):
         return render(request, "scan_qr.html", {"error": "No QR code provided"})
     animal = get_object_or_404(Animal, qr_code=qr_code)
     return redirect("animal_detail", pk=animal.id)
+
+
+# =============================================================================
+# GPS CONSOLE
+# =============================================================================
+
+ANIMAL_TAG = "ZW0068"
+
+GPS_STATE: dict = {
+    "sats":    0,
+    "has_fix": False,
+}
+
+
+def _accuracy_label(sats: int) -> str:
+    if sats >= 14: return "Excellent (1-2m)"
+    if sats >= 11: return "Good (2-5m)"
+    if sats >= 8:  return "Moderate (5-10m)"
+    if sats >= 6:  return "Poor (10-50m)"
+    if sats > 0:   return "Very Poor (>100m)"
+    return "No fix"
+
+
+@require_GET
+def gps_console(request):
+    try:
+        animal = Animal.objects.get(tag_number=ANIMAL_TAG)
+    except Animal.DoesNotExist:
+        animal = None
+
+    return render(request, "gps_console.html", {
+        "animal":     animal,
+        "animal_tag": ANIMAL_TAG,
+    })
+
+
+@require_GET
+def gps_stream_json(request):
+    try:
+        animal = Animal.objects.get(tag_number=ANIMAL_TAG)
+    except Animal.DoesNotExist:
+        return JsonResponse(
+            {"error": f"Animal {ANIMAL_TAG} not found.", "lines": []}, status=404
+        )
+
+    from django.http import JsonResponse
+
+    logs = list(
+        LocationLog.objects
+        .filter(animal=animal)
+        .order_by("-timestamp")[:30]
+    )
+    total_saved = LocationLog.objects.filter(animal=animal).count()
+
+    has_fix   = bool(logs) or GPS_STATE["has_fix"]
+    latest    = logs[0] if logs else None
+    displayed = list(reversed(logs))
+
+    sats     = GPS_STATE["sats"]
+    accuracy = _accuracy_label(sats)
+
+    if logs:
+        avg_lat   = sum(l.latitude  for l in logs) / len(logs)
+        avg_lon   = sum(l.longitude for l in logs) / len(logs)
+        latest_ts = latest.timestamp.strftime("%H:%M:%S")
+    else:
+        avg_lat = avg_lon = 0.0
+        latest_ts = None
+
+    lines = []
+    for log in displayed:
+        ts_str = log.timestamp.strftime("%H:%M:%S")
+        lines.append({
+            "tag": "RAW",
+            "cls": "tag-raw",
+            "body": (
+                f"[RAW] LAT: {log.latitude:.6f}"
+                f" | LON: {log.longitude:.6f}"
+                f" | SAT: {sats}"
+                f" | TS: {ts_str}"
+            ),
+        })
+        lines.append({
+            "tag": "SAT",
+            "cls": "tag-acc",
+            "body": f"[SAT]  {sats} satellites  |  {accuracy}",
+        })
+        lines.append({
+            "tag": "SAVE",
+            "cls": "tag-save",
+            "body": (
+                f"SAVED → LocationLog  animal={ANIMAL_TAG}"
+                f"  lat={log.latitude:.6f}  lon={log.longitude:.6f}"
+                f"  sats={sats}  @ {ts_str}"
+            ),
+        })
+
+    from django.http import JsonResponse
+    return JsonResponse({
+        "has_fix":     has_fix,
+        "lat":         latest.latitude  if latest else None,
+        "lon":         latest.longitude if latest else None,
+        "avg_lat":     avg_lat,
+        "avg_lon":     avg_lon,
+        "sats":        sats,
+        "accuracy":    accuracy,
+        "samples":     len(logs),
+        "total_saved": total_saved,
+        "latest_ts":   latest_ts,
+        "lines":       lines,
+    })

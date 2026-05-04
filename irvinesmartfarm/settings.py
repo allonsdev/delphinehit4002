@@ -139,7 +139,8 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-
+GPS_SERIAL_PORT  = "COM3"   # or "COM3" on Windows
+GPS_LOG_INTERVAL = 30
 
 DEFAULT_FROM_EMAIL = "smartmombe@gmail.com"
 ALERT_EMAIL_RECIPIENTS = ["smartmombe@gmail.com"]  # ← your actual recipients

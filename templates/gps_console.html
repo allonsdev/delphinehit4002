@@ -1,0 +1,1188 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}GPS Console — ZW0068{% endblock %}
+{% block page_title %}GPS Console{% endblock %}
+{% block page_subtitle %}Live coordinate stream · Animal {{ animal_tag }}{% endblock %}
+
+{% block extra_head %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=DM+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<style>
+/* ═══════════════════════════════════════════════════
+   DESIGN: Clean white shell + true-black terminal
+   Typography: DM Sans (UI) + IBM Plex Mono (console)
+═══════════════════════════════════════════════════ */
+
+:root {
+  /* White shell palette */
+  --shell-bg:        #ffffff;
+  --shell-surface:   #f5f5f5;
+  --shell-border:    #e2e2e2;
+  --shell-text:      #1a1a1a;
+  --shell-muted:     #6b6b6b;
+  --shell-accent:    #1a1a1a;
+
+  /* Terminal palette (true black) */
+  --trm-bg:          #0a0a0a;
+  --trm-surface:     #111111;
+  --trm-border:      #222222;
+  --trm-green:       #22c55e;
+  --trm-green-dim:   #15803d;
+  --trm-amber:       #f59e0b;
+  --trm-red:         #ef4444;
+  --trm-blue:        #38bdf8;
+  --trm-muted:       #3f3f3f;
+  --trm-text:        #d4d4d4;
+
+  /* Shared */
+  --radius:    6px;
+  --font-ui:   'DM Sans',    sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+
+/* ── PAGE RESET ───────────────────────────────────── */
+.gps-page {
+  font-family: var(--font-ui);
+  background: var(--shell-bg);
+  color: var(--shell-text);
+  min-height: calc(100vh - 60px);
+  padding: 0;
+  margin: -24px;          /* bleed to base.html edges */
+}
+@media (max-width: 768px) { .gps-page { margin: -16px; } }
+
+/* ── TOP BAR ──────────────────────────────────────── */
+.gps-topbar {
+  background: var(--shell-bg);
+  border-bottom: 1px solid var(--shell-border);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.topbar-pills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--shell-border);
+  background: var(--shell-surface);
+  color: var(--shell-muted);
+  font-family: var(--font-ui);
+  white-space: nowrap;
+}
+.pill.live    { border-color: #bbf7d0; background: #f0fdf4; color: #15803d; }
+.pill.fix     { border-color: #bbf7d0; background: #f0fdf4; color: #166534; }
+.pill.nofix   { border-color: #fde68a; background: #fffbeb; color: #92400e; }
+.pill.animal  { border-color: #bfdbfe; background: #eff6ff; color: #1d4ed8; }
+.pill.error   { border-color: #fecaca; background: #fef2f2; color: #991b1b; }
+
+.pill-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+.pill-dot.pulse { animation: dot-pulse 1.5s ease-in-out infinite; }
+@keyframes dot-pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: .4; transform: scale(.7); }
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tb-btn {
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--shell-border);
+  background: var(--shell-bg);
+  color: var(--shell-text);
+  cursor: pointer;
+  transition: all .15s;
+}
+.tb-btn:hover { background: var(--shell-surface); }
+.tb-btn.active { background: var(--shell-text); color: var(--shell-bg); border-color: var(--shell-text); }
+.tb-btn.danger { color: var(--trm-red); border-color: #fecaca; }
+.tb-btn.danger:hover { background: #fef2f2; }
+
+/* ── BODY LAYOUT ──────────────────────────────────── */
+.gps-body {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  height: calc(100vh - 60px - 53px);  /* subtract nav + topbar */
+  overflow: hidden;
+}
+@media (max-width: 960px) {
+  .gps-body { grid-template-columns: 1fr; }
+  .gps-sidebar { display: none; }
+}
+
+/* ── TERMINAL COLUMN ──────────────────────────────── */
+.terminal-col {
+  display: flex;
+  flex-direction: column;
+  background: var(--trm-bg);
+  overflow: hidden;
+}
+
+.terminal-titlebar {
+  background: var(--trm-surface);
+  border-bottom: 1px solid var(--trm-border);
+  padding: 9px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.trm-traffic {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.trm-traffic span {
+  width: 11px; height: 11px;
+  border-radius: 50%;
+}
+.trm-traffic .t-r { background: #ff5f57; }
+.trm-traffic .t-y { background: #febc2e; }
+.trm-traffic .t-g { background: #28c840; }
+.trm-title-text {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--trm-muted);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin-left: 12px;
+}
+.trm-meta {
+  display: flex;
+  gap: 16px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--trm-muted);
+}
+
+.terminal-output {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 16px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--trm-border) transparent;
+}
+.terminal-output::-webkit-scrollbar { width: 4px; }
+.terminal-output::-webkit-scrollbar-thumb { background: var(--trm-border); border-radius: 2px; }
+
+/* ── LOG LINE ─────────────────────────────────────── */
+.log-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.55;
+  animation: fadein .14s ease;
+}
+.log-line:hover { background: rgba(255,255,255,.03); }
+
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(3px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.log-ts {
+  font-size: 10px;
+  color: var(--trm-muted);
+  flex-shrink: 0;
+  min-width: 72px;
+  margin-top: 2px;
+}
+.log-tag {
+  flex-shrink: 0;
+  font-size: 9.5px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 3px;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  min-width: 48px;
+  text-align: center;
+  margin-top: 2px;
+}
+/* tag colour variants */
+.tag-raw  { background: rgba(34,197,94,.12);  color: #22c55e; border: 1px solid rgba(34,197,94,.2); }
+.tag-avg  { background: rgba(56,189,248,.12); color: #38bdf8; border: 1px solid rgba(56,189,248,.2); }
+.tag-acc  { background: rgba(245,158,11,.12); color: #f59e0b; border: 1px solid rgba(245,158,11,.2); }
+.tag-sys  { background: rgba(255,255,255,.05); color: #525252; border: 1px solid var(--trm-border); }
+.tag-fix  { background: rgba(34,197,94,.2);   color: #4ade80; border: 1px solid rgba(34,197,94,.4); }
+.tag-lost { background: rgba(239,68,68,.15);  color: #f87171; border: 1px solid rgba(239,68,68,.3); }
+.tag-wait { background: rgba(245,158,11,.12); color: #fbbf24; border: 1px solid rgba(245,158,11,.2); }
+.tag-save { background: rgba(56,189,248,.15); color: #7dd3fc; border: 1px solid rgba(56,189,248,.3); }
+
+.log-body { flex: 1; min-width: 0; word-break: break-all; color: var(--trm-text); }
+
+/* inline highlight */
+.v-coord { color: #22c55e; }
+.v-sat   { color: #38bdf8; }
+.v-acc   { color: #f59e0b; }
+.v-save  { color: #7dd3fc; }
+
+/* ── PROMPT BAR ───────────────────────────────────── */
+.terminal-prompt {
+  background: var(--trm-surface);
+  border-top: 1px solid var(--trm-border);
+  padding: 9px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+}
+.prompt-sym { color: #22c55e; font-weight: 600; }
+.prompt-cmd { color: var(--trm-muted); flex: 1; }
+.cursor {
+  display: inline-block;
+  width: 7px; height: 13px;
+  background: #22c55e;
+  border-radius: 1px;
+  animation: blink .85s step-end infinite;
+  vertical-align: middle;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+/* ── SIDEBAR ──────────────────────────────────────── */
+.gps-sidebar {
+  background: var(--shell-bg);
+  border-left: 1px solid var(--shell-border);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--shell-border) transparent;
+}
+
+.sb-section {
+  padding: 16px;
+  border-bottom: 1px solid var(--shell-border);
+}
+.sb-title {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--shell-muted);
+  margin-bottom: 12px;
+  font-family: var(--font-ui);
+}
+
+/* Metric grid */
+.metric-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.metric-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--shell-border);
+  font-size: 12px;
+}
+.metric-row:last-child { border-bottom: none; }
+.metric-key {
+  color: var(--shell-muted);
+  font-family: var(--font-ui);
+  font-size: 11px;
+}
+.metric-val {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--shell-text);
+}
+.metric-val.green  { color: #15803d; }
+.metric-val.blue   { color: #1d4ed8; }
+.metric-val.amber  { color: #92400e; }
+.metric-val.red    { color: #991b1b; }
+.metric-val.muted  { color: var(--shell-muted); }
+
+/* Signal bars */
+.signal-wrap {
+  margin-top: 10px;
+}
+.signal-label {
+  font-size: 10px;
+  color: var(--shell-muted);
+  margin-bottom: 5px;
+  font-family: var(--font-ui);
+}
+.signal-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 24px;
+}
+.signal-bar {
+  flex: 1;
+  background: var(--shell-border);
+  border-radius: 2px;
+  transition: background .4s, height .4s;
+  min-height: 3px;
+}
+.signal-bar.lit     { background: #22c55e; }
+.signal-bar.partial { background: #f59e0b; }
+
+/* Mini map */
+.mini-map-wrap {
+  border: 1px solid var(--shell-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-top: 8px;
+  position: relative;
+}
+#miniMap { height: 160px; }
+.map-badge {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  background: rgba(255,255,255,.92);
+  border: 1px solid var(--shell-border);
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--shell-text);
+  z-index: 1000;
+  pointer-events: none;
+  backdrop-filter: blur(4px);
+}
+
+/* DB save list */
+.save-list {
+  margin-top: 8px;
+  max-height: 180px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--shell-border) transparent;
+}
+.save-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--shell-border);
+  font-size: 11px;
+  gap: 8px;
+}
+.save-item:last-child { border-bottom: none; }
+.save-coord {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: #15803d;
+}
+.save-time {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--shell-muted);
+  flex-shrink: 0;
+}
+.save-empty {
+  font-size: 11px;
+  color: var(--shell-muted);
+  text-align: center;
+  padding: 12px 0;
+  font-family: var(--font-ui);
+}
+
+/* ── SATELLITE PANEL ──────────────────────────────── */
+.sat-hero {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.sat-count-big {
+  font-family: var(--font-mono);
+  font-size: 44px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--shell-text);
+  transition: color .4s;
+  letter-spacing: -.02em;
+}
+.sat-count-big.excellent { color: #15803d; }
+.sat-count-big.good      { color: #16a34a; }
+.sat-count-big.moderate  { color: #b45309; }
+.sat-count-big.poor      { color: #92400e; }
+.sat-count-big.none      { color: #9ca3af; }
+
+.sat-hero-right {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 5px;
+}
+.sat-label-top {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--shell-muted);
+  font-family: var(--font-ui);
+}
+.sat-accuracy-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 4px;
+  font-family: var(--font-ui);
+  transition: all .4s;
+  white-space: nowrap;
+}
+.sat-accuracy-badge.excellent { background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; }
+.sat-accuracy-badge.good      { background:#f0fdf4; color:#166534; border:1px solid #86efac; }
+.sat-accuracy-badge.moderate  { background:#fffbeb; color:#92400e; border:1px solid #fde68a; }
+.sat-accuracy-badge.poor      { background:#fff7ed; color:#9a3412; border:1px solid #fed7aa; }
+.sat-accuracy-badge.none      { background:var(--shell-surface); color:var(--shell-muted); border:1px solid var(--shell-border); }
+
+/* Bar graph — one column per sat slot (14 total) */
+.sat-bars-wrap {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 48px;
+  margin-bottom: 4px;
+}
+.sat-bar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  height: 100%;
+  justify-content: flex-end;
+}
+.s-bar {
+  width: 100%;
+  border-radius: 2px 2px 0 0;
+  background: var(--shell-border);
+  transition: height .55s cubic-bezier(.4,0,.2,1), background .55s;
+  min-height: 3px;
+}
+.s-num {
+  font-family: var(--font-mono);
+  font-size: 7px;
+  color: var(--shell-muted);
+  line-height: 1;
+  user-select: none;
+}
+.sat-bar-col.lit  .s-bar { background: #22c55e; }
+.sat-bar-col.half .s-bar { background: #f59e0b; }
+
+.sat-threshold-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2px;
+  font-size: 8.5px;
+  font-family: var(--font-mono);
+  color: var(--shell-muted);
+}
+
+/* Sky-view polar plot */
+.skyview-wrap {
+  margin-top: 12px;
+}
+.skyview-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--shell-muted);
+  font-family: var(--font-ui);
+  margin-bottom: 6px;
+}
+#skyCanvas {
+  display: block;
+  border-radius: 50%;
+  border: 1px solid var(--shell-border);
+}
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="gps-page">
+
+  <!-- ── TOP BAR ──────────────────────────────────── -->
+  <div class="gps-topbar">
+    <div class="topbar-pills">
+      <span class="pill live" id="connPill">
+        <span class="pill-dot pulse"></span>
+        Connecting…
+      </span>
+      <span class="pill nofix" id="fixPill">
+        <span class="pill-dot"></span>
+        Awaiting fix
+      </span>
+      <span class="pill animal">
+        <span class="pill-dot"></span>
+        {{ animal_tag }}{% if animal %} · {{ animal.breed }}{% endif %}
+      </span>
+      <span class="pill">
+        <span class="pill-dot" style="background:var(--shell-muted)"></span>
+        9600 baud
+      </span>
+      <span class="pill" style="font-family:var(--font-mono);font-size:11px;color:var(--shell-muted);" id="lineCounter">
+        0 lines
+      </span>
+    </div>
+    <div class="topbar-actions">
+      <span style="font-size:11px;color:var(--shell-muted);font-family:var(--font-mono);" id="uptimePill">00:00:00</span>
+      <button class="tb-btn" onclick="clearConsole()">Clear</button>
+      <button class="tb-btn" onclick="togglePause()" id="pauseBtn">⏸ Pause</button>
+      <button class="tb-btn danger" onclick="toggleStream()" id="streamBtn">⏹ Stop</button>
+    </div>
+  </div>
+
+  <!-- ── BODY ─────────────────────────────────────── -->
+  <div class="gps-body">
+
+    <!-- Terminal -->
+    <div class="terminal-col">
+      <div class="terminal-titlebar">
+        <div style="display:flex;align-items:center;">
+          <div class="trm-traffic">
+            <span class="t-r"></span>
+            <span class="t-y"></span>
+            <span class="t-g"></span>
+          </div>
+          <span class="trm-title-text">NEO-6M — {{ animal_tag }}</span>
+        </div>
+        <div class="trm-meta">
+          <span id="lineRate">— lines/s</span>
+          <span id="uptimeDisp">00:00:00</span>
+        </div>
+      </div>
+
+      <div class="terminal-output" id="termOutput"></div>
+
+      <div class="terminal-prompt">
+        <span class="prompt-sym">gps@farm:~$</span>
+        <span class="prompt-cmd">streaming to LocationLog · interval 30s</span>
+        <span class="cursor"></span>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="gps-sidebar">
+
+      <!-- Satellite panel -->
+      <div class="sb-section">
+        <div class="sb-title">Satellites · NEO-6M</div>
+
+        <!-- Hero: big count + accuracy badge -->
+        <div class="sat-hero">
+          <div class="sat-count-big none" id="satCountBig">—</div>
+          <div class="sat-hero-right">
+            <span class="sat-label-top">satellites in view</span>
+            <span class="sat-accuracy-badge none" id="satAccBadge">No fix</span>
+          </div>
+        </div>
+
+        <!-- Bar graph: 14 columns (max NEO-6M channels) -->
+        <div class="sat-bars-wrap" id="satBarsWrap">
+          {% for i in "12345678901234" %}
+          <div class="sat-bar-col" id="satCol{{ forloop.counter }}">
+            <div class="s-bar" style="height:3px;"></div>
+            <div class="s-num">{{ forloop.counter }}</div>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="sat-threshold-row">
+          <span>0</span>
+          <span title="poor">6</span>
+          <span title="moderate">8</span>
+          <span title="good">11</span>
+          <span title="excellent">14</span>
+        </div>
+
+        <!-- Sky-view polar plot (simulated positions) -->
+        <div class="skyview-wrap">
+          <div class="skyview-label">Sky view</div>
+          <canvas id="skyCanvas" width="252" height="110"></canvas>
+        </div>
+      </div>
+
+      <!-- Live metrics -->
+      <div class="sb-section">
+        <div class="sb-title">Live Metrics</div>
+        <div class="metric-grid">
+          <div class="metric-row">
+            <span class="metric-key">Latitude</span>
+            <span class="metric-val green" id="sLat">—</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-key">Longitude</span>
+            <span class="metric-val green" id="sLon">—</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-key">Avg Lat</span>
+            <span class="metric-val blue" id="sAvgLat">—</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-key">Avg Lon</span>
+            <span class="metric-val blue" id="sAvgLon">—</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-key">Satellites</span>
+            <span class="metric-val" id="sSats">—</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-key">Accuracy</span>
+            <span class="metric-val amber" id="sAcc">—</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-key">Samples</span>
+            <span class="metric-val muted" id="sSamples">0 / 30</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- DB saves -->
+      <div class="sb-section">
+        <div class="sb-title">LocationLog Saves</div>
+        <div class="metric-grid">
+          <div class="metric-row">
+            <span class="metric-key">Total saved</span>
+            <span class="metric-val blue" id="sTotalSaved">0</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-key">Next save in</span>
+            <span class="metric-val amber" id="sNextSave">30s</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-key">Last saved</span>
+            <span class="metric-val muted" id="sLastSaved">—</span>
+          </div>
+        </div>
+        <div class="save-list" id="saveList">
+          <div class="save-empty">No saves yet</div>
+        </div>
+      </div>
+
+      <!-- Mini map -->
+      <div class="sb-section">
+        <div class="sb-title">Last Fix · Map</div>
+        <div class="mini-map-wrap">
+          <div id="miniMap"></div>
+          <div class="map-badge" id="mapBadge">{{ animal_tag }} · NO FIX</div>
+        </div>
+      </div>
+
+      <!-- Session stats -->
+      <div class="sb-section">
+        <div class="sb-title">Session Stats</div>
+        <div class="metric-grid">
+          <div class="metric-row">
+            <span class="metric-key">Lines received</span>
+            <span class="metric-val" id="statLines">0</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-key">Fix acquired</span>
+            <span class="metric-val muted" id="statFix">—</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-key">Fix lost events</span>
+            <span class="metric-val muted" id="statLost">0</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-key">Poll errors</span>
+            <span class="metric-val red" id="statErrors">0</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /sidebar -->
+  </div><!-- /body -->
+</div><!-- /page -->
+{% endblock %}
+
+
+{% block extra_scripts %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+// ═══════════════════════════════════════════════════
+//  GPS CONSOLE  —  polls /gps/stream/json/ every 2 s
+//  Set DEMO_MODE = true to use simulated data instead.
+// ═══════════════════════════════════════════════════
+
+var DEMO_MODE  = false;                      // ← false = real Django data
+var STREAM_URL = "{% url 'gps_stream_json' %}";
+var POLL_MS    = 2000;
+
+// ── STATE ────────────────────────────────────────────
+var paused      = false;
+var streaming   = true;
+var lineCount   = 0;
+var lostCount   = 0;
+var errCount    = 0;
+var fixAcquired = false;
+var sessionStart = Date.now();
+var countdown   = 30;
+var mapReady    = false;
+var miniMap, miniMarker;
+
+// Track last seen total_saved to detect new saves
+var lastTotalSaved = 0;
+
+// ── HELPERS ──────────────────────────────────────────
+function pad(n) { return String(n).padStart(2,'0'); }
+
+function nowTs() {
+  var d = new Date();
+  return pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds())+
+         '.'+String(d.getMilliseconds()).padStart(3,'0');
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function highlight(text) {
+  return esc(text)
+    .replace(/(-?\d{1,3}\.\d{4,})/g, '<span class="v-coord">$1</span>')
+    .replace(/\bSAT:\s*(\d+)/g, 'SAT: <span class="v-sat">$1</span>')
+    .replace(/(Excellent|Good|Moderate|Poor|Very Poor)[^\s<]*/g, '<span class="v-acc">$&</span>')
+    .replace(/SAVED →[^\n<]*/g, '<span class="v-save">$&</span>');
+}
+
+// ── UPTIME CLOCK ─────────────────────────────────────
+setInterval(function() {
+  var s   = Math.floor((Date.now() - sessionStart) / 1000);
+  var str = pad(Math.floor(s/3600))+':'+pad(Math.floor((s%3600)/60))+':'+pad(s%60);
+  document.getElementById('uptimePill').textContent = str;
+  document.getElementById('uptimeDisp').textContent = str;
+}, 1000);
+
+// ── COUNTDOWN ────────────────────────────────────────
+setInterval(function() {
+  if (!streaming || paused) return;
+  countdown = Math.max(0, countdown - 1);
+  document.getElementById('sNextSave').textContent = countdown + 's';
+}, 1000);
+
+// ── LINE RATE ─────────────────────────────────────────
+var rateCount = 0;
+setInterval(function() {
+  document.getElementById('lineRate').textContent = rateCount + ' lines/s';
+  document.getElementById('statLines').textContent = lineCount;
+  rateCount = 0;
+}, 1000);
+
+// ── APPEND LINE ──────────────────────────────────────
+function appendLine(tag, tagCls, body, doHighlight) {
+  if (paused) return;
+  var out = document.getElementById('termOutput');
+  var div = document.createElement('div');
+  div.className = 'log-line';
+  div.innerHTML =
+    '<span class="log-ts">'+(nowTs())+'</span>'+
+    '<span class="log-tag '+tagCls+'">'+tag+'</span>'+
+    '<span class="log-body">'+(doHighlight ? highlight(body) : esc(body))+'</span>';
+  out.appendChild(div);
+
+  // auto-scroll
+  if (out.scrollTop + out.clientHeight >= out.scrollHeight - 60)
+    out.scrollTop = out.scrollHeight;
+
+  lineCount++; rateCount++;
+  document.getElementById('lineCounter').textContent = lineCount + ' lines';
+
+  // trim to 600 lines
+  var all = out.querySelectorAll('.log-line');
+  if (all.length > 600) all[0].remove();
+}
+
+// ── CONTROLS ─────────────────────────────────────────
+function clearConsole() {
+  document.getElementById('termOutput').innerHTML = '';
+  lineCount = 0;
+  document.getElementById('lineCounter').textContent = '0 lines';
+  appendLine('SYS', 'tag-sys', 'Console cleared.', false);
+}
+
+function togglePause() {
+  paused = !paused;
+  var btn = document.getElementById('pauseBtn');
+  btn.textContent = paused ? '▶ Resume' : '⏸ Pause';
+  btn.classList.toggle('active', paused);
+  appendLine('SYS', 'tag-sys', paused ? 'Paused — data continues logging.' : 'Resumed.', false);
+}
+
+function toggleStream() {
+  streaming = !streaming;
+  var btn = document.getElementById('streamBtn');
+  btn.textContent = streaming ? '⏹ Stop' : '▶ Start';
+  updateConnPill(streaming ? 'live' : 'stopped');
+  appendLine('SYS', 'tag-sys', streaming ? 'Stream resumed.' : 'Stream stopped by user.', false);
+}
+
+// ── PILL HELPERS ──────────────────────────────────────
+function updateConnPill(state) {
+  var el = document.getElementById('connPill');
+  el.className = 'pill';
+  if (state === 'live')    { el.classList.add('live');  el.innerHTML = '<span class="pill-dot pulse"></span>Live'; }
+  if (state === 'stopped') { el.className = 'pill';     el.innerHTML = '<span class="pill-dot" style="background:#999"></span>Stopped'; }
+  if (state === 'error')   { el.classList.add('error'); el.innerHTML = '<span class="pill-dot"></span>Error'; }
+}
+
+function updateFixPill(hasFix) {
+  var el = document.getElementById('fixPill');
+  if (hasFix) {
+    el.className = 'pill fix';
+    el.innerHTML = '<span class="pill-dot pulse"></span>Fix acquired';
+    if (!fixAcquired) {
+      fixAcquired = true;
+      var t = new Date();
+      document.getElementById('statFix').textContent =
+        pad(t.getHours())+':'+pad(t.getMinutes())+':'+pad(t.getSeconds());
+    }
+  } else {
+    el.className = 'pill nofix';
+    el.innerHTML = '<span class="pill-dot"></span>Awaiting fix';
+  }
+}
+
+// ── SATELLITE HELPERS ─────────────────────────────────
+function satClass(sats) {
+  if (sats >= 14) return 'excellent';
+  if (sats >= 11) return 'good';
+  if (sats >= 8)  return 'moderate';
+  if (sats >= 6)  return 'poor';
+  return 'none';
+}
+
+function getAccLabel(sats) {
+  if (sats >= 14) return 'Excellent (1-2m)';
+  if (sats >= 11) return 'Good (2-5m)';
+  if (sats >= 8)  return 'Moderate (5-10m)';
+  if (sats >= 6)  return 'Poor (10-50m)';
+  if (sats > 0)   return 'Very Poor (>100m)';
+  return 'No fix';
+}
+
+function updateSatPanel(sats, accuracy) {
+  var cls = satClass(sats);
+
+  var big = document.getElementById('satCountBig');
+  big.textContent = sats > 0 ? sats : '—';
+  big.className   = 'sat-count-big ' + cls;
+
+  var badge = document.getElementById('satAccBadge');
+  badge.textContent = accuracy || getAccLabel(sats);
+  badge.className   = 'sat-accuracy-badge ' + cls;
+
+  for (var i = 1; i <= 14; i++) {
+    var col = document.getElementById('satCol' + i);
+    var bar = col.querySelector('.s-bar');
+    if (i <= sats) {
+      var pct = Math.min(100, Math.max(12, 90 - (i - 1) * 4 + (Math.random() * 10 - 5)));
+      bar.style.height = pct + '%';
+      col.className = 'sat-bar-col ' + (sats >= 8 ? 'lit' : 'half');
+    } else {
+      bar.style.height = '3px';
+      col.className = 'sat-bar-col';
+    }
+  }
+
+  drawSkyView(sats);
+}
+
+// ── SKY-VIEW POLAR CANVAS ─────────────────────────────
+var skyDots = [];
+
+function drawSkyView(sats) {
+  var canvas = document.getElementById('skyCanvas');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var W = canvas.width, H = canvas.height;
+  var cx = W / 2, cy = H / 2;
+  var R  = Math.min(cx, cy) - 8;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Background circle
+  ctx.fillStyle = '#f9fafb';
+  ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI*2); ctx.fill();
+
+  // Rings: horizon, 45°, zenith
+  [[1,'#d1d5db',1.5],[0.66,'#e5e7eb',1],[0.33,'#e5e7eb',1]].forEach(function(r) {
+    ctx.beginPath(); ctx.arc(cx, cy, R*r[0], 0, Math.PI*2);
+    ctx.strokeStyle = r[1]; ctx.lineWidth = r[2]; ctx.stroke();
+  });
+
+  // Cardinal labels
+  ctx.font = '7.5px IBM Plex Mono, monospace';
+  ctx.fillStyle = '#9ca3af';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  [['N',0],['E',Math.PI/2],['S',Math.PI],['W',-Math.PI/2]].forEach(function(l) {
+    ctx.fillText(l[0], cx+(R+7)*Math.sin(l[1]), cy-(R+7)*Math.cos(l[1]));
+  });
+
+  // Ensure cached dot positions
+  while (skyDots.length < 14) {
+    skyDots.push({ ang: Math.random()*Math.PI*2, rad: Math.sqrt(Math.random())*R*0.9 });
+  }
+
+  // Satellite dots
+  for (var i = 0; i < sats && i < 14; i++) {
+    var d = skyDots[i];
+    var dx = cx + d.rad * Math.sin(d.ang);
+    var dy = cy - d.rad * Math.cos(d.ang);
+    var col = sats >= 8 ? '#22c55e' : '#f59e0b';
+
+    // Glow
+    var grd = ctx.createRadialGradient(dx, dy, 0, dx, dy, 8);
+    grd.addColorStop(0, col); grd.addColorStop(1, 'transparent');
+    ctx.beginPath(); ctx.arc(dx, dy, 8, 0, Math.PI*2);
+    ctx.fillStyle = grd; ctx.fill();
+
+    // Dot
+    ctx.beginPath(); ctx.arc(dx, dy, 3.5, 0, Math.PI*2);
+    ctx.fillStyle = col; ctx.fill();
+
+    // PRN label
+    ctx.font = '6px IBM Plex Mono, monospace';
+    ctx.fillStyle = '#374151';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    ctx.fillText(i+1, dx, dy-5);
+  }
+
+  // Crosshair
+  ctx.strokeStyle = '#d1d5db'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(cx-5,cy); ctx.lineTo(cx+5,cy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx,cy-5); ctx.lineTo(cx,cy+5); ctx.stroke();
+}
+
+// ── SIDEBAR ───────────────────────────────────────────
+function updateMetrics(data) {
+  if (data.lat !== null && data.lon !== null) {
+    document.getElementById('sLat').textContent     = data.lat.toFixed(6);
+    document.getElementById('sLon').textContent     = data.lon.toFixed(6);
+    document.getElementById('sAvgLat').textContent  = data.avg_lat.toFixed(6);
+    document.getElementById('sAvgLon').textContent  = data.avg_lon.toFixed(6);
+    document.getElementById('sSamples').textContent = data.samples + ' / 30';
+    updateMiniMap(data.lat, data.lon);
+  }
+  var sats = data.sats || 0;
+  document.getElementById('sSats').textContent       = sats || '—';
+  document.getElementById('sAcc').textContent        = data.accuracy || getAccLabel(sats);
+  document.getElementById('sTotalSaved').textContent = data.total_saved || 0;
+  if (data.latest_ts) document.getElementById('sLastSaved').textContent = data.latest_ts;
+
+  updateSatPanel(sats, data.accuracy || null);
+
+  if (data.total_saved > lastTotalSaved && data.lat !== null) {
+    var diff = data.total_saved - lastTotalSaved;
+    for (var i = 0; i < diff; i++) addSaveItem(data.lat, data.lon, data.latest_ts || '—');
+    lastTotalSaved = data.total_saved;
+    countdown = 30;
+  }
+}
+
+function addSaveItem(lat, lon, ts) {
+  var list = document.getElementById('saveList');
+  var empty = list.querySelector('.save-empty');
+  if (empty) empty.remove();
+
+  var item = document.createElement('div');
+  item.className = 'save-item';
+  item.innerHTML =
+    '<span class="save-coord">'+lat.toFixed(5)+', '+lon.toFixed(5)+'</span>'+
+    '<span class="save-time">'+ts+'</span>';
+  list.insertBefore(item, list.firstChild);
+
+  var items = list.querySelectorAll('.save-item');
+  if (items.length > 12) items[items.length-1].remove();
+}
+
+// ── MINI MAP ──────────────────────────────────────────
+function initMiniMap(lat, lon) {
+  if (mapReady) return;
+  mapReady = true;
+  miniMap = L.map('miniMap', {
+    zoomControl: false, attributionControl: false,
+    scrollWheelZoom: false, dragging: false, tap: false,
+  }).setView([lat, lon], 16);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    subdomains: 'abcd', maxZoom: 19,
+  }).addTo(miniMap);
+  var icon = L.divIcon({
+    className: '',
+    html: '<div style="width:13px;height:13px;border-radius:50%;background:#15803d;border:2.5px solid #fff;box-shadow:0 0 6px rgba(21,128,61,.5);"></div>',
+    iconSize: [13,13], iconAnchor: [6.5,6.5],
+  });
+  miniMarker = L.marker([lat, lon], { icon: icon }).addTo(miniMap);
+}
+
+function updateMiniMap(lat, lon) {
+  if (!mapReady) { initMiniMap(lat, lon); return; }
+  miniMarker.setLatLng([lat, lon]);
+  miniMap.setView([lat, lon], 16, { animate: true, duration: 0.5 });
+  document.getElementById('mapBadge').textContent =
+    '{{ animal_tag }} · ' + lat.toFixed(5) + ', ' + lon.toFixed(5);
+}
+
+// ═══════════════════════════════════════════════════
+// REAL POLL MODE — fetches /gps/stream/json/ every 2s
+// ═══════════════════════════════════════════════════
+var knownLineKeys = new Set();  // avoid re-printing old DB rows
+
+function pollBackend() {
+  if (!streaming) return;
+  fetch(STREAM_URL)
+    .then(function(r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
+    .then(function(data) {
+      updateConnPill('live');
+      updateFixPill(data.has_fix);
+      updateMetrics(data);
+
+      // Render new lines (use body text as dedup key)
+      (data.lines || []).forEach(function(line) {
+        var key = line.body;
+        if (!knownLineKeys.has(key)) {
+          knownLineKeys.add(key);
+          appendLine(line.tag, line.cls, line.body, true);
+          // Keep set bounded
+          if (knownLineKeys.size > 2000) {
+            knownLineKeys.delete(knownLineKeys.values().next().value);
+          }
+        }
+      });
+    })
+    .catch(function(e) {
+      errCount++;
+      document.getElementById('statErrors').textContent = errCount;
+      updateConnPill('error');
+      console.error('Poll error:', e);
+    });
+}
+
+// ═══════════════════════════════════════════════════
+// DEMO MODE — simulated data (set DEMO_MODE = true)
+// ═══════════════════════════════════════════════════
+var demoLat = -17.829412, demoLon = 31.052362;
+var demoSats = 0, demoFix = false, demoSamples = 0;
+var demoAvgLat = demoLat, demoAvgLon = demoLon;
+var demoSaveTimer = 15, demoTick = 0;
+
+function demoStep() {
+  if (!streaming) return;
+  demoTick++;
+
+  if (demoSats < 9 && demoTick < 7) {
+    demoSats = Math.min(9, demoSats + Math.ceil(Math.random()*2));
+    var bar = Array.from({length:14}, function(_,i){ return i<demoSats?'=':'-'; }).join('');
+    appendLine('WAIT','tag-wait','[WAITING] Satellites: '+demoSats+' ['+bar+']',false);
+    updateSatPanel(demoSats, getAccLabel(demoSats));
+    return;
+  }
+
+  if (!demoFix) {
+    demoFix = true;
+    appendLine('★ FIX','tag-fix','*** GPS FIX ACQUIRED ***',false);
+    updateFixPill(true);
+    updateConnPill('live');
+  }
+
+  demoLat += (Math.random()-.5)*.0002;
+  demoLon += (Math.random()-.5)*.0002;
+  demoSats = Math.max(6, Math.min(14, demoSats + Math.round((Math.random()-.5)*2)));
+  demoSamples = Math.min(30, demoSamples+1);
+  demoAvgLat = (demoAvgLat*(demoSamples-1)+demoLat)/demoSamples;
+  demoAvgLon = (demoAvgLon*(demoSamples-1)+demoLon)/demoSamples;
+
+  appendLine('RAW','tag-raw',
+    '[RAW] LAT: '+demoLat.toFixed(6)+' | LON: '+demoLon.toFixed(6)+' | SAT: '+demoSats, true);
+  appendLine('AVG','tag-avg',
+    '[AVG] LAT: '+demoAvgLat.toFixed(6)+' | LON: '+demoAvgLon.toFixed(6)+
+    ' | Samples: '+demoSamples+'/30', true);
+  appendLine('ACC','tag-acc',
+    '[ACC] Estimate: '+getAccLabel(demoSats), true);
+
+  updateMetrics({
+    has_fix: true, lat: demoLat, lon: demoLon,
+    avg_lat: demoAvgLat, avg_lon: demoAvgLon,
+    sats: demoSats, accuracy: getAccLabel(demoSats),
+    samples: demoSamples,
+    total_saved: lastTotalSaved, latest_ts: null,
+  });
+
+  demoSaveTimer--;
+  if (demoSaveTimer <= 0) {
+    demoSaveTimer = 15;
+    appendLine('SAVE','tag-save',
+      'SAVED → LocationLog  animal={{ animal_tag }}  lat='+demoLat.toFixed(6)+
+      '  lon='+demoLon.toFixed(6), true);
+    lastTotalSaved++;
+    addSaveItem(demoLat, demoLon, new Date().toTimeString().slice(0,8));
+    countdown = 30;
+    document.getElementById('sTotalSaved').textContent = lastTotalSaved;
+    document.getElementById('sLastSaved').textContent  = new Date().toTimeString().slice(0,8);
+  }
+
+  if (Math.random() < .015) {
+    demoFix = false; demoSats = 2;
+    appendLine('LOST','tag-lost','*** GPS FIX LOST ***',false);
+    updateFixPill(false);
+    lostCount++;
+    document.getElementById('statLost').textContent = lostCount;
+  }
+}
+
+// ── BOOT ─────────────────────────────────────────────
+appendLine('SYS','tag-sys','=== NEO-6M GPS Module ===',false);
+appendLine('SYS','tag-sys','Tracking animal: {{ animal_tag }}{% if animal %} ({{ animal.breed }}){% endif %}',false);
+appendLine('SYS','tag-sys','Poll endpoint: '+STREAM_URL+' every '+POLL_MS+'ms',false);
+appendLine('SYS','tag-sys','Mode: '+(DEMO_MODE?'DEMO (simulated)':'LIVE (Django LocationLog)'),false);
+
+if (DEMO_MODE) {
+  setInterval(demoStep, POLL_MS);
+} else {
+  pollBackend();  // immediate first poll
+  setInterval(pollBackend, POLL_MS);
+}
+</script>
+{% endblock %}

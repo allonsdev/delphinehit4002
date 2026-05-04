@@ -8,417 +8,373 @@
 {% if last_location %}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 {% endif %}
-
 <style>
-/* ── RESPONSIVE BASE ──────────────────────────────── */
+/* ═══════════════════════════════════════════════════
+   RESPONSIVE BASE
+═══════════════════════════════════════════════════ */
 @media (max-width: 768px) {
-  .kpi-grid          { grid-template-columns: repeat(2,1fr) !important; gap: 10px !important; }
+  .kpi-grid          { grid-template-columns: repeat(2,1fr) !important; gap:10px !important; }
   .info-grid         { grid-template-columns: 1fr !important; }
   .chart-row         { grid-template-columns: 1fr !important; }
-  .profile-hero      { flex-wrap: wrap; padding: 16px; gap: 12px; }
-  .qr-box            { margin-left: 0 !important; }
-  .sf-tabs           { overflow-x: auto; flex-wrap: nowrap; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-  .sf-tabs::-webkit-scrollbar { display: none; }
-  .sf-tab            { flex: none; min-width: 80px; font-size: 11.5px; padding: 8px 10px; }
-  .profile-avatar    { width: 56px; height: 56px; font-size: 22px; }
-  .profile-hero h1   { font-size: 19px; }
-  .hero-meta         { gap: 5px; }
-  .hero-badge        { font-size: 11px; padding: 3px 9px; }
-  .kpi-card          { padding: 12px 14px; gap: 10px; }
-  .kpi-icon          { width: 38px; height: 38px; font-size: 16px; }
-  .kpi-val           { font-size: 18px !important; }
-  .edit-fieldset-grid         { grid-template-columns: 1fr !important; }
-  .edit-fieldset-grid.cols-3  { grid-template-columns: 1fr !important; }
-  .edit-actions-bar  { flex-direction: column; align-items: stretch; }
+  .profile-hero      { flex-wrap:wrap; padding:16px; gap:12px; }
+  .qr-box            { margin-left:0 !important; }
+  .sf-tabs           { overflow-x:auto; flex-wrap:nowrap; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+  .sf-tabs::-webkit-scrollbar { display:none; }
+  .sf-tab            { flex:none; min-width:80px; font-size:11.5px; padding:8px 10px; }
+  .profile-avatar    { width:56px; height:56px; font-size:22px; }
+  .profile-hero h1   { font-size:19px; }
+  .hero-meta         { gap:5px; }
+  .hero-badge        { font-size:11px; padding:3px 9px; }
+  .kpi-card          { padding:12px 14px; gap:10px; }
+  .kpi-icon          { width:38px; height:38px; font-size:16px; }
+  .kpi-val           { font-size:18px !important; }
+  #animalMap         { height:240px !important; }
+  .edit-fieldset-grid         { grid-template-columns:1fr !important; }
+  .edit-fieldset-grid.cols-3  { grid-template-columns:1fr !important; }
+  .edit-actions-bar  { flex-direction:column; align-items:stretch; }
   .edit-actions-bar .btn-save,
   .edit-actions-bar .btn-cancel,
-  .btn-danger-outline { justify-content: center; width: 100%; }
-  #animalMap         { height: 240px !important; }
-
-  /* Inline rows become stacked cards on mobile */
-  .inline-row        { grid-template-columns: 1fr !important; }
-  .inline-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  .inline-card       { border-radius: 10px !important; }
+  .btn-danger-outline { justify-content:center; width:100%; }
 }
 
-/* ── HERO ─────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════════════ */
 .profile-hero {
   background: linear-gradient(135deg,#1b5e20 0%,#2e7d32 60%,#43a047 100%);
-  border-radius: 14px; padding: 24px 28px; color: #fff;
-  margin-bottom: 24px; display: flex; align-items: center; gap: 20px;
+  border-radius:14px; padding:24px 28px; color:#fff;
+  margin-bottom:24px; display:flex; align-items:center; gap:20px;
 }
 .profile-avatar {
-  width: 72px; height: 72px; border-radius: 50%;
-  background: rgba(255,255,255,0.15); display: flex;
-  align-items: center; justify-content: center;
-  font-size: 28px; border: 3px solid rgba(255,255,255,0.3);
-  color: #fff; flex-shrink: 0;
+  width:72px; height:72px; border-radius:50%;
+  background:rgba(255,255,255,0.15); display:flex;
+  align-items:center; justify-content:center;
+  font-size:28px; border:3px solid rgba(255,255,255,0.3); color:#fff; flex-shrink:0;
 }
-.profile-hero h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
-.profile-hero p  { font-size: 13px; opacity: .85; margin: 0; }
-.hero-meta       { display: flex; gap: 7px; margin-top: 10px; flex-wrap: wrap; }
+.profile-hero h1  { font-size:22px; font-weight:700; margin-bottom:4px; }
+.profile-hero p   { font-size:13px; opacity:.85; margin:0; }
+.hero-meta        { display:flex; gap:7px; margin-top:10px; flex-wrap:wrap; }
 .hero-badge {
-  background: rgba(255,255,255,0.18);
-  border: 1px solid rgba(255,255,255,0.25);
-  border-radius: 20px; padding: 4px 11px;
-  font-size: 11.5px; font-weight: 600;
-  display: inline-flex; align-items: center; gap: 5px;
+  background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.25);
+  border-radius:20px; padding:4px 11px; font-size:11.5px; font-weight:600;
+  display:inline-flex; align-items:center; gap:5px;
 }
 .qr-box {
-  margin-left: auto; background: rgba(255,255,255,0.95);
-  border-radius: 12px; padding: 10px; text-align: center; flex-shrink: 0;
+  margin-left:auto; background:rgba(255,255,255,0.95);
+  border-radius:12px; padding:10px; text-align:center; flex-shrink:0;
 }
-.qr-box img { width: 88px; height: 88px; display: block; }
-.qr-box p   { font-size: 10px; color: #555; margin-top: 4px; margin-bottom: 0; }
+.qr-box img { width:88px; height:88px; display:block; }
+.qr-box p   { font-size:10px; color:#555; margin-top:4px; margin-bottom:0; }
 
-/* ── KPI CARDS ────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════
+   KPI CARDS
+═══════════════════════════════════════════════════ */
 .kpi-grid {
-  display: grid; grid-template-columns: repeat(4,1fr);
-  gap: 14px; margin-bottom: 24px;
+  display:grid; grid-template-columns:repeat(4,1fr);
+  gap:14px; margin-bottom:24px;
 }
 .kpi-card {
-  background: #fff; border-radius: 12px; padding: 18px 20px;
-  border: 1px solid var(--sf-border);
-  box-shadow: 0 1px 3px rgba(0,0,0,.06);
-  display: flex; align-items: center; gap: 14px;
+  background:#fff; border-radius:12px; padding:18px 20px;
+  border:1px solid var(--sf-border); box-shadow:0 1px 3px rgba(0,0,0,.06);
+  display:flex; align-items:center; gap:14px;
 }
 .kpi-icon {
-  width: 46px; height: 46px; border-radius: 12px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 19px; flex-shrink: 0;
+  width:46px; height:46px; border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:19px; flex-shrink:0;
 }
-.kpi-label { font-size: 11px; font-weight: 700; color: var(--sf-muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 3px; }
-.kpi-val   { font-size: 22px; font-weight: 700; line-height: 1; }
+.kpi-label { font-size:11px; font-weight:700; color:var(--sf-muted); text-transform:uppercase; letter-spacing:.5px; margin-bottom:3px; }
+.kpi-val   { font-size:22px; font-weight:700; line-height:1; }
 
-/* ── TABS ─────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════
+   TABS
+═══════════════════════════════════════════════════ */
 .sf-tabs {
-  display: flex; gap: 4px; background: #f0f2f5;
-  border-radius: 10px; padding: 4px; margin-bottom: 22px;
+  display:flex; gap:4px; background:#f0f2f5;
+  border-radius:10px; padding:4px; margin-bottom:22px;
 }
 .sf-tab {
-  flex: 1; text-align: center; padding: 9px 6px;
-  border-radius: 8px; font-size: 12.5px; font-weight: 600;
-  cursor: pointer; color: var(--sf-muted); border: none;
-  background: transparent; transition: all .15s;
-  white-space: nowrap; display: inline-flex;
-  align-items: center; justify-content: center; gap: 5px;
+  flex:1; text-align:center; padding:9px 6px;
+  border-radius:8px; font-size:12.5px; font-weight:600;
+  cursor:pointer; color:var(--sf-muted); border:none;
+  background:transparent; transition:all .15s;
+  white-space:nowrap; display:inline-flex;
+  align-items:center; justify-content:center; gap:5px;
 }
 .sf-tab.active {
-  background: #fff; color: var(--sf-green);
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  background:#fff; color:var(--sf-green);
+  box-shadow:0 1px 4px rgba(0,0,0,0.1);
 }
-.sf-tab-panel        { display: none; }
-.sf-tab-panel.active { display: block; }
+.sf-tab-panel        { display:none; }
+.sf-tab-panel.active { display:block; }
 
-/* ── CONTENT GRIDS ────────────────────────────────── */
-.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-
+/* ═══════════════════════════════════════════════════
+   INFO GRIDS
+═══════════════════════════════════════════════════ */
+.info-grid  { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.chart-row  { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
 .chart-wrap {
-  background: #fff; border-radius: 12px; padding: 20px;
-  border: 1px solid var(--sf-border);
-  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  background:#fff; border-radius:12px; padding:20px;
+  border:1px solid var(--sf-border); box-shadow:0 1px 3px rgba(0,0,0,.06);
 }
 .chart-wrap h4 {
-  font-size: 11.5px; font-weight: 700; color: var(--sf-muted);
-  margin-bottom: 14px; text-transform: uppercase; letter-spacing: .5px;
-  display: flex; align-items: center; gap: 6px;
+  font-size:11.5px; font-weight:700; color:var(--sf-muted);
+  margin-bottom:14px; text-transform:uppercase; letter-spacing:.5px;
+  display:flex; align-items:center; gap:6px;
 }
 .info-section {
-  background: #fff; border-radius: 12px; padding: 20px;
-  border: 1px solid var(--sf-border);
-  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  background:#fff; border-radius:12px; padding:20px;
+  border:1px solid var(--sf-border); box-shadow:0 1px 3px rgba(0,0,0,.06);
 }
 .info-section h4 {
-  font-size: 11.5px; font-weight: 700; color: var(--sf-muted);
-  text-transform: uppercase; letter-spacing: .5px;
-  margin-bottom: 14px; display: flex; align-items: center; gap: 6px;
+  font-size:11.5px; font-weight:700; color:var(--sf-muted);
+  text-transform:uppercase; letter-spacing:.5px; margin-bottom:14px;
+  display:flex; align-items:center; gap:6px;
 }
 .info-row {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 8px 0; border-bottom: 1px solid #f3f4f6; font-size: 13.5px;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:8px 0; border-bottom:1px solid #f3f4f6; font-size:13.5px;
 }
-.info-row:last-child { border: none; }
-.info-label { color: var(--sf-muted); font-weight: 500; }
-.info-val   { font-weight: 600; color: var(--sf-text); text-align: right; max-width: 60%; word-break: break-word; }
+.info-row:last-child { border:none; }
+.info-label { color:var(--sf-muted); font-weight:500; }
+.info-val   { font-weight:600; color:var(--sf-text); text-align:right; max-width:60%; word-break:break-word; }
 
 /* ── MAP ──────────────────────────────────────────── */
 #animalMap {
-  height: 360px; border-radius: 0 0 12px 12px;
-  border-top: 1px solid var(--sf-border); overflow: hidden;
+  height:360px; border-radius:0 0 12px 12px;
+  border-top:1px solid var(--sf-border); overflow:hidden;
 }
-.empty-state { text-align: center; padding: 40px 20px; color: var(--sf-muted); }
-.empty-state i { font-size: 34px; margin-bottom: 12px; opacity: .35; display: block; }
+.empty-state { text-align:center; padding:40px 20px; color:var(--sf-muted); }
+.empty-state i { font-size:34px; margin-bottom:12px; opacity:.35; display:block; }
 
-/* ══════════════════════════════════════════════════
-   EDIT TAB — BASE FIELDS
-══════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════════════ */
 .sf-toast {
-  position: fixed; top: 72px; right: 20px; z-index: 9999;
-  background: #1b5e20; color: #fff; padding: 13px 18px;
-  border-radius: 10px; font-size: 13px; font-weight: 600;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.22);
-  display: flex; align-items: center; gap: 9px;
-  transform: translateX(120%); transition: transform .28s cubic-bezier(.4,0,.2,1);
-  max-width: 300px;
+  position:fixed; top:72px; right:20px; z-index:9999;
+  background:#1b5e20; color:#fff; padding:13px 18px;
+  border-radius:10px; font-size:13px; font-weight:600;
+  box-shadow:0 4px 20px rgba(0,0,0,0.22);
+  display:flex; align-items:center; gap:9px;
+  transform:translateX(120%); transition:transform .28s cubic-bezier(.4,0,.2,1);
+  max-width:300px;
 }
-.sf-toast.show  { transform: translateX(0); }
-.sf-toast.error { background: #dc2626; }
+.sf-toast.show  { transform:translateX(0); }
+.sf-toast.error { background:#dc2626; }
 
-.edit-fieldset {
-  background: #fff; border: 1px solid var(--sf-border);
-  border-radius: 12px; margin-bottom: 14px; overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+/* ═══════════════════════════════════════════════════
+   SWALLOW ACCORDION
+═══════════════════════════════════════════════════ */
+.swallow-section {
+  background:#fff;
+  border:1.5px solid var(--sf-border);
+  border-radius:14px;
+  margin-bottom:12px;
+  overflow:hidden;
+  box-shadow:0 1px 4px rgba(0,0,0,.05);
+  transition:border-color .2s;
 }
-.edit-fieldset-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 13px 18px; background: #f8fafc;
-  border-bottom: 1px solid var(--sf-border);
-  cursor: pointer; user-select: none;
-}
-.edit-fieldset-header h4 {
-  font-size: 11.5px; font-weight: 700; color: var(--sf-muted);
-  text-transform: uppercase; letter-spacing: .5px;
-  margin: 0; display: flex; align-items: center; gap: 8px;
-}
-.edit-fieldset-header h4 i { color: var(--sf-green); font-size: 13px; }
-.edit-fieldset-toggle { color: var(--sf-muted); font-size: 11px; transition: transform .2s; }
-.edit-fieldset-body           { padding: 18px 20px; display: block; }
-.edit-fieldset-body.collapsed { display: none; }
+.swallow-section:focus-within { border-color:#a5d6a7; }
+.swallow-section.has-errors   { border-color:#fca5a5 !important; }
 
-.edit-fieldset-grid         { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.edit-fieldset-grid.cols-3  { grid-template-columns: 1fr 1fr 1fr; }
-.edit-fieldset-grid.cols-1  { grid-template-columns: 1fr; }
-.field-full { grid-column: 1 / -1; }
+.swallow-header {
+  display:flex; align-items:center;
+  padding:14px 20px; cursor:pointer;
+  user-select:none; gap:12px;
+  background:#fafcfa;
+  border-bottom:1.5px solid transparent;
+  transition:background .15s, border-color .15s;
+}
+.swallow-header:hover { background:#f0f7f0; }
+.swallow-header.open  { background:#f0f7f0; border-bottom-color:var(--sf-border); }
+.swallow-section.has-errors .swallow-header       { background:#fff5f5; }
+.swallow-section.has-errors .swallow-header:hover { background:#fee2e2; }
+.swallow-section.has-errors .swallow-header.open  { background:#fee2e2; border-bottom-color:#fca5a5; }
 
-.sf-field         { display: flex; flex-direction: column; gap: 5px; }
-.sf-field label   { font-size: 11px; font-weight: 700; color: var(--sf-muted); text-transform: uppercase; letter-spacing: .4px; }
-.sf-field label .required { color: #dc2626; margin-left: 2px; }
+.swallow-icon {
+  width:34px; height:34px; border-radius:9px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px; flex-shrink:0;
+}
+.swallow-title-group { flex:1; min-width:0; }
+.swallow-title {
+  font-size:13px; font-weight:700; color:var(--sf-text);
+  display:flex; align-items:center; gap:8px;
+}
+.swallow-subtitle { font-size:11px; color:var(--sf-muted); margin-top:2px; }
+
+.swallow-right { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+
+.swallow-notify {
+  display:none;
+  align-items:center; justify-content:center;
+  min-width:20px; height:20px;
+  background:#dc2626; color:#fff;
+  font-size:10px; font-weight:800;
+  border-radius:20px; padding:0 6px;
+  animation:pop-in .2s cubic-bezier(.4,0,.2,1);
+}
+.swallow-notify.visible { display:inline-flex; }
+@keyframes pop-in {
+  from { transform:scale(0); opacity:0; }
+  to   { transform:scale(1); opacity:1; }
+}
+
+.swallow-badge {
+  font-size:10px; font-weight:700; padding:2px 9px;
+  border-radius:20px; background:#f1f5f9; color:var(--sf-muted);
+}
+.swallow-badge.has-errors { background:#fee2e2; color:#dc2626; }
+.swallow-badge.filled     { background:#dcfce7; color:#16a34a; }
+
+.swallow-chevron {
+  color:var(--sf-muted); font-size:12px;
+  transition:transform .25s cubic-bezier(.4,0,.2,1);
+}
+.swallow-chevron.open { transform:rotate(180deg); }
+
+.swallow-body {
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .32s cubic-bezier(.4,0,.2,1);
+}
+.swallow-body.open { max-height:2000px; }
+.swallow-body-inner { padding:20px 22px 22px; }
+
+/* ═══════════════════════════════════════════════════
+   FORM FIELD STYLES
+═══════════════════════════════════════════════════ */
+.edit-fieldset-grid        { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.edit-fieldset-grid.cols-3 { grid-template-columns:1fr 1fr 1fr; }
+.edit-fieldset-grid.cols-1 { grid-template-columns:1fr; }
+.field-full { grid-column:1/-1; }
+
+.sf-field         { display:flex; flex-direction:column; gap:5px; }
+.sf-field label   {
+  font-size:11px; font-weight:700; color:var(--sf-muted);
+  text-transform:uppercase; letter-spacing:.4px;
+  display:flex; align-items:center; gap:3px;
+}
+.required-star { color:#dc2626; font-size:13px; line-height:1; }
 
 .sf-input, .sf-select, .sf-textarea {
-  width: 100%; padding: 9px 11px;
-  border: 1.5px solid var(--sf-border); border-radius: 8px;
-  font-size: 13.5px; font-family: 'Inter', sans-serif;
-  color: var(--sf-text); background: #fff;
-  transition: border-color .15s, box-shadow .15s;
-  outline: none; appearance: none; -webkit-appearance: none;
-  box-sizing: border-box;
+  width:100%; padding:9px 11px;
+  border:1.5px solid var(--sf-border); border-radius:8px;
+  font-size:13.5px; font-family:'Inter',sans-serif;
+  color:var(--sf-text); background:#fff;
+  transition:border-color .15s, box-shadow .15s;
+  outline:none; appearance:none; -webkit-appearance:none; box-sizing:border-box;
 }
 .sf-input:focus, .sf-select:focus, .sf-textarea:focus {
-  border-color: var(--sf-green);
-  box-shadow: 0 0 0 3px rgba(27,94,32,0.1);
+  border-color:var(--sf-green);
+  box-shadow:0 0 0 3px rgba(27,94,32,0.1);
 }
-.sf-input.error, .sf-select.error { border-color: #dc2626; box-shadow: 0 0 0 3px rgba(220,38,38,0.08); }
+
+/* ── Validation states ──────────────────────────── */
+.sf-input.field-error,
+.sf-select.field-error,
+.sf-textarea.field-error {
+  border-color:#dc2626 !important;
+  box-shadow:0 0 0 3px rgba(220,38,38,0.08) !important;
+  background:#fffafa;
+}
+.sf-input.field-valid,
+.sf-select.field-valid,
+.sf-textarea.field-valid {
+  border-color:#16a34a;
+  background:#f0fdf4;
+}
+.field-error-msg {
+  font-size:11px; color:#dc2626; font-weight:600;
+  display:flex; align-items:center; gap:4px; margin-top:2px;
+  animation:slide-in-err .15s ease;
+}
+@keyframes slide-in-err {
+  from { opacity:0; transform:translateY(-4px); }
+  to   { opacity:1; transform:translateY(0); }
+}
 .sf-select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%2364748b' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath fill='%2364748b' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 12px center; padding-right:32px;
 }
-.sf-textarea  { resize: vertical; min-height: 80px; }
-.sf-field-hint  { font-size: 11px; color: var(--sf-muted); margin-top: 1px; }
-
-.sf-checkbox {
-  width: 18px; height: 18px; accent-color: var(--sf-green);
-  cursor: pointer; flex-shrink: 0;
-}
+.sf-textarea  { resize:vertical; min-height:80px; }
+.sf-field-hint { font-size:11px; color:var(--sf-muted); margin-top:1px; }
+.sf-checkbox { width:18px; height:18px; accent-color:var(--sf-green); cursor:pointer; flex-shrink:0; }
 .sf-checkbox-row {
-  display: flex; align-items: center; gap: 9px;
-  padding: 9px 0; font-size: 13.5px; font-weight: 500;
+  display:flex; align-items:center; gap:9px;
+  padding:9px 0; font-size:13.5px; font-weight:500;
 }
 
+/* ── Mandatory field highlight ──────────────────── */
+.sf-input.sf-required,
+.sf-select.sf-required,
+.sf-textarea.sf-required {
+  border-left: 3px solid #dc2626 !important;
+  background: #fffbfb !important;
+}
+.sf-input.sf-required:focus,
+.sf-select.sf-required:focus {
+  border-color: var(--sf-green) !important;
+  border-left-color: #dc2626 !important;
+  box-shadow: 0 0 0 3px rgba(27,94,32,0.1) !important;
+  background: #fff !important;
+}
+
+/* ═══════════════════════════════════════════════════
+   ACTIONS BAR
+═══════════════════════════════════════════════════ */
 .edit-actions-bar {
-  position: sticky; bottom: 0;
-  background: #fff; border-top: 1px solid var(--sf-border);
-  padding: 13px 20px;
-  display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  border-radius: 0 0 12px 12px;
-  box-shadow: 0 -2px 16px rgba(0,0,0,.08);
-  z-index: 10; flex-wrap: wrap;
-  margin-top: 4px;
+  position:sticky; bottom:0;
+  background:#fff; border-top:1px solid var(--sf-border);
+  padding:13px 20px;
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  border-radius:0 0 12px 12px;
+  box-shadow:0 -2px 16px rgba(0,0,0,.08);
+  z-index:10; flex-wrap:wrap; margin-top:4px;
 }
 .btn-save {
-  background: var(--sf-green); color: #fff; border: none;
-  border-radius: 8px; padding: 10px 22px; font-size: 13.5px; font-weight: 600;
-  cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
-  transition: background .15s, transform .1s; text-decoration: none;
+  background:var(--sf-green); color:#fff; border:none;
+  border-radius:8px; padding:10px 22px; font-size:13.5px; font-weight:600;
+  cursor:pointer; display:inline-flex; align-items:center; gap:8px;
+  transition:background .15s, transform .1s; text-decoration:none;
 }
-.btn-save:hover   { background: #2e7d32; color: #fff; }
-.btn-save:active  { transform: scale(.98); }
-.btn-save:disabled { opacity: .55; cursor: not-allowed; }
-
+.btn-save:hover   { background:#2e7d32; color:#fff; }
+.btn-save:active  { transform:scale(.98); }
+.btn-save:disabled { opacity:.55; cursor:not-allowed; }
 .btn-cancel {
-  background: #f1f5f9; color: var(--sf-muted);
-  border: 1px solid var(--sf-border); border-radius: 8px;
-  padding: 10px 18px; font-size: 13.5px; font-weight: 600;
-  cursor: pointer; text-decoration: none;
-  display: inline-flex; align-items: center; gap: 8px; transition: background .15s;
+  background:#f1f5f9; color:var(--sf-muted);
+  border:1px solid var(--sf-border); border-radius:8px;
+  padding:10px 18px; font-size:13.5px; font-weight:600;
+  cursor:pointer; text-decoration:none;
+  display:inline-flex; align-items:center; gap:8px; transition:background .15s;
 }
-.btn-cancel:hover { background: #e2e8f0; color: var(--sf-muted); }
-
+.btn-cancel:hover { background:#e2e8f0; color:var(--sf-muted); }
 .btn-danger-outline {
-  background: transparent; color: #dc2626;
-  border: 1.5px solid #dc2626; border-radius: 8px;
-  padding: 10px 16px; font-size: 13px; font-weight: 600;
-  cursor: pointer; display: inline-flex; align-items: center; gap: 7px;
-  transition: all .15s; text-decoration: none;
+  background:transparent; color:#dc2626;
+  border:1.5px solid #dc2626; border-radius:8px;
+  padding:10px 16px; font-size:13px; font-weight:600;
+  cursor:pointer; display:inline-flex; align-items:center; gap:7px;
+  transition:all .15s; text-decoration:none;
 }
-.btn-danger-outline:hover { background: #fee2e2; color: #dc2626; }
-
-.save-status { font-size: 12px; color: var(--sf-muted); display: flex; align-items: center; gap: 5px; }
-.save-status.saving { color: var(--sf-green); }
-
+.btn-danger-outline:hover { background:#fee2e2; color:#dc2626; }
+.save-status { font-size:12px; color:var(--sf-muted); display:flex; align-items:center; gap:5px; }
+.save-status.saving { color:var(--sf-green); }
 .unsaved-dot {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: #f59e0b; display: inline-block;
-  margin-left: 5px; opacity: 0; transition: opacity .2s;
+  width:7px; height:7px; border-radius:50%;
+  background:#f59e0b; display:inline-block; margin-left:5px;
+  opacity:0; transition:opacity .2s;
 }
-.unsaved-dot.visible { opacity: 1; }
-
+.unsaved-dot.visible { opacity:1; }
 .django-form-errors {
-  background: #fee2e2; border: 1px solid #fecaca; border-radius: 10px;
-  padding: 14px 18px; margin-bottom: 16px; font-size: 13px; color: #dc2626;
+  background:#fee2e2; border:1px solid #fecaca; border-radius:10px;
+  padding:14px 18px; margin-bottom:16px; font-size:13px; color:#dc2626;
 }
-.django-form-errors ul { margin: 6px 0 0 16px; }
-
-/* ══════════════════════════════════════════════════
-   INLINE FORMSETS
-══════════════════════════════════════════════════ */
-
-/* Section divider between base fields and inlines */
-.inline-section-divider {
-  display: flex; align-items: center; gap: 12px;
-  margin: 28px 0 16px;
-}
-.inline-section-divider span {
-  font-size: 11px; font-weight: 800; color: var(--sf-muted);
-  text-transform: uppercase; letter-spacing: 1px; white-space: nowrap;
-}
-.inline-section-divider::before,
-.inline-section-divider::after {
-  content: ''; flex: 1; height: 1px; background: var(--sf-border);
-}
-
-/* Each inline formset block */
-.inline-formset {
-  background: #fff; border: 1px solid var(--sf-border);
-  border-radius: 12px; margin-bottom: 14px; overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0,0,0,.06);
-}
-.inline-formset-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 13px 18px; background: #f8fafc;
-  border-bottom: 1px solid var(--sf-border);
-  cursor: pointer; user-select: none;
-}
-.inline-formset-header h4 {
-  font-size: 11.5px; font-weight: 700; color: var(--sf-muted);
-  text-transform: uppercase; letter-spacing: .5px;
-  margin: 0; display: flex; align-items: center; gap: 8px;
-}
-.inline-formset-header h4 i { font-size: 13px; }
-.inline-formset-body { padding: 0; display: block; }
-.inline-formset-body.collapsed { display: none; }
-
-/* Individual inline row (one related record) */
-.inline-card {
-  border-bottom: 1px solid #f0f2f5;
-  padding: 16px 20px; position: relative;
-  transition: background .12s;
-}
-.inline-card:last-child { border-bottom: none; }
-.inline-card:hover { background: #fafbfc; }
-.inline-card.marked-delete { opacity: .45; background: #fff5f5; }
-
-.inline-row {
-  display: grid; gap: 12px;
-  align-items: start;
-}
-/* Column counts per formset type */
-.inline-row.cols-2 { grid-template-columns: 1fr 1fr; }
-.inline-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
-.inline-row.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
-.inline-row.cols-6 { grid-template-columns: repeat(6, 1fr); }
-
-/* Compact field styling inside inline rows */
-.inline-field       { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
-.inline-field label { font-size: 10px; font-weight: 700; color: var(--sf-muted); text-transform: uppercase; letter-spacing: .4px; }
-.inline-field .sf-input,
-.inline-field .sf-select,
-.inline-field .sf-textarea { font-size: 12.5px; padding: 7px 9px; }
-.inline-field .sf-select   { padding-right: 28px; }
-
-/* Delete checkbox area */
-.inline-delete-area {
-  display: flex; align-items: center; gap: 6px;
-  margin-top: 10px; padding-top: 10px;
-  border-top: 1px dashed #e5e7eb;
-}
-.inline-delete-area label {
-  font-size: 11.5px; color: #dc2626; font-weight: 600; cursor: pointer;
-  display: flex; align-items: center; gap: 6px;
-}
-.inline-delete-area input[type="checkbox"] {
-  accent-color: #dc2626; width: 15px; height: 15px; cursor: pointer;
-}
-
-/* "Add another" footer button */
-.inline-add-btn {
-  display: flex; align-items: center; gap: 7px;
-  width: 100%; padding: 12px 20px;
-  background: transparent; border: none; border-top: 1px solid #f0f2f5;
-  color: var(--sf-green); font-size: 13px; font-weight: 600;
-  cursor: pointer; transition: background .12s;
-  font-family: 'Inter', sans-serif;
-}
-.inline-add-btn:hover { background: #f0fdf4; }
-.inline-add-btn i { font-size: 12px; }
-
-/* Empty state inside inline */
-.inline-empty {
-  padding: 24px 20px; text-align: center;
-  color: var(--sf-muted); font-size: 13px;
-}
-.inline-empty i { font-size: 22px; opacity: .3; display: block; margin-bottom: 8px; }
-
-/* Badge showing count of existing records */
-.inline-count-badge {
-  background: var(--sf-green); color: #fff;
-  font-size: 10.5px; font-weight: 700;
-  border-radius: 20px; padding: 2px 8px;
-  display: inline-flex; align-items: center;
-  min-width: 22px; justify-content: center;
-}
-.inline-count-badge.zero {
-  background: #e2e8f0; color: var(--sf-muted);
-}
-
-/* Row number pill */
-.inline-row-num {
-  position: absolute; top: 14px; right: 16px;
-  font-size: 10px; color: var(--sf-muted); font-weight: 600;
-  background: #f1f5f9; border-radius: 20px;
-  padding: 2px 8px;
-}
-
-/* Mobile — all inline columns collapse to 1 or 2 */
-@media (max-width: 768px) {
-  .inline-row.cols-3,
-  .inline-row.cols-4,
-  .inline-row.cols-6 { grid-template-columns: 1fr 1fr !important; }
-  .inline-row.cols-2 { grid-template-columns: 1fr !important; }
-  .inline-row-num { display: none; }
-}
-@media (max-width: 480px) {
-  .inline-row.cols-3,
-  .inline-row.cols-4,
-  .inline-row.cols-6,
-  .inline-row.cols-2 { grid-template-columns: 1fr !important; }
-}
+.django-form-errors ul { margin:6px 0 0 16px; }
 </style>
 {% endblock %}
 
 {% block content %}
 
-<!-- BACK -->
 <div style="margin-bottom:16px;">
   <a href="{% url 'animal_list' %}" style="font-size:13px;color:var(--sf-muted);text-decoration:none;display:inline-flex;align-items:center;gap:6px;">
     <i class="fa-solid fa-arrow-left"></i> Back to Animals
@@ -427,9 +383,7 @@
 
 <!-- HERO -->
 <div class="profile-hero">
-  <div class="profile-avatar">
-    <i class="fa-solid fa-cow" style="font-size:30px;"></i>
-  </div>
+  <div class="profile-avatar"><i class="fa-solid fa-cow" style="font-size:30px;"></i></div>
   <div style="flex:1;min-width:0;">
     <h1>{{ animal.tag_number }}</h1>
     <p>{{ animal.breed }}{% if animal.strain %} · {{ animal.strain }}{% endif %} · {{ animal.species }}</p>
@@ -497,7 +451,7 @@
   </button>
 </div>
 
-<!-- ════ TAB: OVERVIEW ════════════════════════════════ -->
+<!-- ════════════════════════ TAB: OVERVIEW ════════════════════════ -->
 <div id="tab-overview" class="sf-tab-panel active">
   <div class="info-grid">
     <div class="info-section">
@@ -548,20 +502,17 @@
   </div>
 </div>
 
-<!-- ════ TAB: HEALTH ═════════════════════════════════ -->
+<!-- ════════════════════════ TAB: HEALTH ══════════════════════════ -->
 <div id="tab-health" class="sf-tab-panel">
   <div class="chart-row">
     <div class="chart-wrap">
       <h4><i class="fa-solid fa-weight-scale"></i> Weight History</h4>
-      {% if weight_data != "[]" %}
-        <canvas id="weightChart" height="130"></canvas>
-      {% else %}
-        <div class="empty-state"><i class="fa-solid fa-chart-line"></i><p>No weight data recorded</p></div>
-      {% endif %}
+      {% if weight_data != "[]" %}<canvas id="weightChart" height="130"></canvas>
+      {% else %}<div class="empty-state"><i class="fa-solid fa-chart-line"></i><p>No weight data recorded</p></div>{% endif %}
     </div>
     <div class="chart-wrap">
       <h4><i class="fa-solid fa-syringe"></i> Vaccinations ({{ vaccinations|length }})</h4>
-      <div class="table-responsive">
+      <div style="overflow-x:auto;">
         <table class="table sf-table">
           <thead><tr><th>Vaccine</th><th>Date</th><th>Next Due</th></tr></thead>
           <tbody>
@@ -575,7 +526,7 @@
   </div>
   <div class="sf-card">
     <div class="sf-card-title"><i class="fa-solid fa-virus"></i> Disease Records</div>
-    <div class="table-responsive">
+    <div style="overflow-x:auto;">
       <table class="table sf-table">
         <thead><tr><th>Disease</th><th>Severity</th><th>Onset</th><th>Recovery</th><th>Chronic</th></tr></thead>
         <tbody>
@@ -583,8 +534,7 @@
           <tr>
             <td>{{ d.disease_name }}</td>
             <td><span class="sf-badge {% if d.severity == 'HIGH' %}sf-badge-red{% elif d.severity == 'MEDIUM' %}sf-badge-amber{% else %}sf-badge-green{% endif %}">{{ d.severity }}</span></td>
-            <td>{{ d.onset_date }}</td>
-            <td>{{ d.recovery_date|default:"Active" }}</td>
+            <td>{{ d.onset_date }}</td><td>{{ d.recovery_date|default:"Active" }}</td>
             <td>{% if d.chronic %}<span class="sf-badge sf-badge-red">Yes</span>{% else %}<span class="sf-badge sf-badge-green">No</span>{% endif %}</td>
           </tr>
           {% empty %}<tr><td colspan="5" class="text-center" style="color:var(--sf-muted);padding:20px;">No disease records</td></tr>{% endfor %}
@@ -594,7 +544,7 @@
   </div>
   <div class="sf-card">
     <div class="sf-card-title"><i class="fa-solid fa-pills"></i> Treatments</div>
-    <div class="table-responsive">
+    <div style="overflow-x:auto;">
       <table class="table sf-table">
         <thead><tr><th>Diagnosis</th><th>Medication</th><th>Dosage</th><th>Date</th></tr></thead>
         <tbody>
@@ -607,20 +557,17 @@
   </div>
 </div>
 
-<!-- ════ TAB: PRODUCTION ══════════════════════════════ -->
+<!-- ════════════════════════ TAB: PRODUCTION ══════════════════════ -->
 <div id="tab-production" class="sf-tab-panel">
   <div class="chart-row">
     <div class="chart-wrap">
       <h4><i class="fa-solid fa-droplet"></i> Milk Yield (L)</h4>
-      {% if milk_data != "[]" %}
-        <canvas id="milkChart" height="130"></canvas>
-      {% else %}
-        <div class="empty-state"><i class="fa-solid fa-droplet"></i><p>No milk data recorded</p></div>
-      {% endif %}
+      {% if milk_data != "[]" %}<canvas id="milkChart" height="130"></canvas>
+      {% else %}<div class="empty-state"><i class="fa-solid fa-droplet"></i><p>No milk data</p></div>{% endif %}
     </div>
     <div class="chart-wrap">
       <h4><i class="fa-solid fa-wheat-awn"></i> Recent Feeding</h4>
-      <div class="table-responsive">
+      <div style="overflow-x:auto;">
         <table class="table sf-table">
           <thead><tr><th>Feed Type</th><th>Qty (kg)</th><th>Time</th></tr></thead>
           <tbody>
@@ -632,66 +579,36 @@
       </div>
     </div>
   </div>
-  <div class="sf-card">
-    <div class="sf-card-title"><i class="fa-solid fa-chart-bar"></i> Production Records</div>
-    <div class="table-responsive">
-      <table class="table sf-table">
-        <thead><tr><th>Date</th><th>Milk (L)</th><th>Weight Gain (kg)</th><th>Feed Consumed (kg)</th></tr></thead>
-        <tbody>
-          {% for p in production %}
-          <tr><td>{{ p.record_date }}</td><td>{{ p.milk_yield_liters|default:"—" }}</td><td>{{ p.weight_gain_kg|default:"—" }}</td><td>{{ p.feed_consumption_kg|default:"—" }}</td></tr>
-          {% empty %}<tr><td colspan="4" class="text-center" style="color:var(--sf-muted);padding:20px;">No production records</td></tr>{% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </div>
 </div>
 
-<!-- ════ TAB: BREEDING ═══════════════════════════════ -->
+<!-- ════════════════════════ TAB: BREEDING ════════════════════════ -->
 <div id="tab-breeding" class="sf-tab-panel">
   <div class="sf-card">
     <div class="sf-card-title"><i class="fa-solid fa-dna"></i> Breeding Events</div>
-    <div class="table-responsive">
+    <div style="overflow-x:auto;">
       <table class="table sf-table">
         <thead><tr><th>Sire</th><th>Method</th><th>Date</th><th>Expected Calving</th><th>Pregnant</th></tr></thead>
         <tbody>
           {% for b in breeding %}
           <tr>
-            <td>{{ b.male.tag_number|default:"—" }}</td>
-            <td>{{ b.method }}</td>
-            <td>{{ b.breeding_date }}</td>
-            <td>{{ b.expected_calving_date|default:"—" }}</td>
-            <td>
-              {% if b.confirmed_pregnant %}<span class="sf-badge sf-badge-green">Yes</span>
-              {% elif b.confirmed_pregnant == False %}<span class="sf-badge sf-badge-red">No</span>
-              {% else %}<span class="sf-badge sf-badge-amber">Pending</span>{% endif %}
-            </td>
+            <td>{{ b.male.tag_number|default:"—" }}</td><td>{{ b.method }}</td>
+            <td>{{ b.breeding_date }}</td><td>{{ b.expected_calving_date|default:"—" }}</td>
+            <td>{% if b.confirmed_pregnant %}<span class="sf-badge sf-badge-green">Yes</span>
+                {% elif b.confirmed_pregnant == False %}<span class="sf-badge sf-badge-red">No</span>
+                {% else %}<span class="sf-badge sf-badge-amber">Pending</span>{% endif %}</td>
           </tr>
           {% empty %}<tr><td colspan="5" class="text-center" style="color:var(--sf-muted);padding:20px;">No breeding events</td></tr>{% endfor %}
         </tbody>
       </table>
     </div>
   </div>
-  <div class="sf-card">
-    <div class="sf-card-title"><i class="fa-solid fa-baby"></i> Calving Records</div>
-    <div class="table-responsive">
-      <table class="table sf-table">
-        <thead><tr><th>Calf Tag</th><th>Date</th><th>Birth Weight</th><th>Complications</th></tr></thead>
-        <tbody>
-          {% for c in calving %}
-          <tr><td>{{ c.calf.tag_number|default:"—" }}</td><td>{{ c.calving_date }}</td><td>{{ c.birth_weight_kg|default:"—" }} kg</td><td>{{ c.complications|default:"None" }}</td></tr>
-          {% empty %}<tr><td colspan="4" class="text-center" style="color:var(--sf-muted);padding:20px;">No calving records</td></tr>{% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </div>
 </div>
 
-<!-- ════ TAB: FINANCE ════════════════════════════════ -->
+<!-- ════════════════════════ TAB: FINANCE ════════════════════════ -->
 <div id="tab-finance" class="sf-tab-panel">
   <div class="sf-card">
     <div class="sf-card-title"><i class="fa-solid fa-receipt"></i> Expense Records</div>
-    <div class="table-responsive">
+    <div style="overflow-x:auto;">
       <table class="table sf-table">
         <thead><tr><th>Category</th><th>Amount</th><th>Date</th><th>Description</th></tr></thead>
         <tbody>
@@ -699,8 +616,7 @@
           <tr>
             <td><span class="sf-badge sf-badge-amber">{{ e.category }}</span></td>
             <td style="font-weight:600;color:#dc2626;">R {{ e.amount|floatformat:2 }}</td>
-            <td>{{ e.expense_date }}</td>
-            <td>{{ e.description|default:"—" }}</td>
+            <td>{{ e.expense_date }}</td><td>{{ e.description|default:"—" }}</td>
           </tr>
           {% empty %}<tr><td colspan="4" class="text-center" style="color:var(--sf-muted);padding:20px;">No expense records</td></tr>{% endfor %}
         </tbody>
@@ -709,7 +625,7 @@
   </div>
 </div>
 
-<!-- ════ TAB: LOCATION ═══════════════════════════════ -->
+<!-- ════════════════════════ TAB: LOCATION ════════════════════════ -->
 <div id="tab-location" class="sf-tab-panel">
   <div class="info-grid" style="margin-bottom:16px;">
     <div class="info-section">
@@ -727,13 +643,10 @@
     </div>
     {% if last_location %}
     <div class="info-section">
-      <h4><i class="fa-solid fa-satellite-dish"></i> GPS Signal Info</h4>
+      <h4><i class="fa-solid fa-satellite-dish"></i> GPS Info</h4>
       <div class="info-row"><span class="info-label">Coordinates</span>
         <span class="info-val" style="font-family:monospace;font-size:12px;">{{ last_location.latitude }}, {{ last_location.longitude }}</span>
       </div>
-      <div class="info-row"><span class="info-label">Accuracy</span><span class="info-val">{{ last_location.accuracy|default:"—" }} m</span></div>
-      <div class="info-row"><span class="info-label">Altitude</span><span class="info-val">{{ last_location.altitude|default:"—" }} m</span></div>
-      <div class="info-row"><span class="info-label">Device</span><span class="info-val">{{ last_location.device|default:"—" }}</span></div>
       <div style="margin-top:12px;">
         <a href="https://maps.google.com/?q={{ last_location.latitude }},{{ last_location.longitude }}"
            target="_blank"
@@ -766,751 +679,433 @@
   {% endif %}
 </div>
 
-<!-- ════ TAB: EDIT ════════════════════════════════════ -->
+<!-- ════════════════════════ TAB: EDIT ════════════════════════════ -->
 <div id="tab-edit" class="sf-tab-panel">
 
-  {% if form.errors or disease_formset.errors or vaccination_formset.errors or treatment_formset.errors or health_obs_formset.errors or breeding_formset.errors or calving_formset.errors or production_formset.errors %}
+  {% if form.errors %}
   <div class="django-form-errors">
     <strong><i class="fa-solid fa-triangle-exclamation"></i> Please fix the errors below:</strong>
     <ul>
       {% for field in form %}{% for error in field.errors %}<li><strong>{{ field.label }}:</strong> {{ error }}</li>{% endfor %}{% endfor %}
       {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
-      {% for fs in disease_formset %}{% for field in fs %}{% for error in field.errors %}<li><strong>Disease – {{ field.label }}:</strong> {{ error }}</li>{% endfor %}{% endfor %}{% endfor %}
-      {% for fs in vaccination_formset %}{% for field in fs %}{% for error in field.errors %}<li><strong>Vaccination – {{ field.label }}:</strong> {{ error }}</li>{% endfor %}{% endfor %}{% endfor %}
-      {% for fs in treatment_formset %}{% for field in fs %}{% for error in field.errors %}<li><strong>Treatment – {{ field.label }}:</strong> {{ error }}</li>{% endfor %}{% endfor %}{% endfor %}
-      {% for fs in health_obs_formset %}{% for field in fs %}{% for error in field.errors %}<li><strong>Health Obs – {{ field.label }}:</strong> {{ error }}</li>{% endfor %}{% endfor %}{% endfor %}
-      {% for fs in breeding_formset %}{% for field in fs %}{% for error in field.errors %}<li><strong>Breeding – {{ field.label }}:</strong> {{ error }}</li>{% endfor %}{% endfor %}{% endfor %}
-      {% for fs in calving_formset %}{% for field in fs %}{% for error in field.errors %}<li><strong>Calving – {{ field.label }}:</strong> {{ error }}</li>{% endfor %}{% endfor %}{% endfor %}
-      {% for fs in production_formset %}{% for field in fs %}{% for error in field.errors %}<li><strong>Production – {{ field.label }}:</strong> {{ error }}</li>{% endfor %}{% endfor %}{% endfor %}
     </ul>
   </div>
   {% endif %}
+
+  <!-- Mandatory field legend -->
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;padding:10px 14px;
+              background:#fff5f5;border:1px solid #fecaca;border-radius:8px;font-size:12px;">
+    <span style="display:inline-block;width:12px;height:12px;border-radius:2px;
+                 border-left:3px solid #dc2626;background:#fffbfb;flex-shrink:0;"></span>
+    <span><strong style="color:#b91c1c;">Red-accented fields</strong> and labels marked
+    <strong style="color:#dc2626;">*</strong> are mandatory — the form will not save without them.</span>
+  </div>
 
   <form method="post" action="{% url 'animal_update' animal.pk %}" id="editAnimalForm" novalidate>
     {% csrf_token %}
     {% if form.errors %}<input type="hidden" id="openEditTab" value="1">{% endif %}
 
-    <!-- ══════════════════════════════════════════════
-         SECTION A — BASE ANIMAL FIELDS
-    ══════════════════════════════════════════════ -->
-
-    <!-- ── 1. IDENTITY ─────────────────────────────── -->
-    <div class="edit-fieldset" id="fs-identity">
-      <div class="edit-fieldset-header" onclick="toggleFieldset('fs-identity')">
-        <h4><i class="fa-solid fa-tag"></i> Identity</h4>
-        <i class="fa-solid fa-chevron-up edit-fieldset-toggle" id="toggle-fs-identity"></i>
-      </div>
-      <div class="edit-fieldset-body" id="body-fs-identity">
-        <div class="edit-fieldset-grid">
-          <div class="sf-field">
-            <label>Tag Number <span class="required">*</span></label>
-            <input class="sf-input {% if form.tag_number.errors %}error{% endif %}" type="text" name="tag_number" value="{{ form.tag_number.value|default:animal.tag_number }}" required maxlength="100">
+    <!-- ══ 1. IDENTITY ══════════════════════════════ -->
+    <div class="swallow-section" id="sw-identity">
+      <div class="swallow-header open" onclick="toggleSwallow('identity')">
+        <div class="swallow-icon" style="background:#e8f5e9;"><i class="fa-solid fa-tag" style="color:#2e7d32;"></i></div>
+        <div class="swallow-title-group">
+          <div class="swallow-title">
+            Identity
+            <span class="swallow-badge" id="badge-identity">4 fields</span>
+            <span class="swallow-notify" id="notify-identity"></span>
           </div>
-          <div class="sf-field">
-            <label>Electronic ID</label>
-            <input class="sf-input" type="text" name="electronic_id" value="{{ form.electronic_id.value|default:animal.electronic_id }}" maxlength="100">
-          </div>
-          <div class="sf-field">
-            <label>Registration Number</label>
-            <input class="sf-input" type="text" name="registration_number" value="{{ form.registration_number.value|default:animal.registration_number }}" maxlength="100">
-          </div>
-          <div class="sf-field">
-            <label>Insurance Policy Number</label>
-            <input class="sf-input" type="text" name="insurance_policy_number" value="{{ form.insurance_policy_number.value|default:animal.insurance_policy_number }}" maxlength="100">
-          </div>
+          <div class="swallow-subtitle">Tag number, electronic ID, registration</div>
+        </div>
+        <div class="swallow-right">
+          <i class="fa-solid fa-chevron-down swallow-chevron open" id="chev-identity"></i>
         </div>
       </div>
-    </div>
-
-    <!-- ── 2. CLASSIFICATION ───────────────────────── -->
-    <div class="edit-fieldset" id="fs-class">
-      <div class="edit-fieldset-header" onclick="toggleFieldset('fs-class')">
-        <h4><i class="fa-solid fa-paw"></i> Classification</h4>
-        <i class="fa-solid fa-chevron-up edit-fieldset-toggle" id="toggle-fs-class"></i>
-      </div>
-      <div class="edit-fieldset-body" id="body-fs-class">
-        <div class="edit-fieldset-grid">
-          <div class="sf-field">
-            <label>Species <span class="required">*</span></label>
-            <input class="sf-input" type="text" name="species" value="{{ form.species.value|default:animal.species }}" required maxlength="50">
-          </div>
-          <div class="sf-field">
-            <label>Breed <span class="required">*</span></label>
-            <input class="sf-input" type="text" name="breed" value="{{ form.breed.value|default:animal.breed }}" required maxlength="100">
-          </div>
-          <div class="sf-field">
-            <label>Strain</label>
-            <input class="sf-input" type="text" name="strain" value="{{ form.strain.value|default:animal.strain }}" maxlength="100">
-          </div>
-          <div class="sf-field">
-            <label>Color</label>
-            <input class="sf-input" type="text" name="color" value="{{ form.color.value|default:animal.color }}" maxlength="100">
-          </div>
-          <div class="sf-field">
-            <label>Horn Status</label>
-            <input class="sf-input" type="text" name="horn_status" value="{{ form.horn_status.value|default:animal.horn_status }}" maxlength="50" placeholder="e.g. Polled, Dehorned">
-          </div>
-          <div class="sf-field">
-            <label>Purpose <span class="required">*</span></label>
-            <select class="sf-select" name="purpose" required>
-              <option value="DAIRY"    {% if animal.purpose == 'DAIRY' %}selected{% endif %}>Dairy</option>
-              <option value="BEEF"     {% if animal.purpose == 'BEEF' %}selected{% endif %}>Beef</option>
-              <option value="BREEDING" {% if animal.purpose == 'BREEDING' %}selected{% endif %}>Breeding</option>
-              <option value="DRAFT"    {% if animal.purpose == 'DRAFT' %}selected{% endif %}>Draft</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── 3. SEX & LIFECYCLE ──────────────────────── -->
-    <div class="edit-fieldset" id="fs-lifecycle">
-      <div class="edit-fieldset-header" onclick="toggleFieldset('fs-lifecycle')">
-        <h4><i class="fa-solid fa-calendar-days"></i> Sex &amp; Lifecycle</h4>
-        <i class="fa-solid fa-chevron-up edit-fieldset-toggle" id="toggle-fs-lifecycle"></i>
-      </div>
-      <div class="edit-fieldset-body" id="body-fs-lifecycle">
-        <div class="edit-fieldset-grid">
-          <div class="sf-field">
-            <label>Sex <span class="required">*</span></label>
-            <select class="sf-select" name="sex" required>
-              <option value="Male"   {% if animal.sex == 'Male' %}selected{% endif %}>Male</option>
-              <option value="Female" {% if animal.sex == 'Female' %}selected{% endif %}>Female</option>
-            </select>
-          </div>
-          <div class="sf-field">
-            <label>Date of Birth <span class="required">*</span></label>
-            <input class="sf-input" type="date" name="date_of_birth" value="{{ animal.date_of_birth|date:'Y-m-d' }}" required>
-          </div>
-          <div class="sf-field">
-            <label>Birth Type</label>
-            <input class="sf-input" type="text" name="birth_type" value="{{ animal.birth_type }}" maxlength="50" placeholder="e.g. Single, Twin">
-          </div>
-          <div class="sf-field">
-            <label>Birth Weight (kg)</label>
-            <input class="sf-input" type="number" name="birth_weight_kg" value="{{ animal.birth_weight_kg }}" step="0.01" min="0">
-          </div>
-          <div class="sf-field">
-            <label>Weaning Date</label>
-            <input class="sf-input" type="date" name="weaning_date" value="{{ animal.weaning_date|date:'Y-m-d' }}">
-          </div>
-          <div class="sf-field">
-            <label>Weaning Weight (kg)</label>
-            <input class="sf-input" type="number" name="weaning_weight_kg" value="{{ animal.weaning_weight_kg }}" step="0.01" min="0">
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── 4. LINEAGE ──────────────────────────────── -->
-    <div class="edit-fieldset" id="fs-lineage">
-      <div class="edit-fieldset-header" onclick="toggleFieldset('fs-lineage')">
-        <h4><i class="fa-solid fa-dna"></i> Lineage</h4>
-        <i class="fa-solid fa-chevron-up edit-fieldset-toggle" id="toggle-fs-lineage"></i>
-      </div>
-      <div class="edit-fieldset-body" id="body-fs-lineage">
-        <div class="edit-fieldset-grid">
-          <div class="sf-field">
-            <label>Sire Tag (Father)</label>
-            <input class="sf-input" type="text" name="sire_tag" value="{{ animal.sire_tag }}" maxlength="100">
-          </div>
-          <div class="sf-field">
-            <label>Dam Tag (Mother)</label>
-            <input class="sf-input" type="text" name="dam_tag" value="{{ animal.dam_tag }}" maxlength="100">
-          </div>
-          <div class="sf-field">
-            <label>Genetic Merit Index</label>
-            <input class="sf-input" type="number" name="genetic_merit_index" value="{{ animal.genetic_merit_index }}" step="0.01">
-            <span class="sf-field-hint">Higher values indicate superior genetics</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── 5. STATUS & ACQUISITION ─────────────────── -->
-    <div class="edit-fieldset" id="fs-status">
-      <div class="edit-fieldset-header" onclick="toggleFieldset('fs-status')">
-        <h4><i class="fa-solid fa-circle-dot"></i> Status &amp; Acquisition</h4>
-        <i class="fa-solid fa-chevron-up edit-fieldset-toggle" id="toggle-fs-status"></i>
-      </div>
-      <div class="edit-fieldset-body" id="body-fs-status">
-        <div class="edit-fieldset-grid">
-          <div class="sf-field">
-            <label>Status <span class="required">*</span></label>
-            <select class="sf-select" name="status" required>
-              <option value="ACTIVE"      {% if animal.status == 'ACTIVE' %}selected{% endif %}>Active</option>
-              <option value="SOLD"        {% if animal.status == 'SOLD' %}selected{% endif %}>Sold</option>
-              <option value="DECEASED"    {% if animal.status == 'DECEASED' %}selected{% endif %}>Deceased</option>
-              <option value="QUARANTINED" {% if animal.status == 'QUARANTINED' %}selected{% endif %}>Quarantined</option>
-              <option value="CULLED"      {% if animal.status == 'CULLED' %}selected{% endif %}>Culled</option>
-              <option value="MISSING"     {% if animal.status == 'MISSING' %}selected{% endif %}>Missing</option>
-            </select>
-          </div>
-          <div class="sf-field">
-            <label>Acquisition Date</label>
-            <input class="sf-input" type="date" name="acquisition_date" value="{{ animal.acquisition_date|date:'Y-m-d' }}">
-          </div>
-          <div class="sf-field">
-            <label>Acquisition Method</label>
-            <input class="sf-input" type="text" name="acquisition_method" value="{{ animal.acquisition_method }}" maxlength="50">
-          </div>
-          <div class="sf-field">
-            <label>Purchase Price (R)</label>
-            <input class="sf-input" type="number" name="purchase_price" value="{{ animal.purchase_price }}" step="0.01" min="0">
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── 6. LOCATION ─────────────────────────────── -->
-    <div class="edit-fieldset" id="fs-loc">
-      <div class="edit-fieldset-header" onclick="toggleFieldset('fs-loc')">
-        <h4><i class="fa-solid fa-map-pin"></i> Location</h4>
-        <i class="fa-solid fa-chevron-up edit-fieldset-toggle" id="toggle-fs-loc"></i>
-      </div>
-      <div class="edit-fieldset-body" id="body-fs-loc">
-        <div class="edit-fieldset-grid">
-          <div class="sf-field">
-            <label>Farm <span class="required">*</span></label>
-            <select class="sf-select" name="farm" required>
-              {% for farm in farms %}
-              <option value="{{ farm.pk }}" {% if animal.farm.pk == farm.pk %}selected{% endif %}>{{ farm.name }}</option>
-              {% endfor %}
-            </select>
-          </div>
-          <div class="sf-field">
-            <label>Current Paddock</label>
-            <select class="sf-select" name="current_paddock">
-              <option value="">— Unassigned —</option>
-              {% for paddock in paddocks %}
-              <option value="{{ paddock.pk }}" {% if animal.current_paddock and animal.current_paddock.pk == paddock.pk %}selected{% endif %}>
-                {{ paddock.name }} ({{ paddock.farm.name }})
-              </option>
-              {% endfor %}
-            </select>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── 7. PHYSICAL METRICS ─────────────────────── -->
-    <div class="edit-fieldset" id="fs-physical">
-      <div class="edit-fieldset-header" onclick="toggleFieldset('fs-physical')">
-        <h4><i class="fa-solid fa-ruler"></i> Physical Metrics</h4>
-        <i class="fa-solid fa-chevron-up edit-fieldset-toggle" id="toggle-fs-physical"></i>
-      </div>
-      <div class="edit-fieldset-body" id="body-fs-physical">
-        <div class="edit-fieldset-grid cols-3">
-          <div class="sf-field">
-            <label>Current Weight (kg)</label>
-            <input class="sf-input" type="number" name="current_weight_kg" value="{{ animal.current_weight_kg }}" step="0.1" min="0">
-          </div>
-          <div class="sf-field">
-            <label>Height (cm)</label>
-            <input class="sf-input" type="number" name="height_cm" value="{{ animal.height_cm }}" step="0.1" min="0">
-          </div>
-          <div class="sf-field">
-            <label>Body Length (cm)</label>
-            <input class="sf-input" type="number" name="body_length_cm" value="{{ animal.body_length_cm }}" step="0.1" min="0">
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── 8. WELFARE ──────────────────────────────── -->
-    <div class="edit-fieldset" id="fs-welfare">
-      <div class="edit-fieldset-header" onclick="toggleFieldset('fs-welfare')">
-        <h4><i class="fa-solid fa-heart"></i> Welfare Scores</h4>
-        <i class="fa-solid fa-chevron-up edit-fieldset-toggle" id="toggle-fs-welfare"></i>
-      </div>
-      <div class="edit-fieldset-body" id="body-fs-welfare">
-        <div class="edit-fieldset-grid">
-          <div class="sf-field">
-            <label>Temperament Score</label>
-            <input class="sf-input" type="number" name="temperament_score" value="{{ animal.temperament_score }}" min="1" max="5">
-            <span class="sf-field-hint">Scale 1–5 (1 = calm, 5 = aggressive)</span>
-          </div>
-          <div class="sf-field">
-            <label>Lameness Score</label>
-            <input class="sf-input" type="number" name="lameness_score" value="{{ animal.lameness_score }}" min="0" max="5">
-            <span class="sf-field-hint">Scale 0–5 (0 = sound, 5 = non-weight bearing)</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── 9. LIFECYCLE END ────────────────────────── -->
-    <div class="edit-fieldset" id="fs-end">
-      <div class="edit-fieldset-header" onclick="toggleFieldset('fs-end')">
-        <h4><i class="fa-solid fa-circle-xmark"></i> Lifecycle End</h4>
-        <i class="fa-solid fa-chevron-down edit-fieldset-toggle" id="toggle-fs-end"></i>
-      </div>
-      <div class="edit-fieldset-body collapsed" id="body-fs-end">
-        <div class="edit-fieldset-grid">
-          <div class="sf-field">
-            <label>Date of Death</label>
-            <input class="sf-input" type="date" name="date_of_death" value="{{ animal.date_of_death|date:'Y-m-d' }}">
-          </div>
-          <div class="sf-field">
-            <label>Cause of Death</label>
-            <input class="sf-input" type="text" name="cause_of_death" value="{{ animal.cause_of_death }}" maxlength="255">
-          </div>
-          <div class="sf-field field-full">
-            <label>Culling Reason</label>
-            <input class="sf-input" type="text" name="culling_reason" value="{{ animal.culling_reason }}" maxlength="255">
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── 10. NOTES ───────────────────────────────── -->
-    <div class="edit-fieldset" id="fs-notes">
-      <div class="edit-fieldset-header" onclick="toggleFieldset('fs-notes')">
-        <h4><i class="fa-solid fa-note-sticky"></i> Notes</h4>
-        <i class="fa-solid fa-chevron-up edit-fieldset-toggle" id="toggle-fs-notes"></i>
-      </div>
-      <div class="edit-fieldset-body" id="body-fs-notes">
-        <div class="sf-field">
-          <label>General Notes</label>
-          <textarea class="sf-textarea" name="notes" rows="4" placeholder="Any additional observations…">{{ animal.notes }}</textarea>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══════════════════════════════════════════════
-         SECTION B — RELATED RECORD INLINES
-    ══════════════════════════════════════════════ -->
-    <div class="inline-section-divider">
-      <span><i class="fa-solid fa-table-list" style="margin-right:6px;"></i> Related Records</span>
-    </div>
-
-    <!-- ── INLINE: DISEASE RECORDS ─────────────────── -->
-    {{ disease_formset.management_form }}
-    <div class="inline-formset" id="ifs-disease">
-      <div class="inline-formset-header" onclick="toggleInline('ifs-disease')">
-        <h4>
-          <i class="fa-solid fa-virus" style="color:#dc2626;"></i> Disease Records
-          <span class="inline-count-badge {% if not diseases %}zero{% endif %}">{{ diseases|length }}</span>
-        </h4>
-        <i class="fa-solid fa-chevron-up edit-fieldset-toggle" id="toggle-ifs-disease"></i>
-      </div>
-      <div class="inline-formset-body" id="body-ifs-disease">
-        <div id="disease-forms">
-          {% for form in disease_formset %}
-          <div class="inline-card {% if form.DELETE.value %}marked-delete{% endif %}" id="disease-row-{{ forloop.counter0 }}">
-            <span class="inline-row-num">#{{ forloop.counter }}</span>
-            {{ form.id }}
-            <div class="inline-row cols-3">
-              <div class="inline-field">
-                <label>Disease Name</label>
-                {{ form.disease_name }}
-              </div>
-              <div class="inline-field">
-                <label>Severity</label>
-                {{ form.severity }}
-              </div>
-              <div class="inline-field">
-                <label>Onset Date</label>
-                {{ form.onset_date }}
-              </div>
-              <div class="inline-field">
-                <label>Recovery Date</label>
-                {{ form.recovery_date }}
-              </div>
-              <div class="inline-field">
-                <label>Economic Loss (R)</label>
-                {{ form.economic_loss_estimate }}
-              </div>
-              <div class="inline-field" style="justify-content:flex-end;padding-top:18px;">
-                <div class="sf-checkbox-row">
-                  {{ form.chronic }}
-                  <span>Chronic condition</span>
-                </div>
-              </div>
+      <div class="swallow-body open" id="body-identity">
+        <div class="swallow-body-inner">
+          <div class="edit-fieldset-grid">
+            <div class="sf-field">
+              <label>Tag Number <span class="required-star">*</span></label>
+              <input class="sf-input sf-required" type="text" name="tag_number" id="id_tag_number"
+                     value="{{ form.tag_number.value|default:animal.tag_number }}"
+                     required maxlength="100" data-label="Tag Number" data-section="identity">
             </div>
-            {% if form.instance.pk %}
-            <div class="inline-delete-area">
-              <label for="{{ form.DELETE.id_for_label }}">
-                <i class="fa-solid fa-trash-can"></i>
-                {{ form.DELETE }} Delete this record
-              </label>
+            <div class="sf-field">
+              <label>Electronic ID</label>
+              <input class="sf-input" type="text" name="electronic_id"
+                     value="{{ form.electronic_id.value|default:animal.electronic_id }}" maxlength="100">
             </div>
-            {% endif %}
+            <div class="sf-field">
+              <label>Registration Number</label>
+              <input class="sf-input" type="text" name="registration_number"
+                     value="{{ form.registration_number.value|default:animal.registration_number }}" maxlength="100">
+            </div>
+            <div class="sf-field">
+              <label>Insurance Policy Number</label>
+              <input class="sf-input" type="text" name="insurance_policy_number"
+                     value="{{ form.insurance_policy_number.value|default:animal.insurance_policy_number }}" maxlength="100">
+            </div>
           </div>
-          {% empty %}
-          <div class="inline-empty" id="disease-empty">
-            <i class="fa-solid fa-virus"></i>
-            <span>No disease records yet. Click below to add one.</span>
-          </div>
-          {% endfor %}
         </div>
-        <button type="button" class="inline-add-btn" onclick="addInlineRow('disease', {{ disease_formset.total_form_count }})">
-          <i class="fa-solid fa-plus"></i> Add Disease Record
-        </button>
       </div>
     </div>
 
-    <!-- ── INLINE: VACCINATION RECORDS ─────────────── -->
-    {{ vaccination_formset.management_form }}
-    <div class="inline-formset" id="ifs-vaccination">
-      <div class="inline-formset-header" onclick="toggleInline('ifs-vaccination')">
-        <h4>
-          <i class="fa-solid fa-syringe" style="color:#7c3aed;"></i> Vaccination Records
-          <span class="inline-count-badge {% if not vaccinations %}zero{% endif %}">{{ vaccinations|length }}</span>
-        </h4>
-        <i class="fa-solid fa-chevron-up edit-fieldset-toggle" id="toggle-ifs-vaccination"></i>
-      </div>
-      <div class="inline-formset-body" id="body-ifs-vaccination">
-        <div id="vaccination-forms">
-          {% for form in vaccination_formset %}
-          <div class="inline-card {% if form.DELETE.value %}marked-delete{% endif %}" id="vaccination-row-{{ forloop.counter0 }}">
-            <span class="inline-row-num">#{{ forloop.counter }}</span>
-            {{ form.id }}
-            <div class="inline-row cols-3">
-              <div class="inline-field">
-                <label>Vaccine Name</label>
-                {{ form.vaccine_name }}
-              </div>
-              <div class="inline-field">
-                <label>Dose</label>
-                {{ form.dose }}
-              </div>
-              <div class="inline-field">
-                <label>Batch Number</label>
-                {{ form.batch_number }}
-              </div>
-              <div class="inline-field">
-                <label>Date Administered</label>
-                {{ form.date_administered }}
-              </div>
-              <div class="inline-field">
-                <label>Next Due Date</label>
-                {{ form.next_due_date }}
-              </div>
-              <div class="inline-field">
-                <label>Notes</label>
-                {{ form.notes }}
-              </div>
-            </div>
-            {% if form.instance.pk %}
-            <div class="inline-delete-area">
-              <label for="{{ form.DELETE.id_for_label }}">
-                <i class="fa-solid fa-trash-can"></i>
-                {{ form.DELETE }} Delete this record
-              </label>
-            </div>
-            {% endif %}
+    <!-- ══ 2. CLASSIFICATION ════════════════════════ -->
+    <div class="swallow-section" id="sw-class">
+      <div class="swallow-header" onclick="toggleSwallow('class')">
+        <div class="swallow-icon" style="background:#e3f2fd;"><i class="fa-solid fa-paw" style="color:#1565c0;"></i></div>
+        <div class="swallow-title-group">
+          <div class="swallow-title">
+            Classification
+            <span class="swallow-badge" id="badge-class">6 fields</span>
+            <span class="swallow-notify" id="notify-class"></span>
           </div>
-          {% empty %}
-          <div class="inline-empty" id="vaccination-empty">
-            <i class="fa-solid fa-syringe"></i>
-            <span>No vaccination records yet. Click below to add one.</span>
-          </div>
-          {% endfor %}
+          <div class="swallow-subtitle">Species, breed, color, purpose</div>
         </div>
-        <button type="button" class="inline-add-btn" onclick="addInlineRow('vaccination', {{ vaccination_formset.total_form_count }})">
-          <i class="fa-solid fa-plus"></i> Add Vaccination Record
-        </button>
+        <div class="swallow-right"><i class="fa-solid fa-chevron-down swallow-chevron" id="chev-class"></i></div>
+      </div>
+      <div class="swallow-body" id="body-class">
+        <div class="swallow-body-inner">
+          <div class="edit-fieldset-grid">
+            <div class="sf-field">
+              <label>Species <span class="required-star">*</span></label>
+              <input class="sf-input sf-required" type="text" name="species"
+                     value="{{ form.species.value|default:animal.species }}"
+                     required maxlength="50" data-label="Species" data-section="class">
+            </div>
+            <div class="sf-field">
+              <label>Breed <span class="required-star">*</span></label>
+              <input class="sf-input sf-required" type="text" name="breed"
+                     value="{{ form.breed.value|default:animal.breed }}"
+                     required maxlength="100" data-label="Breed" data-section="class">
+            </div>
+            <div class="sf-field">
+              <label>Color <span class="required-star">*</span></label>
+              <input class="sf-input sf-required" type="text" name="color"
+                     value="{{ form.color.value|default:animal.color }}"
+                     maxlength="100" required data-label="Color" data-section="class">
+            </div>
+            <div class="sf-field">
+              <label>Strain</label>
+              <input class="sf-input" type="text" name="strain"
+                     value="{{ form.strain.value|default:animal.strain }}" maxlength="100">
+            </div>
+            <div class="sf-field">
+              <label>Horn Status</label>
+              <input class="sf-input" type="text" name="horn_status"
+                     value="{{ form.horn_status.value|default:animal.horn_status }}"
+                     maxlength="50" placeholder="e.g. Polled, Dehorned">
+            </div>
+            <div class="sf-field">
+              <label>Purpose <span class="required-star">*</span></label>
+              <select class="sf-select sf-required" name="purpose" required data-label="Purpose" data-section="class">
+                <option value="">— Select —</option>
+                <option value="DAIRY"    {% if animal.purpose == 'DAIRY' %}selected{% endif %}>Dairy</option>
+                <option value="BEEF"     {% if animal.purpose == 'BEEF' %}selected{% endif %}>Beef</option>
+                <option value="BREEDING" {% if animal.purpose == 'BREEDING' %}selected{% endif %}>Breeding</option>
+                <option value="DRAFT"    {% if animal.purpose == 'DRAFT' %}selected{% endif %}>Draft</option>
+              </select>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- ── INLINE: TREATMENT RECORDS ───────────────── -->
-    {{ treatment_formset.management_form }}
-    <div class="inline-formset" id="ifs-treatment">
-      <div class="inline-formset-header" onclick="toggleInline('ifs-treatment')">
-        <h4>
-          <i class="fa-solid fa-pills" style="color:#0891b2;"></i> Treatment Records
-          <span class="inline-count-badge {% if not treatments %}zero{% endif %}">{{ treatments|length }}</span>
-        </h4>
-        <i class="fa-solid fa-chevron-up edit-fieldset-toggle" id="toggle-ifs-treatment"></i>
-      </div>
-      <div class="inline-formset-body" id="body-ifs-treatment">
-        <div id="treatment-forms">
-          {% for form in treatment_formset %}
-          <div class="inline-card {% if form.DELETE.value %}marked-delete{% endif %}" id="treatment-row-{{ forloop.counter0 }}">
-            <span class="inline-row-num">#{{ forloop.counter }}</span>
-            {{ form.id }}
-            <div class="inline-row cols-3">
-              <div class="inline-field">
-                <label>Diagnosis</label>
-                {{ form.diagnosis }}
-              </div>
-              <div class="inline-field">
-                <label>Medication</label>
-                {{ form.medication }}
-              </div>
-              <div class="inline-field">
-                <label>Dosage</label>
-                {{ form.dosage }}
-              </div>
-              <div class="inline-field">
-                <label>Treatment Date</label>
-                {{ form.treatment_date }}
-              </div>
-              <div class="inline-field">
-                <label>Withdrawal Period (days)</label>
-                {{ form.withdrawal_period_days }}
-              </div>
-              <div class="inline-field">
-                <label>Notes</label>
-                {{ form.notes }}
-              </div>
-            </div>
-            {% if form.instance.pk %}
-            <div class="inline-delete-area">
-              <label for="{{ form.DELETE.id_for_label }}">
-                <i class="fa-solid fa-trash-can"></i>
-                {{ form.DELETE }} Delete this record
-              </label>
-            </div>
-            {% endif %}
+    <!-- ══ 3. SEX & LIFECYCLE ═══════════════════════ -->
+    <div class="swallow-section" id="sw-lifecycle">
+      <div class="swallow-header" onclick="toggleSwallow('lifecycle')">
+        <div class="swallow-icon" style="background:#fce4ec;"><i class="fa-solid fa-calendar-days" style="color:#c62828;"></i></div>
+        <div class="swallow-title-group">
+          <div class="swallow-title">
+            Sex &amp; Lifecycle
+            <span class="swallow-badge" id="badge-lifecycle">6 fields</span>
+            <span class="swallow-notify" id="notify-lifecycle"></span>
           </div>
-          {% empty %}
-          <div class="inline-empty" id="treatment-empty">
-            <i class="fa-solid fa-pills"></i>
-            <span>No treatment records yet. Click below to add one.</span>
-          </div>
-          {% endfor %}
+          <div class="swallow-subtitle">Date of birth, birth weight, weaning</div>
         </div>
-        <button type="button" class="inline-add-btn" onclick="addInlineRow('treatment', {{ treatment_formset.total_form_count }})">
-          <i class="fa-solid fa-plus"></i> Add Treatment Record
-        </button>
+        <div class="swallow-right"><i class="fa-solid fa-chevron-down swallow-chevron" id="chev-lifecycle"></i></div>
+      </div>
+      <div class="swallow-body" id="body-lifecycle">
+        <div class="swallow-body-inner">
+          <div class="edit-fieldset-grid">
+            <div class="sf-field">
+              <label>Sex <span class="required-star">*</span></label>
+              <select class="sf-select sf-required" name="sex" required data-label="Sex" data-section="lifecycle">
+                <option value="">— Select —</option>
+                <option value="Male"   {% if animal.sex == 'Male' %}selected{% endif %}>Male</option>
+                <option value="Female" {% if animal.sex == 'Female' %}selected{% endif %}>Female</option>
+              </select>
+            </div>
+            <div class="sf-field">
+              <label>Date of Birth <span class="required-star">*</span></label>
+              <input class="sf-input sf-required" type="date" name="date_of_birth"
+                     value="{{ animal.date_of_birth|date:'Y-m-d' }}"
+                     required data-label="Date of Birth" data-section="lifecycle">
+            </div>
+            <div class="sf-field">
+              <label>Birth Type</label>
+              <input class="sf-input" type="text" name="birth_type"
+                     value="{{ animal.birth_type }}" maxlength="50" placeholder="e.g. Single, Twin">
+            </div>
+            <div class="sf-field">
+              <label>Birth Weight (kg)</label>
+              <input class="sf-input" type="number" name="birth_weight_kg"
+                     value="{{ animal.birth_weight_kg }}" step="0.01" min="0">
+            </div>
+            <div class="sf-field">
+              <label>Weaning Date</label>
+              <input class="sf-input" type="date" name="weaning_date"
+                     value="{{ animal.weaning_date|date:'Y-m-d' }}">
+            </div>
+            <div class="sf-field">
+              <label>Weaning Weight (kg)</label>
+              <input class="sf-input" type="number" name="weaning_weight_kg"
+                     value="{{ animal.weaning_weight_kg }}" step="0.01" min="0">
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- ── INLINE: HEALTH OBSERVATIONS ─────────────── -->
-    {{ health_obs_formset.management_form }}
-    <div class="inline-formset" id="ifs-health_obs">
-      <div class="inline-formset-header" onclick="toggleInline('ifs-health_obs')">
-        <h4>
-          <i class="fa-solid fa-stethoscope" style="color:#16a34a;"></i> Health Observations
-          <span class="inline-count-badge {% if not health %}zero{% endif %}">{{ health|length }}</span>
-        </h4>
-        <i class="fa-solid fa-chevron-up edit-fieldset-toggle" id="toggle-ifs-health_obs"></i>
-      </div>
-      <div class="inline-formset-body" id="body-ifs-health_obs">
-        <div id="health_obs-forms">
-          {% for form in health_obs_formset %}
-          <div class="inline-card {% if form.DELETE.value %}marked-delete{% endif %}" id="health_obs-row-{{ forloop.counter0 }}">
-            <span class="inline-row-num">#{{ forloop.counter }}</span>
-            {{ form.id }}
-            <div class="inline-row cols-4">
-              <div class="inline-field">
-                <label>Weight (kg)</label>
-                {{ form.weight_kg }}
-              </div>
-              <div class="inline-field">
-                <label>Body Condition (1–5)</label>
-                {{ form.body_condition_score }}
-              </div>
-              <div class="inline-field">
-                <label>Temperature (°C)</label>
-                {{ form.temperature_c }}
-              </div>
-              <div class="inline-field">
-                <label>Symptoms</label>
-                {{ form.symptoms }}
-              </div>
-            </div>
-            {% if form.instance.pk %}
-            <div class="inline-delete-area">
-              <label for="{{ form.DELETE.id_for_label }}">
-                <i class="fa-solid fa-trash-can"></i>
-                {{ form.DELETE }} Delete this record
-              </label>
-            </div>
-            {% endif %}
+    <!-- ══ 4. LINEAGE ════════════════════════════════ -->
+    <div class="swallow-section" id="sw-lineage">
+      <div class="swallow-header" onclick="toggleSwallow('lineage')">
+        <div class="swallow-icon" style="background:#e8eaf6;"><i class="fa-solid fa-dna" style="color:#3949ab;"></i></div>
+        <div class="swallow-title-group">
+          <div class="swallow-title">
+            Lineage
+            <span class="swallow-badge" id="badge-lineage">3 fields</span>
+            <span class="swallow-notify" id="notify-lineage"></span>
           </div>
-          {% empty %}
-          <div class="inline-empty" id="health_obs-empty">
-            <i class="fa-solid fa-stethoscope"></i>
-            <span>No health observations yet. Click below to add one.</span>
-          </div>
-          {% endfor %}
+          <div class="swallow-subtitle">Sire, dam, genetic merit — all optional</div>
         </div>
-        <button type="button" class="inline-add-btn" onclick="addInlineRow('health_obs', {{ health_obs_formset.total_form_count }})">
-          <i class="fa-solid fa-plus"></i> Add Health Observation
-        </button>
+        <div class="swallow-right"><i class="fa-solid fa-chevron-down swallow-chevron" id="chev-lineage"></i></div>
+      </div>
+      <div class="swallow-body" id="body-lineage">
+        <div class="swallow-body-inner">
+          <div class="edit-fieldset-grid">
+            <div class="sf-field">
+              <label>Sire Tag (Father)</label>
+              <input class="sf-input" type="text" name="sire_tag"
+                     value="{{ animal.sire_tag }}" maxlength="100">
+            </div>
+            <div class="sf-field">
+              <label>Dam Tag (Mother)</label>
+              <input class="sf-input" type="text" name="dam_tag"
+                     value="{{ animal.dam_tag }}" maxlength="100">
+            </div>
+            <div class="sf-field">
+              <label>Genetic Merit Index</label>
+              <input class="sf-input" type="number" name="genetic_merit_index"
+                     value="{{ animal.genetic_merit_index }}" step="0.01">
+              <span class="sf-field-hint">Higher values indicate superior genetics</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- ── INLINE: BREEDING EVENTS ─────────────────── -->
-    {{ breeding_formset.management_form }}
-    <div class="inline-formset" id="ifs-breeding">
-      <div class="inline-formset-header" onclick="toggleInline('ifs-breeding')">
-        <h4>
-          <i class="fa-solid fa-dna" style="color:#d97706;"></i> Breeding Events
-          <span class="inline-count-badge {% if not breeding %}zero{% endif %}">{{ breeding|length }}</span>
-        </h4>
-        <i class="fa-solid fa-chevron-up edit-fieldset-toggle" id="toggle-ifs-breeding"></i>
-      </div>
-      <div class="inline-formset-body" id="body-ifs-breeding">
-        <div id="breeding-forms">
-          {% for form in breeding_formset %}
-          <div class="inline-card {% if form.DELETE.value %}marked-delete{% endif %}" id="breeding-row-{{ forloop.counter0 }}">
-            <span class="inline-row-num">#{{ forloop.counter }}</span>
-            {{ form.id }}
-            <div class="inline-row cols-3">
-              <div class="inline-field">
-                <label>Sire (Male Animal)</label>
-                {{ form.male }}
-              </div>
-              <div class="inline-field">
-                <label>Method</label>
-                {{ form.method }}
-              </div>
-              <div class="inline-field">
-                <label>Breeding Date</label>
-                {{ form.breeding_date }}
-              </div>
-              <div class="inline-field">
-                <label>Expected Calving Date</label>
-                {{ form.expected_calving_date }}
-              </div>
-              <div class="inline-field">
-                <label>Confirmed Pregnant</label>
-                {{ form.confirmed_pregnant }}
-              </div>
-              <div class="inline-field">
-                <label>Notes</label>
-                {{ form.notes }}
-              </div>
-            </div>
-            {% if form.instance.pk %}
-            <div class="inline-delete-area">
-              <label for="{{ form.DELETE.id_for_label }}">
-                <i class="fa-solid fa-trash-can"></i>
-                {{ form.DELETE }} Delete this record
-              </label>
-            </div>
-            {% endif %}
+    <!-- ══ 5. STATUS & ACQUISITION ══════════════════ -->
+    <div class="swallow-section" id="sw-status">
+      <div class="swallow-header" onclick="toggleSwallow('status')">
+        <div class="swallow-icon" style="background:#e0f2f1;"><i class="fa-solid fa-circle-dot" style="color:#00695c;"></i></div>
+        <div class="swallow-title-group">
+          <div class="swallow-title">
+            Status &amp; Acquisition
+            <span class="swallow-badge" id="badge-status">4 fields</span>
+            <span class="swallow-notify" id="notify-status"></span>
           </div>
-          {% empty %}
-          <div class="inline-empty" id="breeding-empty">
-            <i class="fa-solid fa-dna"></i>
-            <span>No breeding events yet. Click below to add one.</span>
-          </div>
-          {% endfor %}
+          <div class="swallow-subtitle">Animal status, purchase details</div>
         </div>
-        <button type="button" class="inline-add-btn" onclick="addInlineRow('breeding', {{ breeding_formset.total_form_count }})">
-          <i class="fa-solid fa-plus"></i> Add Breeding Event
-        </button>
+        <div class="swallow-right"><i class="fa-solid fa-chevron-down swallow-chevron" id="chev-status"></i></div>
+      </div>
+      <div class="swallow-body" id="body-status">
+        <div class="swallow-body-inner">
+          <div class="edit-fieldset-grid">
+            <div class="sf-field">
+              <label>Status <span class="required-star">*</span></label>
+              <select class="sf-select sf-required" name="status" required data-label="Status" data-section="status">
+                <option value="">— Select —</option>
+                <option value="ACTIVE"      {% if animal.status == 'ACTIVE' %}selected{% endif %}>Active</option>
+                <option value="SOLD"        {% if animal.status == 'SOLD' %}selected{% endif %}>Sold</option>
+                <option value="DECEASED"    {% if animal.status == 'DECEASED' %}selected{% endif %}>Deceased</option>
+                <option value="QUARANTINED" {% if animal.status == 'QUARANTINED' %}selected{% endif %}>Quarantined</option>
+                <option value="CULLED"      {% if animal.status == 'CULLED' %}selected{% endif %}>Culled</option>
+                <option value="MISSING"     {% if animal.status == 'MISSING' %}selected{% endif %}>Missing</option>
+              </select>
+            </div>
+            <div class="sf-field">
+              <label>Acquisition Date</label>
+              <input class="sf-input" type="date" name="acquisition_date"
+                     value="{{ animal.acquisition_date|date:'Y-m-d' }}">
+            </div>
+            <div class="sf-field">
+              <label>Acquisition Method</label>
+              <input class="sf-input" type="text" name="acquisition_method"
+                     value="{{ animal.acquisition_method }}" maxlength="50">
+            </div>
+            <div class="sf-field">
+              <label>Purchase Price (R)</label>
+              <input class="sf-input" type="number" name="purchase_price"
+                     value="{{ animal.purchase_price }}" step="0.01" min="0">
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- ── INLINE: CALVING RECORDS ─────────────────── -->
-    {{ calving_formset.management_form }}
-    <div class="inline-formset" id="ifs-calving">
-      <div class="inline-formset-header" onclick="toggleInline('ifs-calving')">
-        <h4>
-          <i class="fa-solid fa-baby" style="color:#ec4899;"></i> Calving Records
-          <span class="inline-count-badge {% if not calving %}zero{% endif %}">{{ calving|length }}</span>
-        </h4>
-        <i class="fa-solid fa-chevron-up edit-fieldset-toggle" id="toggle-ifs-calving"></i>
-      </div>
-      <div class="inline-formset-body" id="body-ifs-calving">
-        <div id="calving-forms">
-          {% for form in calving_formset %}
-          <div class="inline-card {% if form.DELETE.value %}marked-delete{% endif %}" id="calving-row-{{ forloop.counter0 }}">
-            <span class="inline-row-num">#{{ forloop.counter }}</span>
-            {{ form.id }}
-            <div class="inline-row cols-4">
-              <div class="inline-field">
-                <label>Calf (Animal)</label>
-                {{ form.calf }}
-              </div>
-              <div class="inline-field">
-                <label>Calving Date</label>
-                {{ form.calving_date }}
-              </div>
-              <div class="inline-field">
-                <label>Birth Weight (kg)</label>
-                {{ form.birth_weight_kg }}
-              </div>
-              <div class="inline-field">
-                <label>Complications</label>
-                {{ form.complications }}
-              </div>
-            </div>
-            {% if form.instance.pk %}
-            <div class="inline-delete-area">
-              <label for="{{ form.DELETE.id_for_label }}">
-                <i class="fa-solid fa-trash-can"></i>
-                {{ form.DELETE }} Delete this record
-              </label>
-            </div>
-            {% endif %}
+    <!-- ══ 6. LOCATION ══════════════════════════════ -->
+    <div class="swallow-section" id="sw-loc">
+      <div class="swallow-header" onclick="toggleSwallow('loc')">
+        <div class="swallow-icon" style="background:#fff8e1;"><i class="fa-solid fa-map-pin" style="color:#f57f17;"></i></div>
+        <div class="swallow-title-group">
+          <div class="swallow-title">
+            Location
+            <span class="swallow-badge" id="badge-loc">2 fields</span>
+            <span class="swallow-notify" id="notify-loc"></span>
           </div>
-          {% empty %}
-          <div class="inline-empty" id="calving-empty">
-            <i class="fa-solid fa-baby"></i>
-            <span>No calving records yet. Click below to add one.</span>
-          </div>
-          {% endfor %}
+          <div class="swallow-subtitle">Farm and paddock assignment</div>
         </div>
-        <button type="button" class="inline-add-btn" onclick="addInlineRow('calving', {{ calving_formset.total_form_count }})">
-          <i class="fa-solid fa-plus"></i> Add Calving Record
-        </button>
+        <div class="swallow-right"><i class="fa-solid fa-chevron-down swallow-chevron" id="chev-loc"></i></div>
+      </div>
+      <div class="swallow-body" id="body-loc">
+        <div class="swallow-body-inner">
+          <div class="edit-fieldset-grid">
+            <div class="sf-field">
+              <label>Farm <span class="required-star">*</span></label>
+              <select class="sf-select sf-required" name="farm" required data-label="Farm" data-section="loc">
+                <option value="">— Select Farm —</option>
+                {% for farm in farms %}
+                <option value="{{ farm.pk }}" {% if animal.farm.pk == farm.pk %}selected{% endif %}>{{ farm.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="sf-field">
+              <label>Current Paddock</label>
+              <select class="sf-select" name="current_paddock">
+                <option value="">— Unassigned —</option>
+                {% for paddock in paddocks %}
+                <option value="{{ paddock.pk }}" {% if animal.current_paddock and animal.current_paddock.pk == paddock.pk %}selected{% endif %}>
+                  {{ paddock.name }} ({{ paddock.farm.name }})
+                </option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- ── INLINE: PRODUCTION RECORDS ─────────────── -->
-    {{ production_formset.management_form }}
-    <div class="inline-formset" id="ifs-production">
-      <div class="inline-formset-header" onclick="toggleInline('ifs-production')">
-        <h4>
-          <i class="fa-solid fa-chart-line" style="color:#2563eb;"></i> Production Records
-          <span class="inline-count-badge {% if not production %}zero{% endif %}">{{ production|length }}</span>
-        </h4>
-        <i class="fa-solid fa-chevron-up edit-fieldset-toggle" id="toggle-ifs-production"></i>
-      </div>
-      <div class="inline-formset-body" id="body-ifs-production">
-        <div id="production-forms">
-          {% for form in production_formset %}
-          <div class="inline-card {% if form.DELETE.value %}marked-delete{% endif %}" id="production-row-{{ forloop.counter0 }}">
-            <span class="inline-row-num">#{{ forloop.counter }}</span>
-            {{ form.id }}
-            <div class="inline-row cols-4">
-              <div class="inline-field">
-                <label>Record Date</label>
-                {{ form.record_date }}
-              </div>
-              <div class="inline-field">
-                <label>Milk Yield (L)</label>
-                {{ form.milk_yield_liters }}
-              </div>
-              <div class="inline-field">
-                <label>Weight Gain (kg)</label>
-                {{ form.weight_gain_kg }}
-              </div>
-              <div class="inline-field">
-                <label>Feed Consumed (kg)</label>
-                {{ form.feed_consumption_kg }}
-              </div>
-            </div>
-            {% if form.instance.pk %}
-            <div class="inline-delete-area">
-              <label for="{{ form.DELETE.id_for_label }}">
-                <i class="fa-solid fa-trash-can"></i>
-                {{ form.DELETE }} Delete this record
-              </label>
-            </div>
-            {% endif %}
+    <!-- ══ 7. PHYSICAL METRICS ═══════════════════════ -->
+    <div class="swallow-section" id="sw-physical">
+      <div class="swallow-header" onclick="toggleSwallow('physical')">
+        <div class="swallow-icon" style="background:#fce4ec;"><i class="fa-solid fa-ruler" style="color:#ad1457;"></i></div>
+        <div class="swallow-title-group">
+          <div class="swallow-title">
+            Physical Metrics
+            <span class="swallow-badge" id="badge-physical">5 fields</span>
+            <span class="swallow-notify" id="notify-physical"></span>
           </div>
-          {% empty %}
-          <div class="inline-empty" id="production-empty">
-            <i class="fa-solid fa-chart-line"></i>
-            <span>No production records yet. Click below to add one.</span>
-          </div>
-          {% endfor %}
+          <div class="swallow-subtitle">Weight, height, body length, welfare scores — all optional</div>
         </div>
-        <button type="button" class="inline-add-btn" onclick="addInlineRow('production', {{ production_formset.total_form_count }})">
-          <i class="fa-solid fa-plus"></i> Add Production Record
-        </button>
+        <div class="swallow-right"><i class="fa-solid fa-chevron-down swallow-chevron" id="chev-physical"></i></div>
+      </div>
+      <div class="swallow-body" id="body-physical">
+        <div class="swallow-body-inner">
+          <div class="edit-fieldset-grid cols-3">
+            <div class="sf-field">
+              <label>Current Weight (kg)</label>
+              <input class="sf-input" type="number" name="current_weight_kg"
+                     value="{{ animal.current_weight_kg }}" step="0.1" min="0">
+            </div>
+            <div class="sf-field">
+              <label>Height (cm)</label>
+              <input class="sf-input" type="number" name="height_cm"
+                     value="{{ animal.height_cm }}" step="0.1" min="0">
+            </div>
+            <div class="sf-field">
+              <label>Body Length (cm)</label>
+              <input class="sf-input" type="number" name="body_length_cm"
+                     value="{{ animal.body_length_cm }}" step="0.1" min="0">
+            </div>
+            <div class="sf-field">
+              <label>Temperament Score</label>
+              <input class="sf-input" type="number" name="temperament_score"
+                     value="{{ animal.temperament_score }}" min="1" max="5"
+                     data-label="Temperament Score" data-section="physical" data-min="1" data-max="5">
+              <span class="sf-field-hint">1 = calm · 5 = aggressive</span>
+            </div>
+            <div class="sf-field">
+              <label>Lameness Score</label>
+              <input class="sf-input" type="number" name="lameness_score"
+                     value="{{ animal.lameness_score }}" min="0" max="5"
+                     data-label="Lameness Score" data-section="physical" data-min="0" data-max="5">
+              <span class="sf-field-hint">0 = sound · 5 = non-weight bearing</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- ── ACTIONS BAR ─────────────────────────────── -->
+    <!-- ══ 8. LIFECYCLE END ══════════════════════════ -->
+    <div class="swallow-section" id="sw-end">
+      <div class="swallow-header" onclick="toggleSwallow('end')">
+        <div class="swallow-icon" style="background:#ffebee;"><i class="fa-solid fa-circle-xmark" style="color:#c62828;"></i></div>
+        <div class="swallow-title-group">
+          <div class="swallow-title">
+            Lifecycle End
+            <span class="swallow-badge" id="badge-end">3 fields</span>
+            <span class="swallow-notify" id="notify-end"></span>
+          </div>
+          <div class="swallow-subtitle">Death date, cause, culling reason — all optional</div>
+        </div>
+        <div class="swallow-right"><i class="fa-solid fa-chevron-down swallow-chevron" id="chev-end"></i></div>
+      </div>
+      <div class="swallow-body" id="body-end">
+        <div class="swallow-body-inner">
+          <div class="edit-fieldset-grid">
+            <div class="sf-field">
+              <label>Date of Death</label>
+              <input class="sf-input" type="date" name="date_of_death"
+                     value="{{ animal.date_of_death|date:'Y-m-d' }}">
+            </div>
+            <div class="sf-field">
+              <label>Cause of Death</label>
+              <input class="sf-input" type="text" name="cause_of_death"
+                     value="{{ animal.cause_of_death }}" maxlength="255">
+            </div>
+            <div class="sf-field field-full">
+              <label>Culling Reason</label>
+              <input class="sf-input" type="text" name="culling_reason"
+                     value="{{ animal.culling_reason }}" maxlength="255">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ 9. NOTES ══════════════════════════════════ -->
+    <div class="swallow-section" id="sw-notes">
+      <div class="swallow-header" onclick="toggleSwallow('notes')">
+        <div class="swallow-icon" style="background:#f3e5f5;"><i class="fa-solid fa-note-sticky" style="color:#6a1b9a;"></i></div>
+        <div class="swallow-title-group">
+          <div class="swallow-title">Notes</div>
+          <div class="swallow-subtitle">General observations and remarks</div>
+        </div>
+        <div class="swallow-right"><i class="fa-solid fa-chevron-down swallow-chevron" id="chev-notes"></i></div>
+      </div>
+      <div class="swallow-body" id="body-notes">
+        <div class="swallow-body-inner">
+          <div class="sf-field">
+            <label>General Notes</label>
+            <textarea class="sf-textarea" name="notes" rows="4"
+                      placeholder="Any additional observations…">{{ animal.notes }}</textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACTIONS BAR -->
     <div class="edit-actions-bar">
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
         <button type="submit" class="btn-save" id="saveBtn">
@@ -1527,64 +1122,207 @@
         <i class="fa-solid fa-trash-can"></i> Delete Animal
       </a>
     </div>
-
   </form>
-</div><!-- /tab-edit -->
+</div>
 
 <!-- Toast -->
 <div class="sf-toast" id="sfToast">
   <i class="fa-solid fa-circle-check"></i>
   <span id="sfToastMsg">Changes saved successfully</span>
 </div>
-
 {% endblock %}
 
 {% block extra_scripts %}
 {% if last_location %}
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 {% endif %}
-
 <script>
-// ── TAB SWITCHER ─────────────────────────────────────
+// ═══════════════════════════════════════════════════════
+//  TAB SWITCHER
+// ═══════════════════════════════════════════════════════
 var mapInitialised = false;
-
 function showTab(id, btn) {
-  document.querySelectorAll('.sf-tab-panel').forEach(function(p) { p.classList.remove('active'); });
-  document.querySelectorAll('.sf-tab').forEach(function(b) { b.classList.remove('active'); });
+  document.querySelectorAll('.sf-tab-panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.sf-tab').forEach(function(b){ b.classList.remove('active'); });
   document.getElementById('tab-' + id).classList.add('active');
   btn.classList.add('active');
-  if (id === 'location' && !mapInitialised) { initMap(); }
+  if (id === 'location' && !mapInitialised) initMap();
 }
-
-// Auto-open Edit tab if Django returned form errors
 window.addEventListener('DOMContentLoaded', function() {
   if (document.getElementById('openEditTab')) {
-    var btn = document.getElementById('editTabBtn');
-    if (btn) { showTab('edit', btn); }
+    showTab('edit', document.getElementById('editTabBtn'));
+    submitAttempted = true;
+    updateAllNotifies();
   }
 });
 
-// ── FIELDSET COLLAPSE ────────────────────────────────
-function toggleFieldset(id) {
-  var body   = document.getElementById('body-' + id);
-  var toggle = document.getElementById('toggle-' + id);
-  var isOpen = !body.classList.contains('collapsed');
-  body.classList.toggle('collapsed', isOpen);
-  toggle.classList.toggle('fa-chevron-up',  !isOpen);
-  toggle.classList.toggle('fa-chevron-down', isOpen);
+// ═══════════════════════════════════════════════════════
+//  SWALLOW ACCORDION
+// ═══════════════════════════════════════════════════════
+function toggleSwallow(id) {
+  var body = document.getElementById('body-' + id);
+  var chev = document.getElementById('chev-' + id);
+  var hdr  = document.querySelector('#sw-' + id + ' .swallow-header');
+  var isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  if (chev) chev.classList.toggle('open', !isOpen);
+  if (hdr)  hdr.classList.toggle('open', !isOpen);
 }
 
-// ── INLINE COLLAPSE ──────────────────────────────────
-function toggleInline(id) {
-  var body   = document.getElementById('body-' + id);
-  var toggle = document.getElementById('toggle-' + id);
-  var isOpen = !body.classList.contains('collapsed');
-  body.classList.toggle('collapsed', isOpen);
-  toggle.classList.toggle('fa-chevron-up',  !isOpen);
-  toggle.classList.toggle('fa-chevron-down', isOpen);
+// ═══════════════════════════════════════════════════════
+//  SWALLOW NOTIFICATION BADGES
+// ═══════════════════════════════════════════════════════
+var SWALLOW_SECTIONS = ['identity', 'class', 'lifecycle', 'status', 'loc', 'physical'];
+
+function updateSectionNotify(sectionId) {
+  var section  = document.getElementById('sw-' + sectionId);
+  var notifyEl = document.getElementById('notify-' + sectionId);
+  if (!section || !notifyEl) return;
+
+  var errorCount = 0;
+
+  section.querySelectorAll('[required][data-section="' + sectionId + '"]').forEach(function(el) {
+    if (!el.value.trim()) errorCount++;
+  });
+
+  section.querySelectorAll('[data-min][data-section="' + sectionId + '"]').forEach(function(el) {
+    if (el.value !== '') {
+      var v   = parseFloat(el.value);
+      var min = parseFloat(el.getAttribute('data-min'));
+      var max = parseFloat(el.getAttribute('data-max'));
+      if (v < min || v > max) errorCount++;
+    }
+  });
+
+  if (sectionId === 'lifecycle') {
+    var dobEl = section.querySelector('[name="date_of_birth"]');
+    if (dobEl && dobEl.value && new Date(dobEl.value) >= new Date()) errorCount++;
+  }
+
+  if (errorCount > 0) {
+    notifyEl.textContent = errorCount;
+    notifyEl.classList.add('visible');
+    section.classList.add('has-errors');
+  } else {
+    notifyEl.textContent = '';
+    notifyEl.classList.remove('visible');
+    section.classList.remove('has-errors');
+  }
 }
 
-// ── UNSAVED CHANGES ──────────────────────────────────
+function updateAllNotifies() {
+  SWALLOW_SECTIONS.forEach(updateSectionNotify);
+}
+
+var submitAttempted = false;
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('#editAnimalForm .sf-input, #editAnimalForm .sf-select, #editAnimalForm .sf-textarea')
+    .forEach(function(el) {
+      var sectionId = el.getAttribute('data-section');
+      if (!sectionId) return;
+      function maybeUpdate() { if (submitAttempted) updateSectionNotify(sectionId); }
+      el.addEventListener('input',  maybeUpdate);
+      el.addEventListener('change', maybeUpdate);
+      el.addEventListener('blur',   maybeUpdate);
+    });
+});
+
+// ═══════════════════════════════════════════════════════
+//  VALIDATION
+// ═══════════════════════════════════════════════════════
+function validateForm() {
+  var valid      = true;
+  var firstError = null;
+
+  submitAttempted = true;
+  document.querySelectorAll('.field-error-msg').forEach(function(e) { e.remove(); });
+  document.querySelectorAll('.sf-input.field-error, .sf-select.field-error, .sf-textarea.field-error')
+    .forEach(function(e) { e.classList.remove('field-error', 'field-valid'); });
+
+  document.querySelectorAll('#editAnimalForm [required]').forEach(function(el) {
+    if (!el.value.trim()) {
+      markError(el, (el.getAttribute('data-label') || 'This field') + ' is required.');
+      if (!firstError) firstError = el;
+      valid = false;
+      openSectionForEl(el);
+    } else {
+      el.classList.add('field-valid');
+    }
+  });
+
+  var dob = document.querySelector('[name="date_of_birth"]');
+  if (dob && dob.value && new Date(dob.value) >= new Date()) {
+    markError(dob, 'Date of birth must be in the past.');
+    if (!firstError) firstError = dob;
+    valid = false;
+    openSectionForEl(dob);
+  }
+
+  document.querySelectorAll('#editAnimalForm [data-min]').forEach(function(el) {
+    if (el.value !== '') {
+      var v   = parseFloat(el.value);
+      var min = parseFloat(el.getAttribute('data-min'));
+      var max = parseFloat(el.getAttribute('data-max'));
+      if (v < min || v > max) {
+        markError(el, (el.getAttribute('data-label') || 'Value') + ' must be ' + min + '–' + max + '.');
+        if (!firstError) firstError = el;
+        valid = false;
+        openSectionForEl(el);
+      }
+    }
+  });
+
+  updateAllNotifies();
+
+  if (!valid && firstError) {
+    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    firstError.focus();
+  }
+  return valid;
+}
+
+function markError(el, msg) {
+  el.classList.add('field-error');
+  el.classList.remove('field-valid');
+  var span = document.createElement('span');
+  span.className = 'field-error-msg';
+  span.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> ' + msg;
+  el.parentNode.appendChild(span);
+}
+
+function openSectionForEl(el) {
+  var section = el.closest('.swallow-section');
+  if (section) {
+    var id   = section.id.replace('sw-', '');
+    var body = document.getElementById('body-' + id);
+    if (body && !body.classList.contains('open')) toggleSwallow(id);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('#editAnimalForm .sf-input, #editAnimalForm .sf-select').forEach(function(el) {
+    el.addEventListener('blur', function() {
+      if (!submitAttempted) return;
+      var existingMsg = el.parentNode.querySelector('.field-error-msg');
+      if (el.hasAttribute('required') && !el.value.trim()) {
+        el.classList.add('field-error');
+        el.classList.remove('field-valid');
+        if (!existingMsg) markError(el, (el.getAttribute('data-label') || 'This field') + ' is required.');
+      } else if (el.hasAttribute('required') && el.value.trim()) {
+        el.classList.remove('field-error');
+        el.classList.add('field-valid');
+        if (existingMsg) existingMsg.remove();
+      }
+      var sId = el.getAttribute('data-section');
+      if (sId) updateSectionNotify(sId);
+    });
+  });
+});
+
+// ═══════════════════════════════════════════════════════
+//  UNSAVED CHANGES TRACKING
+// ═══════════════════════════════════════════════════════
 var formDirty = false;
 document.getElementById('editAnimalForm').addEventListener('input', function() {
   if (!formDirty) {
@@ -1601,25 +1339,17 @@ function confirmDiscard() {
   window.location.href = "{% url 'animal_detail' animal.pk %}";
 }
 
-// ── FORM SUBMIT ──────────────────────────────────────
+// ═══════════════════════════════════════════════════════
+//  FORM SUBMIT
+// ═══════════════════════════════════════════════════════
 document.getElementById('editAnimalForm').addEventListener('submit', function(e) {
-  var btn    = document.getElementById('saveBtn');
-  var status = document.getElementById('saveStatus');
-  var valid  = true;
-
-  this.querySelectorAll('[required]').forEach(function(el) {
-    el.classList.remove('error');
-    if (!el.value.trim()) { el.classList.add('error'); valid = false; }
-  });
-
-  if (!valid) {
+  if (!validateForm()) {
     e.preventDefault();
-    showToast('Please fill in all required fields.', true);
-    var firstErr = document.querySelector('.sf-input.error, .sf-select.error');
-    if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    showToast('Please fix the errors highlighted in red.', true);
     return;
   }
-
+  var btn    = document.getElementById('saveBtn');
+  var status = document.getElementById('saveStatus');
   btn.disabled = true;
   btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving…';
   status.className = 'save-status saving';
@@ -1627,7 +1357,9 @@ document.getElementById('editAnimalForm').addEventListener('submit', function(e)
   formDirty = false;
 });
 
-// ── TOAST ─────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════════════════
 function showToast(msg, isError) {
   var toast = document.getElementById('sfToast');
   var icon  = isError ? 'fa-triangle-exclamation' : 'fa-circle-check';
@@ -1636,199 +1368,78 @@ function showToast(msg, isError) {
   requestAnimationFrame(function() { toast.classList.add('show'); });
   setTimeout(function() { toast.classList.remove('show'); }, 3500);
 }
-
-// Show success toast after redirect with ?saved=1
 if (window.location.search.indexOf('saved=1') !== -1) {
   showToast('Changes saved successfully');
   history.replaceState(null, '', window.location.pathname);
 }
 
-// ── WEIGHT CHART ──────────────────────────────────────
+// ═══════════════════════════════════════════════════════
+//  CHARTS
+// ═══════════════════════════════════════════════════════
 {% if weight_data != "[]" %}
 new Chart(document.getElementById('weightChart'), {
   type: 'line',
   data: {
     labels: {{ weight_labels|safe }},
-    datasets: [{ label: 'Weight (kg)', data: {{ weight_data|safe }},
+    datasets: [{
+      label: 'Weight (kg)', data: {{ weight_data|safe }},
       borderColor: '#2e7d32', backgroundColor: 'rgba(46,125,50,0.08)',
-      tension: 0.4, pointBackgroundColor: '#2e7d32', pointRadius: 4, fill: true }]
+      tension: 0.4, pointBackgroundColor: '#2e7d32', pointRadius: 4, fill: true
+    }]
   },
   options: {
     responsive: true, plugins: { legend: { display: false } },
-    scales: { y: { beginAtZero: false, grid: { color:'rgba(0,0,0,0.04)' } }, x: { grid: { display:false } } }
+    scales: { y: { beginAtZero: false, grid: { color: 'rgba(0,0,0,0.04)' } }, x: { grid: { display: false } } }
   }
 });
 {% endif %}
-
-// ── MILK CHART ────────────────────────────────────────
 {% if milk_data != "[]" %}
 new Chart(document.getElementById('milkChart'), {
   type: 'bar',
   data: {
     labels: {{ milk_labels|safe }},
-    datasets: [{ label:'Milk (L)', data: {{ milk_data|safe }},
-      backgroundColor: '#1e88e5', borderRadius: 6 }]
+    datasets: [{ label: 'Milk (L)', data: {{ milk_data|safe }}, backgroundColor: '#1e88e5', borderRadius: 6 }]
   },
   options: {
     responsive: true, plugins: { legend: { display: false } },
-    scales: { y: { beginAtZero:true, grid:{ color:'rgba(0,0,0,0.04)' } }, x: { grid:{ display:false } } }
+    scales: { y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.04)' } }, x: { grid: { display: false } } }
   }
 });
 {% endif %}
 
-// ── LEAFLET MAP ───────────────────────────────────────
+// ═══════════════════════════════════════════════════════
+//  LEAFLET MAP
+// ═══════════════════════════════════════════════════════
 {% if last_location %}
 function initMap() {
   if (mapInitialised) return;
   mapInitialised = true;
-  var lat = {{ last_location.latitude }};
-  var lng = {{ last_location.longitude }};
+  var lat = {{ last_location.latitude }}, lng = {{ last_location.longitude }};
   var tag = "{{ animal.tag_number|escapejs }}";
   var ts  = "{{ last_location.timestamp|date:'d M Y, H:i' }}";
-  var map = L.map('animalMap', { zoomControl:true, scrollWheelZoom:false }).setView([lat, lng], 16);
+  var map = L.map('animalMap', { zoomControl: true, scrollWheelZoom: false }).setView([lat, lng], 16);
   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
     attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
-    subdomains: 'abcd', maxZoom: 19,
+    subdomains: 'abcd', maxZoom: 19
   }).addTo(map);
   var cowIcon = L.divIcon({
     className: '',
     html: '<div style="width:38px;height:38px;border-radius:50%;background:#1b5e20;border:3px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;"><i class=\'fa-solid fa-cow\'></i></div>',
-    iconSize: [38,38], iconAnchor: [19,19], popupAnchor: [0,-22]
+    iconSize: [38, 38], iconAnchor: [19, 19], popupAnchor: [0, -22]
   });
   L.marker([lat, lng], { icon: cowIcon }).addTo(map)
-    .bindPopup('<div style="font-family:Inter,sans-serif;min-width:150px;"><div style="font-weight:700;font-size:14px;margin-bottom:4px;"><i class=\'fa-solid fa-cow\'></i> ' + tag + '</div><div style="font-size:12px;color:#555;"><i class=\'fa-solid fa-clock\'></i> ' + ts + '</div><div style="font-size:11px;color:#888;margin-top:4px;font-family:monospace;">' + lat.toFixed(6) + ', ' + lng.toFixed(6) + '</div></div>', { maxWidth: 230 })
-    .openPopup();
-  {% if last_location.accuracy %}
-  L.circle([lat, lng], { radius: {{ last_location.accuracy }}, color:'#1b5e20', fillColor:'#4caf50', fillOpacity:0.1, weight:1.5 }).addTo(map);
-  {% endif %}
+    .bindPopup(
+      '<div style="font-family:Inter,sans-serif;min-width:150px;">' +
+      '<div style="font-weight:700;font-size:14px;margin-bottom:4px;"><i class=\'fa-solid fa-cow\'></i> ' + tag + '</div>' +
+      '<div style="font-size:12px;color:#555;"><i class=\'fa-solid fa-clock\'></i> ' + ts + '</div>' +
+      '<div style="font-size:11px;color:#888;margin-top:4px;font-family:monospace;">' + lat.toFixed(6) + ', ' + lng.toFixed(6) + '</div>' +
+      '</div>',
+      { maxWidth: 230 }
+    ).openPopup();
 }
-if (document.getElementById('tab-location') && document.getElementById('tab-location').classList.contains('active')) { initMap(); }
+if (document.getElementById('tab-location') && document.getElementById('tab-location').classList.contains('active')) initMap();
 {% else %}
 function initMap() {}
 {% endif %}
-
-// ══════════════════════════════════════════════════════
-// DYNAMIC INLINE ROW CLONING
-// Template HTML strings are stored as data — when "Add"
-// is clicked we clone the last empty extra form, update
-// all index references, and inject it into the DOM.
-// ══════════════════════════════════════════════════════
-
-// Stores the next available index per prefix
-var inlineCounts = {
-  disease:      {{ disease_formset.total_form_count }},
-  vaccination:  {{ vaccination_formset.total_form_count }},
-  treatment:    {{ treatment_formset.total_form_count }},
-  health_obs:   {{ health_obs_formset.total_form_count }},
-  breeding:     {{ breeding_formset.total_form_count }},
-  calving:      {{ calving_formset.total_form_count }},
-  production:   {{ production_formset.total_form_count }},
-};
-
-// Map prefix → Django formset prefix string
-var prefixMap = {
-  disease:      'disease',
-  vaccination:  'vaccination',
-  treatment:    'treatment',
-  health_obs:   'health_obs',
-  breeding:     'breeding',
-  calving:      'calving',
-  production:   'production',
-};
-
-function addInlineRow(prefix, initialCount) {
-  var container   = document.getElementById(prefix + '-forms');
-  var emptyRow    = document.getElementById(prefix + '-empty');
-  var totalInput  = document.getElementById('id_' + prefixMap[prefix] + '-TOTAL_FORMS');
-
-  // Find the last inline-card (which is the blank extra form rendered by Django)
-  var existingCards = container.querySelectorAll('.inline-card');
-  if (existingCards.length === 0) return; // nothing to clone — shouldn't happen
-
-  // Clone the last card (Django always appends `extra=1` empty form at end)
-  var lastCard = existingCards[existingCards.length - 1];
-
-  // Only clone if the last card is truly empty (no pk in hidden id field)
-  var idField = lastCard.querySelector('input[type="hidden"][id$="-id"]');
-  var isBlankExtra = !idField || !idField.value;
-
-  var newCard;
-  if (isBlankExtra) {
-    // Re-use the existing blank, reveal it, then manufacture another blank via string replacement
-    newCard = lastCard;
-  } else {
-    // All existing extras were filled; clone last card and clear values
-    newCard = lastCard.cloneNode(true);
-    newCard.querySelectorAll('input:not([type=hidden]), select, textarea').forEach(function(el) {
-      if (el.type === 'checkbox') { el.checked = false; }
-      else { el.value = ''; }
-    });
-  }
-
-  var currentIndex = inlineCounts[prefix];
-
-  // Update all id/name attributes that contain the old index
-  var oldIndex = currentIndex - 1;
-  newCard.innerHTML = newCard.innerHTML
-    .replace(new RegExp(prefixMap[prefix] + '-' + oldIndex + '-', 'g'),
-             prefixMap[prefix] + '-' + currentIndex + '-');
-  newCard.id = prefix + '-row-' + currentIndex;
-
-  // Clear all input values in the new card
-  newCard.querySelectorAll('input:not([type=hidden]), select, textarea').forEach(function(el) {
-    if (el.type === 'checkbox') { el.checked = false; }
-    else { el.value = ''; }
-  });
-
-  // Remove the delete area from brand-new rows (no pk yet)
-  var delArea = newCard.querySelector('.inline-delete-area');
-  if (delArea) delArea.remove();
-
-  // Update row number pill
-  var numPill = newCard.querySelector('.inline-row-num');
-  if (numPill) numPill.textContent = '#' + (currentIndex + 1);
-
-  // Remove marked-delete class
-  newCard.classList.remove('marked-delete');
-
-  // Append to container if it was a fresh clone
-  if (!isBlankExtra) {
-    container.appendChild(newCard);
-  }
-
-  // Bump management form total
-  inlineCounts[prefix] = currentIndex + 1;
-  if (totalInput) totalInput.value = inlineCounts[prefix];
-
-  // Hide empty-state message
-  if (emptyRow) emptyRow.style.display = 'none';
-
-  // Mark form dirty
-  if (!formDirty) {
-    formDirty = true;
-    document.getElementById('unsavedDot').classList.add('visible');
-  }
-
-  // Smooth scroll to new row
-  newCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
-  // Wire delete checkbox to toggle marked-delete class
-  var delCheckbox = newCard.querySelector('input[type="checkbox"][id$="-DELETE"]');
-  if (delCheckbox) {
-    delCheckbox.addEventListener('change', function() {
-      newCard.classList.toggle('marked-delete', this.checked);
-    });
-  }
-}
-
-// Wire existing delete checkboxes on page load
-document.querySelectorAll('.inline-card').forEach(function(card) {
-  var cb = card.querySelector('input[type="checkbox"][id$="-DELETE"]');
-  if (cb) {
-    cb.addEventListener('change', function() {
-      card.classList.toggle('marked-delete', this.checked);
-    });
-  }
-});
 </script>
 {% endblock %}
