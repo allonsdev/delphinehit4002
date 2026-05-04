@@ -50,7 +50,6 @@ class AnimalEditForm(_forms.ModelForm):
 # =============================================================================
 # SHARED HELPER — build animal detail context
 # =============================================================================
-
 def _animal_detail_context(animal):
     milk_total      = animal.productionrecord_set.aggregate(t=Sum("milk_yield_liters"))["t"] or 0
     total_expenses  = animal.expenserecord_set.aggregate(t=Sum("amount"))["t"] or 0
@@ -99,10 +98,10 @@ def _animal_detail_context(animal):
 def home(request):
     return render(request, "home.html")
 
-
 def login_view(request):
     if request.user.is_authenticated:
         return redirect("dashboard")
+
     if request.method == "POST":
         user = authenticate(
             request,
@@ -111,8 +110,12 @@ def login_view(request):
         )
         if user:
             login(request, user)
-            return redirect("dashboard")
+
+            next_url = request.POST.get("next") or request.GET.get("next")
+            return redirect(next_url or "dashboard")
+
         messages.error(request, "Invalid username or password")
+
     return render(request, "login.html")
 
 
@@ -342,7 +345,7 @@ def animal_list(request):
         "total_alerts":   Alert.objects.count(),
     })
 
-
+@login_required
 def animal_detail(request, pk):
     animal = get_object_or_404(Animal, id=pk)
     ctx = _animal_detail_context(animal)

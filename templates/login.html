@@ -75,6 +75,7 @@ body{font-family:'Plus Jakarta Sans',sans-serif;height:100vh;display:flex;overfl
 
     <form method="POST">
       {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.GET.next }}">
       <div class="form-group">
         <label>Username</label>
         <div class="input-wrap">
